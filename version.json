@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
-  "changelog": "Added richer page backgrounds, persistent saved settings and inbox state, plus a new dashboard page linked from the app.",
+  "version": "1.2.0",
+  "changelog": "Merged the dashboard into the main app and added saved marketing, business, and pipeline views alongside the inbox workspace.",
   "released": "2026-03-30"
 }

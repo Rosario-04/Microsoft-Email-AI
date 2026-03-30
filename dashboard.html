@@ -1,219 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mail AI Dashboard</title>
-<meta name="app-version" content="1.1.0">
+<meta http-equiv="refresh" content="0; url=index.html#dashboard">
+<title>Redirecting to Mail AI</title>
+<script>
+window.location.replace('index.html#dashboard');
+</script>
 <style>
-:root{
-  --bg:#f4eee6; --ink:#162033; --muted:rgba(22,32,51,.62); --line:rgba(22,32,51,.12);
-  --card:rgba(255,255,255,.78); --card-strong:rgba(255,255,255,.92); --accent:#007AFF;
-  --good:#23a55a; --warn:#ff9f0a; --shadow:0 18px 48px rgba(24,34,54,.12); --radius:24px;
-}
-[data-theme="dark"]{
-  --bg:#0d1118; --ink:#f2f5ff; --muted:rgba(242,245,255,.68); --line:rgba(242,245,255,.1);
-  --card:rgba(19,24,34,.76); --card-strong:rgba(26,32,43,.92); --shadow:0 18px 54px rgba(0,0,0,.34);
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
 body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
   font-family:-apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 12% 14%, rgba(255,184,113,.34), transparent 24%),
-    radial-gradient(circle at 82% 10%, rgba(93,143,255,.22), transparent 20%),
-    linear-gradient(135deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 72%, #f4f7ff) 52%, color-mix(in srgb, var(--bg) 72%, #fff6ea) 100%);
-  padding:32px 24px 48px;
+  background:linear-gradient(135deg,#f5efe8,#eef4ff);
+  color:#172235;
 }
-.shell{max-width:1220px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
-.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.9fr);gap:18px}
-.panel,.stat,.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  backdrop-filter:saturate(180%) blur(22px);
-  -webkit-backdrop-filter:saturate(180%) blur(22px);
-}
-.hero-main{padding:28px}
-.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.brand-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-.brand-mark{width:54px;height:54px;border-radius:16px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;font-weight:700;box-shadow:0 14px 28px color-mix(in srgb,var(--accent) 28%,transparent)}
-.brand-logo{width:54px;height:54px;border-radius:16px;object-fit:cover;display:none;box-shadow:0 14px 28px rgba(0,0,0,.15)}
-.hero-title{font-size:clamp(28px,4vw,42px);line-height:1.04;letter-spacing:-.04em;margin:0}
-.hero-copy{font-size:16px;line-height:1.65;color:var(--muted);max-width:58ch;margin:14px 0 0}
-.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-.btn{
-  appearance:none;border:none;cursor:pointer;text-decoration:none;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:46px;padding:0 18px;border-radius:999px;font-size:14px;font-weight:600;
-}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 24%,transparent)}
-.btn-secondary{background:var(--card-strong);color:var(--ink);border:1px solid var(--line)}
-.hero-side{padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:18px}
-.status-stack{display:grid;gap:12px}
-.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px}
-.status-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(35,165,90,.12);color:var(--good);font-weight:600}
-.status-pill.off{background:rgba(255,159,10,.12);color:var(--warn)}
-.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.stat{padding:22px}
-.stat-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.stat-value{font-size:34px;font-weight:750;letter-spacing:-.06em}
-.stat-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
-.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:18px}
-.card{padding:22px}
-.card h2{font-size:19px;letter-spacing:-.03em;margin:0 0 14px}
-.card-sub{font-size:13px;color:var(--muted);margin:-2px 0 18px}
-.recent-list,.settings-list,.channel-list{display:grid;gap:12px}
-.recent-item,.settings-row,.channel-item{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:14px 16px;border-radius:18px;background:var(--card-strong);border:1px solid var(--line);
-}
-.recent-main{min-width:0}
-.recent-sender,.settings-key,.channel-name{font-size:14px;font-weight:650}
-.recent-subj,.settings-val,.channel-meta{font-size:13px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.recent-time{font-size:12px;color:var(--muted);white-space:nowrap}
-.bars{display:grid;gap:12px}
-.bar-row{display:grid;grid-template-columns:110px 1fr 42px;align-items:center;gap:10px}
-.bar-label{font-size:13px;color:var(--muted)}
-.bar-track{height:10px;border-radius:999px;background:rgba(127,139,165,.14);overflow:hidden}
-.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 48%,#8dd7ff))}
-.empty{padding:22px;border-radius:18px;border:1px dashed var(--line);color:var(--muted);text-align:center;line-height:1.6}
-.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
-@media (max-width:980px){.hero,.metrics,.grid{grid-template-columns:1fr}}
-@media (max-width:640px){
-  body{padding:20px 16px 36px}
-  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bar-row{grid-template-columns:1fr}
-}
+a{color:#007AFF}
 </style>
 </head>
 <body>
-<div class="shell">
-  <section class="hero">
-    <div class="panel hero-main">
-      <div class="eyebrow">Overview</div>
-      <div class="brand-row">
-        <div class="brand-mark" id="brandMark">M</div>
-        <img class="brand-logo" id="brandLogo" alt="App logo">
-        <div>
-          <h1 class="hero-title" id="heroTitle">Mail AI Dashboard</h1>
-          <div class="hero-copy" id="heroCopy">Your saved inbox summary, settings, and readiness checks all in one place.</div>
-        </div>
-      </div>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="index.html">Open Inbox</a>
-        <button class="btn btn-secondary" type="button" onclick="window.location.reload()">Refresh Dashboard</button>
-      </div>
-    </div>
-    <div class="panel hero-side">
-      <div>
-        <div class="eyebrow">Readiness</div>
-        <div class="status-stack">
-          <div class="status-row"><span>AI key</span><span class="status-pill" id="aiStatus">Ready</span></div>
-          <div class="status-row"><span>Outlook</span><span class="status-pill off" id="outlookStatus">Not connected</span></div>
-          <div class="status-row"><span>Theme</span><strong id="themeStatus">Light</strong></div>
-          <div class="status-row"><span>Saved version</span><strong id="versionStatus">v1.1.0</strong></div>
-        </div>
-      </div>
-      <div class="card-sub" id="lastSaved">Settings save locally in your browser, so they stay with the app between refreshes and GitHub Pages updates.</div>
-    </div>
-  </section>
-
-  <section class="metrics">
-    <div class="stat"><div class="stat-label">Cached Emails</div><div class="stat-value" id="statEmails">0</div><div class="stat-note">Messages available to the dashboard right now.</div></div>
-    <div class="stat"><div class="stat-label">Unread</div><div class="stat-value" id="statUnread">0</div><div class="stat-note">Messages still waiting on review.</div></div>
-    <div class="stat"><div class="stat-label">Urgent</div><div class="stat-value" id="statUrgent">0</div><div class="stat-note">Items currently marked high priority.</div></div>
-    <div class="stat"><div class="stat-label">Templates</div><div class="stat-value" id="statTemplates">0</div><div class="stat-note">Reusable reply templates saved for your team.</div></div>
-  </section>
-
-  <section class="grid">
-    <div class="card">
-      <h2>Recent Inbox Snapshot</h2>
-      <div class="card-sub">A quick look at the most recent cached messages.</div>
-      <div id="recentWrap"></div>
-    </div>
-    <div class="card">
-      <h2>Label Mix</h2>
-      <div class="card-sub">Distribution across your saved categories.</div>
-      <div class="bars" id="barWrap"></div>
-    </div>
-  </section>
-
-  <section class="grid">
-    <div class="card">
-      <h2>Saved Settings</h2>
-      <div class="card-sub">What the inbox will keep using until you change it.</div>
-      <div class="settings-list" id="settingsWrap"></div>
-    </div>
-    <div class="card">
-      <h2>Channels</h2>
-      <div class="card-sub">Connection state and helper settings.</div>
-      <div class="channel-list" id="channelWrap"></div>
-    </div>
-  </section>
-
-  <div class="footer">Dashboard reads the same local saved state as the inbox app on this site.</div>
-</div>
-
-<script>
-const STORAGE_KEY='mail_ai_state_v1';
-const EMAIL_CACHE_KEY='mail_ai_cached_emails_v1';
-const defaults={appName:'Mail AI',logoLetter:'M',accentColor:'#007AFF',theme:'light',apiKey:'',persona:{name:'Aria',tone:'Professional',sig:'',instr:''},templates:[],syncSettings:{autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common'}};
-function readJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch(_){return fallback;}}
-const state={...defaults,...readJSON(STORAGE_KEY,{})};
-state.persona={...defaults.persona,...(state.persona||{})};
-state.syncSettings={...defaults.syncSettings,...(state.syncSettings||{})};
-const emails=readJSON(EMAIL_CACHE_KEY,[]);
-document.documentElement.setAttribute('data-theme',state.theme||'light');
-document.documentElement.style.setProperty('--accent',state.accentColor||defaults.accentColor);
-document.getElementById('heroTitle').textContent=`${state.appName||defaults.appName} Dashboard`;
-document.getElementById('heroCopy').textContent=(state.persona?.name||'Aria')?`Powered by ${state.persona.name}, with your saved tone, templates, and inbox preferences ready to go.`:'Your saved inbox summary, settings, and readiness checks all in one place.';
-document.getElementById('themeStatus').textContent=(state.theme||'light').replace(/^./,c=>c.toUpperCase());
-document.getElementById('versionStatus').textContent='v1.1.0';
-if(state.savedAt) document.getElementById('lastSaved').textContent=`Last settings save: ${new Date(state.savedAt).toLocaleString()}`;
-const brandMark=document.getElementById('brandMark');
-const brandLogo=document.getElementById('brandLogo');
-brandMark.textContent=(state.logoLetter||'M').slice(0,2);
-brandMark.style.background=state.accentColor||defaults.accentColor;
-if(state.logoDataUrl){brandLogo.src=state.logoDataUrl;brandLogo.style.display='block';brandMark.style.display='none';}
-const unread=emails.filter(e=>e.unread).length;
-const urgent=emails.filter(e=>e.urgent&&!e.snoozed).length;
-const snoozed=emails.filter(e=>e.snoozed).length;
-document.getElementById('statEmails').textContent=emails.length;
-document.getElementById('statUnread').textContent=unread;
-document.getElementById('statUrgent').textContent=urgent;
-document.getElementById('statTemplates').textContent=(state.templates||[]).length;
-const aiStatus=document.getElementById('aiStatus');
-if(!state.apiKey){aiStatus.textContent='Not set';aiStatus.classList.add('off');}
-const outlookStatus=document.getElementById('outlookStatus');
-const userName=localStorage.getItem('ms_user_name')||'';
-const userEmail=localStorage.getItem('ms_user_email')||'';
-if(userName){outlookStatus.textContent='Connected';outlookStatus.classList.remove('off');}
-const recentWrap=document.getElementById('recentWrap');
-if(!emails.length){
-  recentWrap.innerHTML='<div class="empty">Open the inbox and load Outlook or sample messages to populate this dashboard.</div>';
-}else{
-  recentWrap.innerHTML=`<div class="recent-list">${emails.slice(0,5).map(email=>`<div class="recent-item"><div class="recent-main"><div class="recent-sender">${email.sender||'Unknown sender'}</div><div class="recent-subj">${email.subject||'(no subject)'}</div></div><div class="recent-time">${email.time||''}</div></div>`).join('')}</div>`;
-}
-const counts={All:emails.length,Client:emails.filter(e=>e.cat==='client').length,Internal:emails.filter(e=>e.cat==='internal').length,Finance:emails.filter(e=>e.cat==='finance').length,HR:emails.filter(e=>e.cat==='hr').length,Snoozed:snoozed};
-const maxCount=Math.max(...Object.values(counts),1);
-document.getElementById('barWrap').innerHTML=Object.entries(counts).map(([label,value])=>`<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${(value/maxCount)*100}%"></div></div><strong>${value}</strong></div>`).join('');
-document.getElementById('settingsWrap').innerHTML=[
-  ['Assistant',`${state.persona.name} · ${state.persona.tone}`],
-  ['Sign-off',state.persona.sig||'Not set'],
-  ['Notifications',state.syncSettings.notifications?'On':'Off'],
-  ['Auto-categorize',state.syncSettings.autoCategorize?'On':'Off'],
-  ['Auto-flag urgent',state.syncSettings.autoFlagUrgent?'On':'Off'],
-  ['Templates',`${(state.templates||[]).length} saved`]
-].map(([key,val])=>`<div class="settings-row"><div><div class="settings-key">${key}</div><div class="settings-val">${val}</div></div></div>`).join('');
-document.getElementById('channelWrap').innerHTML=[
-  ['Outlook',userName?`${userName}${userEmail?` · ${userEmail}`:''}`:'Not connected'],
-  ['Azure Client ID',state.syncSettings.msClientId||'Not set'],
-  ['Tenant',state.syncSettings.msTenantId||'common'],
-  ['Snoozed emails',`${snoozed} saved`]
-].map(([name,meta])=>`<div class="channel-item"><div><div class="channel-name">${name}</div><div class="channel-meta">${meta}</div></div></div>`).join('');
-</script>
+<p>Redirecting to the unified dashboard. <a href="index.html#dashboard">Open it here</a>.</p>
 </body>
 </html>

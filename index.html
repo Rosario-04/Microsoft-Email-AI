@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.1.0">
+<meta name="app-version" content="1.2.0">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -121,6 +121,70 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .dash-action{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,transparent),rgba(255,255,255,.34));border:.5px solid color-mix(in srgb,var(--accent) 24%,transparent);color:var(--label)}
 .dash-action strong{font-weight:700}
 .dash-action small{display:block;font-size:11px;color:var(--label-3);margin-top:2px}
+.ai-action.active{background:var(--accent);color:#fff}
+.ai-action.active small{color:rgba(255,255,255,.82)}
+
+body.dashboard-mode .search-wrap,
+body.dashboard-mode .sort-pills{display:none}
+body.dashboard-mode .list-body{padding:14px}
+body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
+
+.dash-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.dash-mini-card{padding:14px;border-radius:18px;background:var(--sys-grouped);border:.5px solid var(--sys-sep-op);box-shadow:var(--sh1)}
+.dash-mini-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:7px}
+.dash-mini-value{font-size:22px;font-weight:700;letter-spacing:-.04em}
+.dash-mini-sub{font-size:12px;color:var(--label-3);margin-top:4px;line-height:1.45}
+.dash-list-block{background:var(--sys-grouped);border:.5px solid var(--sys-sep-op);border-radius:20px;padding:14px;margin-bottom:12px}
+.dash-list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.dash-list-title{font-size:13px;font-weight:700;letter-spacing:.02em}
+.dash-list-link{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:var(--font-sf)}
+.dash-list-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:.5px solid var(--sys-sep-op)}
+.dash-list-row:last-child{border-bottom:none;padding-bottom:0}
+.dash-list-row:first-child{padding-top:0}
+.dash-row-main{min-width:0}
+.dash-row-label{font-size:13px;font-weight:600}
+.dash-row-sub{font-size:12px;color:var(--label-3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-row-val{font-size:12px;font-weight:700;color:var(--label-2);white-space:nowrap}
+
+.dash-shell{display:flex;flex-direction:column;gap:18px;padding:18px 18px 26px}
+.dash-hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,transparent),rgba(255,255,255,.46));border:.5px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:28px;padding:24px;box-shadow:var(--sh2)}
+.dash-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--label-3);margin-bottom:10px}
+.dash-title{font-size:32px;font-weight:760;letter-spacing:-.05em;line-height:1.02;margin-bottom:10px}
+.dash-copy{font-size:15px;line-height:1.65;color:var(--label-2);max-width:66ch}
+.dash-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.dash-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:999px;border:none;cursor:pointer;font-family:var(--font-sf);font-size:13px;font-weight:600}
+.dash-btn.primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 24%,transparent)}
+.dash-btn.secondary{background:var(--sys-grouped);color:var(--label);border:.5px solid var(--sys-sep-op)}
+.dash-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.dash-card{background:var(--sys-grouped);border:.5px solid var(--sys-sep-op);border-radius:24px;padding:18px;box-shadow:var(--sh1)}
+.dash-card h3{font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+.dash-card-sub{font-size:12px;color:var(--label-3);margin-bottom:14px;line-height:1.5}
+.dash-stat-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:8px}
+.dash-stat-value{font-size:28px;font-weight:760;letter-spacing:-.05em}
+.dash-stat-foot{font-size:12px;color:var(--label-3);margin-top:6px}
+.dash-split{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.dash-score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dash-score{padding:14px;border-radius:18px;background:var(--sys-grouped-2);border:.5px solid var(--sys-sep-op)}
+.dash-score-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.dash-score-name{font-size:13px;font-weight:700}
+.dash-score-edit{font-size:11px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:var(--font-sf)}
+.dash-score-value{font-size:24px;font-weight:760;letter-spacing:-.04em}
+.dash-score-note{font-size:12px;color:var(--label-3);margin-top:4px}
+.dash-stage-list{display:grid;gap:10px}
+.dash-stage{padding:14px;border-radius:18px;background:var(--sys-grouped-2);border:.5px solid var(--sys-sep-op)}
+.dash-stage-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.dash-stage-name{font-size:14px;font-weight:700}
+.dash-stage-meta{font-size:12px;color:var(--label-3)}
+.dash-stage-track{height:10px;border-radius:999px;background:rgba(120,132,154,.14);overflow:hidden}
+.dash-stage-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 52%,#9ad4ff))}
+.dash-notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dash-note{padding:16px;border-radius:20px;background:var(--sys-grouped);border:.5px solid var(--sys-sep-op)}
+.dash-note-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.dash-note-title{font-size:14px;font-weight:700}
+.dash-note-ta{width:100%;min-height:120px;border:none;outline:none;resize:vertical;background:var(--sys-grouped-2);border-radius:16px;padding:12px;font-family:var(--font-sf);font-size:14px;color:var(--label);line-height:1.55}
+.dash-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.dash-chip{padding:7px 11px;border-radius:999px;background:var(--sys-grouped-2);border:.5px solid var(--sys-sep-op);font-size:12px;color:var(--label-2)}
+
 
 /* ── LIST PANE ── */
 .list-pane{grid-area:list;background:var(--pane-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-right:.5px solid var(--sys-sep-op);display:flex;flex-direction:column;overflow:hidden}
@@ -527,33 +591,33 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 
   <div class="sec-lbl">Mailboxes</div>
   <ul class="nav-list">
-    <li><button class="nav-btn active" onclick="setFilter('all',this)">
+    <li><button class="nav-btn active" data-filter="all" onclick="setFilter('all',this)">
       <div class="n-icon ic-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
       <span class="n-label">All Mail</span>
       <span class="nav-badge gray" id="cntAll">0</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('urgent',this)">
+    <li><button class="nav-btn" data-filter="urgent" onclick="setFilter('urgent',this)">
       <div class="n-icon ic-red"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div>
       <span class="n-label">Urgent</span>
       <span class="nav-badge" id="cntUrgent" style="display:none">0</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('client',this)">
+    <li><button class="nav-btn" data-filter="client" onclick="setFilter('client',this)">
       <div class="n-icon ic-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
       <span class="n-label">Client</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('internal',this)">
+    <li><button class="nav-btn" data-filter="internal" onclick="setFilter('internal',this)">
       <div class="n-icon ic-indigo"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div>
       <span class="n-label">Internal</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('finance',this)">
+    <li><button class="nav-btn" data-filter="finance" onclick="setFilter('finance',this)">
       <div class="n-icon ic-orange"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
       <span class="n-label">Finance</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('hr',this)">
+    <li><button class="nav-btn" data-filter="hr" onclick="setFilter('hr',this)">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
       <span class="n-label">HR</span>
     </button></li>
-    <li><button class="nav-btn" onclick="setFilter('snoozed',this)">
+    <li><button class="nav-btn" data-filter="snoozed" onclick="setFilter('snoozed',this)">
       <div class="n-icon ic-orange"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
       <span class="n-label">Snoozed</span>
       <span class="nav-badge gray" id="cntSnoozed" style="display:none">0</span>
@@ -582,7 +646,7 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 
   <div class="nav-divider"></div>
   <div class="sec-lbl">AI</div>
-  <button class="ai-action dash-action" onclick="openDashboard()">
+  <button class="ai-action dash-action" id="dashboardBtn" onclick="openDashboard()">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
     <span><strong>Dashboard</strong><small>Open your saved overview</small></span>
   </button>
@@ -609,7 +673,7 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.1.0</span>
+    <span id="versionLabel">v1.2.0</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -794,11 +858,27 @@ const defaultTemplates=[
   {id:2,name:'Schedule a call',body:'Hi {name},\n\nHappy to connect! Feel free to grab time on my calendar: [calendar link]\n\nLooking forward to speaking,\n{sig}'},
   {id:3,name:'Confirming receipt',body:'Hi {name},\n\nConfirmed — I\'ve received everything and am reviewing now. I\'ll be in touch soon.\n\nBest,\n{sig}'},
 ];
+const defaultDashboardData={
+  marketing:{leads:182,bookedCalls:27,convRate:12.4,roas:4.1,spend:6200},
+  business:{revenue:128400,pipeline:342000,activeClients:26,closeRate:31.5,retention:92},
+  pipelineStages:[
+    {name:'New Leads',count:48,value:86000},
+    {name:'Qualified',count:19,value:124000},
+    {name:'Proposal Sent',count:11,value:93000},
+    {name:'Closing',count:6,value:39000}
+  ],
+  notes:{
+    marketing:'Track top campaigns, landing page conversion lifts, and cost per booked call.',
+    business:'Review overdue proposals, retention risk, cash movement, and client response speed.'
+  }
+};
 let apiKey='',emails=[],selectedId=null,curFilter='all',curSort='newest',searchQ='';
 let persona={...defaultPersona};
 let accentColor='#007AFF', logoDataUrl='', logoMode='letter';
 let templates=defaultTemplates.map(t=>({...t}));
 let syncSettings={...defaultSyncSettings};
+let dashboardData=clone(defaultDashboardData);
+let currentView='mail';
 const AVC=['#007AFF','#5856D6','#FF2D55','#FF9500','#34C759','#5AC8FA','#AF52DE','#FF3B30'];
 function avc(n){return AVC[n.charCodeAt(0)%AVC.length]}
 function clone(v){return JSON.parse(JSON.stringify(v));}
@@ -837,6 +917,7 @@ function saveSettings(){
     apiKey,
     persona,
     templates,
+    dashboardData,
     theme:currentTheme(),
     syncSettings,
     savedAt:new Date().toISOString()
@@ -897,6 +978,11 @@ function restoreSavedState(){
   persona={...defaultPersona,...(saved.persona||{})};
   templates=Array.isArray(saved.templates)&&saved.templates.length?saved.templates:clone(defaultTemplates);
   syncSettings={...defaultSyncSettings,...(saved.syncSettings||{})};
+  dashboardData={...clone(defaultDashboardData),...(saved.dashboardData||{})};
+  dashboardData.marketing={...defaultDashboardData.marketing,...((saved.dashboardData||{}).marketing||{})};
+  dashboardData.business={...defaultDashboardData.business,...((saved.dashboardData||{}).business||{})};
+  dashboardData.notes={...defaultDashboardData.notes,...((saved.dashboardData||{}).notes||{})};
+  dashboardData.pipelineStages=Array.isArray((saved.dashboardData||{}).pipelineStages)&&saved.dashboardData.pipelineStages.length?(saved.dashboardData||{}).pipelineStages:clone(defaultDashboardData.pipelineStages);
   syncSettings.msClientId=syncSettings.msClientId||localStorage.getItem('ms_client_id')||'';
   syncSettings.msTenantId=syncSettings.msTenantId||localStorage.getItem('ms_tenant_id')||'common';
   msClientId=syncSettings.msClientId;
@@ -912,7 +998,150 @@ function restoreSavedState(){
   counts();
   if(emails.length) render();
 }
-function openDashboard(){window.location.href='dashboard.html';}
+function renderDetailEmpty(message='Select a message'){
+  document.getElementById('detPane').innerHTML=`<div class="det-empty"><div class="det-empty-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div><div style="font-size:15px;color:var(--label-3)">${message}</div></div>`;
+}
+function money(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(Number(v)||0);}
+function pct(v){const n=Number(v)||0; return `${Number.isInteger(n)?n:n.toFixed(1)}%`;}
+function miniMetric(label,value,sub){return `<div class="dash-mini-card"><div class="dash-mini-label">${label}</div><div class="dash-mini-value">${value}</div><div class="dash-mini-sub">${sub}</div></div>`;}
+function renderDashboardList(){
+  const urgent=emails.filter(e=>e.urgent&&!e.snoozed).length;
+  const unread=emails.filter(e=>e.unread).length;
+  const recent=emails.slice(0,4);
+  document.getElementById('listTitle').textContent='Pipeline Dashboard';
+  document.getElementById('listBody').innerHTML=`
+    <div class="dash-mini-grid">
+      ${miniMetric('Revenue',money(dashboardData.business.revenue),'Current business snapshot')}
+      ${miniMetric('Pipeline',money(dashboardData.business.pipeline),'Open opportunities')}
+      ${miniMetric('Leads',dashboardData.marketing.leads,'Marketing inflow')}
+      ${miniMetric('Urgent',urgent,'Inbox needs attention')}
+    </div>
+    <div class="dash-list-block">
+      <div class="dash-list-head"><div class="dash-list-title">Inbox Pulse</div><button class="dash-list-link" onclick="setFilter('urgent',document.querySelector('[data-filter=urgent]'))">Open urgent</button></div>
+      <div class="dash-list-row"><div class="dash-row-main"><div class="dash-row-label">Unread messages</div><div class="dash-row-sub">Everything still waiting on a response</div></div><div class="dash-row-val">${unread}</div></div>
+      <div class="dash-list-row"><div class="dash-row-main"><div class="dash-row-label">Templates saved</div><div class="dash-row-sub">Reusable replies across the pipeline</div></div><div class="dash-row-val">${templates.length}</div></div>
+      <div class="dash-list-row"><div class="dash-row-main"><div class="dash-row-label">Active clients</div><div class="dash-row-sub">Business health snapshot</div></div><div class="dash-row-val">${dashboardData.business.activeClients}</div></div>
+    </div>
+    <div class="dash-list-block">
+      <div class="dash-list-head"><div class="dash-list-title">Recent Messages</div><button class="dash-list-link" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open inbox</button></div>
+      ${recent.length?recent.map(e=>`<div class="dash-list-row"><div class="dash-row-main"><div class="dash-row-label">${e.sender}</div><div class="dash-row-sub">${e.subject}</div></div><div class="dash-row-val">${e.time}</div></div>`).join(''):`<div class="dash-row-sub">Load Outlook or sample data to populate this area.</div>`}
+    </div>`;
+}
+function editDashboardMetric(section,key,label){
+  const current=dashboardData[section][key];
+  const next=prompt(`Update ${label}`, current);
+  if(next===null) return;
+  const parsed=Number(String(next).replace(/[$,%\s,]/g,''));
+  if(Number.isNaN(parsed)){toast('Please enter a number');return;}
+  dashboardData[section][key]=parsed;
+  saveSettings();
+  render();
+}
+function editPipelineStage(index){
+  const stage=dashboardData.pipelineStages[index];
+  if(!stage) return;
+  const count=prompt(`Update count for ${stage.name}`, stage.count);
+  if(count===null) return;
+  const value=prompt(`Update value for ${stage.name}`, stage.value);
+  if(value===null) return;
+  const countNum=Number(String(count).replace(/[^\d.-]/g,''));
+  const valueNum=Number(String(value).replace(/[$,\s]/g,''));
+  if(Number.isNaN(countNum)||Number.isNaN(valueNum)){toast('Please enter valid numbers');return;}
+  stage.count=countNum;
+  stage.value=valueNum;
+  saveSettings();
+  render();
+}
+function updateDashboardNote(key,value){
+  dashboardData.notes[key]=value;
+  saveSettings();
+}
+function renderDashboardDetail(){
+  const urgent=emails.filter(e=>e.urgent&&!e.snoozed).length;
+  const unread=emails.filter(e=>e.unread).length;
+  const maxStage=Math.max(...dashboardData.pipelineStages.map(s=>s.value),1);
+  document.getElementById('detPane').innerHTML=`
+    <div class="det-scroll">
+      <div class="dash-shell">
+        <section class="dash-hero">
+          <div class="dash-kicker">Unified Pipeline</div>
+          <div class="dash-title">${document.getElementById('appName').textContent} Command Center</div>
+          <div class="dash-copy">One place for inbox response work, marketing performance, business health, and pipeline movement. This view stays inside the main app so your operational stats and communications live together.</div>
+          <div class="dash-actions">
+            <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
+            <button class="dash-btn secondary" onclick="openSheet('brand')">Update Brand</button>
+            <button class="dash-btn secondary" onclick="openSheet('api')">Settings</button>
+          </div>
+          <div class="dash-chip-row">
+            <span class="dash-chip">${urgent} urgent messages</span>
+            <span class="dash-chip">${unread} unread messages</span>
+            <span class="dash-chip">${dashboardData.business.activeClients} active clients</span>
+            <span class="dash-chip">${templates.length} saved templates</span>
+          </div>
+        </section>
+        <section class="dash-grid">
+          <div class="dash-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.business.revenue)}</div><div class="dash-stat-foot">Editable business total</div></div>
+          <div class="dash-card"><div class="dash-stat-label">Pipeline</div><div class="dash-stat-value">${money(dashboardData.business.pipeline)}</div><div class="dash-stat-foot">Open opportunity value</div></div>
+          <div class="dash-card"><div class="dash-stat-label">Leads</div><div class="dash-stat-value">${dashboardData.marketing.leads}</div><div class="dash-stat-foot">Marketing-generated leads</div></div>
+          <div class="dash-card"><div class="dash-stat-label">ROAS</div><div class="dash-stat-value">${dashboardData.marketing.roas}x</div><div class="dash-stat-foot">Return on ad spend</div></div>
+        </section>
+        <section class="dash-split">
+          <div class="dash-card">
+            <h3>Marketing Scorecard</h3>
+            <div class="dash-card-sub">Saved stats you can update as campaigns evolve.</div>
+            <div class="dash-score-grid">
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Leads</div><button class="dash-score-edit" onclick="editDashboardMetric('marketing','leads','Marketing leads')">Edit</button></div><div class="dash-score-value">${dashboardData.marketing.leads}</div><div class="dash-score-note">Top-of-funnel volume</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Booked Calls</div><button class="dash-score-edit" onclick="editDashboardMetric('marketing','bookedCalls','Booked calls')">Edit</button></div><div class="dash-score-value">${dashboardData.marketing.bookedCalls}</div><div class="dash-score-note">Meetings from active campaigns</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Conversion Rate</div><button class="dash-score-edit" onclick="editDashboardMetric('marketing','convRate','Conversion rate')">Edit</button></div><div class="dash-score-value">${pct(dashboardData.marketing.convRate)}</div><div class="dash-score-note">Lead to qualified conversion</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Ad Spend</div><button class="dash-score-edit" onclick="editDashboardMetric('marketing','spend','Ad spend')">Edit</button></div><div class="dash-score-value">${money(dashboardData.marketing.spend)}</div><div class="dash-score-note">Current marketing spend</div></div>
+            </div>
+          </div>
+          <div class="dash-card">
+            <h3>Business Scorecard</h3>
+            <div class="dash-card-sub">Core commercial health for the company.</div>
+            <div class="dash-score-grid">
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Revenue</div><button class="dash-score-edit" onclick="editDashboardMetric('business','revenue','Revenue')">Edit</button></div><div class="dash-score-value">${money(dashboardData.business.revenue)}</div><div class="dash-score-note">Tracked business revenue</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Active Clients</div><button class="dash-score-edit" onclick="editDashboardMetric('business','activeClients','Active clients')">Edit</button></div><div class="dash-score-value">${dashboardData.business.activeClients}</div><div class="dash-score-note">Current serviced accounts</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Close Rate</div><button class="dash-score-edit" onclick="editDashboardMetric('business','closeRate','Close rate')">Edit</button></div><div class="dash-score-value">${pct(dashboardData.business.closeRate)}</div><div class="dash-score-note">Closed won from proposals</div></div>
+              <div class="dash-score"><div class="dash-score-top"><div class="dash-score-name">Retention</div><button class="dash-score-edit" onclick="editDashboardMetric('business','retention','Retention')">Edit</button></div><div class="dash-score-value">${pct(dashboardData.business.retention)}</div><div class="dash-score-note">Customer retention health</div></div>
+            </div>
+          </div>
+        </section>
+        <section class="dash-split">
+          <div class="dash-card">
+            <h3>Pipeline Stages</h3>
+            <div class="dash-card-sub">Editable stage counts and values to track business flow.</div>
+            <div class="dash-stage-list">
+              ${dashboardData.pipelineStages.map((stage,index)=>`<div class="dash-stage"><div class="dash-stage-top"><div><div class="dash-stage-name">${stage.name}</div><div class="dash-stage-meta">${stage.count} deals · ${money(stage.value)}</div></div><button class="dash-score-edit" onclick="editPipelineStage(${index})">Edit</button></div><div class="dash-stage-track"><div class="dash-stage-fill" style="width:${Math.max(10,Math.round(stage.value/maxStage*100))}%"></div></div></div>`).join('')}
+            </div>
+          </div>
+          <div class="dash-card">
+            <h3>Operating Notes</h3>
+            <div class="dash-card-sub">Saved planning notes for your marketing and business rhythm.</div>
+            <div class="dash-notes">
+              <div class="dash-note"><div class="dash-note-head"><div class="dash-note-title">Marketing Focus</div></div><textarea class="dash-note-ta" oninput="updateDashboardNote('marketing',this.value)">${dashboardData.notes.marketing}</textarea></div>
+              <div class="dash-note"><div class="dash-note-head"><div class="dash-note-title">Business Focus</div></div><textarea class="dash-note-ta" oninput="updateDashboardNote('business',this.value)">${dashboardData.notes.business}</textarea></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>`;
+}
+function leaveDashboard(){
+  if(currentView!=='dashboard') return;
+  currentView='mail';
+  document.body.classList.remove('dashboard-mode');
+  document.getElementById('dashboardBtn').classList.remove('active');
+  if(location.hash==='#dashboard') history.replaceState({},'', window.location.pathname);
+}
+function openDashboard(){
+  currentView='dashboard';
+  document.body.classList.add('dashboard-mode');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('dashboardBtn').classList.add('active');
+  if(location.hash!=='#dashboard') history.replaceState({},'', `${window.location.pathname}#dashboard`);
+  render();
+}
 
 /* ── SAMPLE DATA ── */
 const RAW=[
@@ -951,12 +1180,16 @@ function counts(){
 
 /* ── FILTERS ── */
 function setFilter(f,btn){
+  leaveDashboard();
   curFilter=f;
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const labels={all:'All Mail',urgent:'Urgent',client:'Client',internal:'Internal',finance:'Finance',hr:'HR',snoozed:'Snoozed'};
   document.getElementById('listTitle').textContent=labels[f]||'Mail';
   render();
+  const selected=emails.find(x=>x.id===selectedId);
+  if(selected && filtered().some(x=>x.id===selectedId)) renderDetail(selected);
+  else {selectedId=null; renderDetailEmpty();}
 }
 function setSort(s,btn){
   curSort=s; document.querySelectorAll('.spill').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render();
@@ -990,6 +1223,11 @@ function catTag(cat){
 }
 
 function render(){
+  if(currentView==='dashboard'){
+    renderDashboardList();
+    renderDashboardDetail();
+    return;
+  }
   const list=filtered(); const body=document.getElementById('listBody');
   if(!list.length){body.innerHTML=`<div class="list-empty"><div style="font-size:36px;opacity:.2;margin-bottom:8px">🔍</div>No messages here.</div>`;return;}
   body.innerHTML=list.map((e,i)=>{
@@ -1746,7 +1984,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
@@ -1754,6 +1992,10 @@ const VERSION_URL = (() => {
 
 document.getElementById('versionLabel').textContent = 'v' + APP_VERSION;
 restoreSavedState();
+if(location.hash==='#dashboard') openDashboard();
+window.addEventListener('hashchange',()=>{
+  if(location.hash==='#dashboard') openDashboard();
+});
 
 async function checkForUpdates(silent=false){
   const btn = document.getElementById('checkBtn');
