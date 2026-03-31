@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.3.2">
+<meta name="app-version" content="1.4.0">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -72,7 +72,9 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .logo-edit-overlay{position:absolute;inset:0;border-radius:10px;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
 .logo-wrap:hover .logo-edit-overlay{display:flex}
 
-.app-name{font-size:17px;font-weight:700;letter-spacing:-.4px;color:var(--label);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-meta{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.app-name{font-size:17px;font-weight:700;letter-spacing:-.4px;color:var(--label);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-subtitle{font-size:11px;color:var(--label-3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .theme-btn{width:28px;height:28px;border-radius:50%;background:var(--gray5);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--label-2);flex-shrink:0;transition:background .15s,transform .2s var(--spring)}
 .theme-btn:hover{background:var(--gray4);transform:scale(1.1)}
 .theme-btn svg{width:14px;height:14px}
@@ -83,6 +85,26 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .api-dot.err{background:var(--red)}
 .api-input{flex:1;border:none;background:transparent;font-family:var(--font-sf);font-size:12px;color:var(--label-2);outline:none;min-width:0}
 .api-input::placeholder{color:var(--label-3)}
+
+.studio-card{margin:8px 14px 14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,color-mix(in srgb,var(--pane-strong) 94%,transparent),color-mix(in srgb,var(--sys-grouped) 96%,transparent));border:.5px solid var(--sys-sep-op);box-shadow:var(--sh1);display:grid;gap:12px}
+.studio-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.studio-title{font-size:13px;font-weight:700;letter-spacing:.01em}
+.studio-copy{font-size:11px;line-height:1.5;color:var(--label-3);margin-top:4px}
+.studio-open{padding:7px 12px;border:none;border-radius:999px;background:var(--sys-grouped-2);color:var(--label);font-family:var(--font-sf);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
+.studio-grid{display:grid;gap:10px}
+.studio-field{display:grid;gap:6px}
+.studio-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3)}
+.studio-input{width:100%;border:none;outline:none;border-radius:14px;background:var(--sys-grouped-2);padding:10px 12px;font-family:var(--font-sf);font-size:13px;color:var(--label)}
+.studio-color-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.studio-color-field{display:grid;gap:6px}
+.studio-color-wrap{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;background:var(--sys-grouped-2)}
+.studio-color{width:34px;height:28px;border:none;background:none;padding:0;cursor:pointer}
+.studio-color::-webkit-color-swatch-wrapper{padding:0}
+.studio-color::-webkit-color-swatch{border:none;border-radius:10px}
+.studio-actions{display:flex;gap:8px;flex-wrap:wrap}
+.studio-btn{padding:9px 12px;border:none;border-radius:999px;background:var(--sys-grouped-2);color:var(--label);font-family:var(--font-sf);font-size:12px;font-weight:600;cursor:pointer}
+.studio-btn.primary{background:var(--accent);color:#fff}
+.studio-note{font-size:11px;color:var(--label-3);line-height:1.45}
 
 .sec-lbl{padding:16px 18px 6px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--label-3)}
 
@@ -130,7 +152,7 @@ body.dashboard-mode .list-body{padding:14px}
 body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
 .dash-shell{display:flex;flex-direction:column;gap:18px;padding:20px 20px 28px}
 .dash-rail{display:grid;gap:12px}
-.dash-rail-card{background:var(--sys-grouped);border:.5px solid var(--sys-sep-op);border-radius:24px;padding:16px;box-shadow:var(--sh1)}
+.dash-rail-card{background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);border-radius:24px;padding:16px;box-shadow:0 10px 24px rgba(19,28,45,.08)}
 .dash-rail-card.hero{background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 12%,transparent),rgba(255,255,255,.44));border-color:color-mix(in srgb,var(--accent) 18%,transparent)}
 .dash-rail-kicker{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--label-3);margin-bottom:8px}
 .dash-rail-title{font-size:24px;font-weight:760;letter-spacing:-.05em;line-height:1.04}
@@ -159,16 +181,17 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 .dash-row-val,.dash-quick-value{font-size:12px;font-weight:700;color:var(--label-2);white-space:nowrap}
 .dash-empty-note{font-size:12px;color:var(--label-3);line-height:1.6}
 
-.dash-hero{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 16%,transparent),rgba(255,255,255,.5));border:.5px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:30px;padding:26px;box-shadow:var(--sh2)}
+.dash-hero{background:linear-gradient(140deg,color-mix(in srgb,var(--accent) 14%,transparent),rgba(255,255,255,.72));border:.5px solid color-mix(in srgb,var(--accent) 18%,transparent);border-radius:30px;padding:26px;box-shadow:0 16px 38px rgba(17,26,42,.1)}
 .dash-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--label-3);margin-bottom:10px}
 .dash-title{font-size:34px;font-weight:780;letter-spacing:-.05em;line-height:1.01;margin-bottom:10px;max-width:12ch}
+.dash-tagline{font-size:15px;font-weight:600;color:var(--label);margin-bottom:10px}
 .dash-copy{font-size:15px;line-height:1.68;color:var(--label-2);max-width:68ch}
 .dash-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
 .dash-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:999px;border:none;cursor:pointer;font-family:var(--font-sf);font-size:13px;font-weight:600}
 .dash-btn.primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 24%,transparent)}
 .dash-btn.secondary{background:var(--sys-grouped);color:var(--label);border:.5px solid var(--sys-sep-op)}
 .dash-hero-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
-.dash-stat-card{background:rgba(255,255,255,.62);border:.5px solid rgba(255,255,255,.42);border-radius:22px;padding:18px}
+.dash-stat-card{background:rgba(255,255,255,.84);border:.5px solid rgba(120,132,154,.14);border-radius:22px;padding:18px}
 [data-theme="dark"] .dash-stat-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
 .dash-stat-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:8px}
 .dash-stat-value{font-size:30px;font-weight:780;letter-spacing:-.05em}
@@ -181,21 +204,21 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 .dash-tab-dot{width:9px;height:9px;border-radius:999px;background:var(--dash-tone)}
 .dash-panel{display:grid;gap:14px}
 .dash-panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.dash-card{background:var(--sys-grouped);border:.5px solid var(--sys-sep-op);border-radius:24px;padding:18px;box-shadow:var(--sh1)}
+.dash-card{background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);border-radius:24px;padding:18px;box-shadow:0 10px 24px rgba(19,28,45,.08)}
 .dash-card h3{font-size:18px;font-weight:760;letter-spacing:-.03em}
 .dash-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
 .dash-card-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:6px}
-.dash-card-copy{font-size:12px;color:var(--label-3);line-height:1.55;max-width:34ch}
+.dash-card-copy{font-size:12px;color:var(--label-2);line-height:1.55;max-width:34ch}
 .dash-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.dash-edit-card{padding:14px;border-radius:18px;background:var(--sys-grouped-2);border:.5px solid var(--sys-sep-op)}
+.dash-edit-card{padding:14px;border-radius:18px;background:color-mix(in srgb,var(--sys-grouped-2) 92%,#ffffff);border:.5px solid rgba(120,132,154,.14)}
 .dash-edit-label{font-size:13px;font-weight:700}
-.dash-edit-help{font-size:12px;color:var(--label-3);line-height:1.45;margin-top:4px;min-height:34px}
-.dash-input-shell{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:15px;background:rgba(255,255,255,.72);border:.5px solid rgba(120,132,154,.18);margin-top:10px}
+.dash-edit-help{font-size:12px;color:var(--label-2);line-height:1.5;margin-top:4px;min-height:34px}
+.dash-input-shell{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:15px;background:rgba(255,255,255,.92);border:.5px solid rgba(120,132,154,.18);margin-top:10px}
 [data-theme="dark"] .dash-input-shell{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}
 .dash-input-addon{font-size:13px;font-weight:700;color:var(--label-3);flex-shrink:0}
 .dash-input,.dash-stage-input{flex:1;border:none;background:transparent;outline:none;font-family:var(--font-sf);font-size:24px;font-weight:780;letter-spacing:-.04em;color:var(--label);min-width:0}
 .dash-stage-input{font-size:18px}
-.dash-input-meta{font-size:11px;color:var(--label-3);line-height:1.45;margin-top:8px}
+.dash-input-meta{font-size:11px;color:var(--label-2);line-height:1.45;margin-top:8px}
 .dash-insight-list{display:grid;gap:10px}
 .dash-insight{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px;border-radius:18px;background:var(--sys-grouped-2);border:.5px solid var(--sys-sep-op)}
 .dash-insight-main{min-width:0}
@@ -539,6 +562,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 @media (max-width:1180px){
   :root{--sb-w:264px;--list-w:320px}
   .dash-hero-metrics,.dash-panel-grid,.dash-dual-note{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio-color-grid{grid-template-columns:1fr}
 }
 
 @media (max-width:960px){
@@ -556,7 +580,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   .det{min-height:46dvh}
   .sb-head{padding:16px 14px 10px}
-  .api-bar,.signed-in-card{margin-left:12px;margin-right:12px}
+  .api-bar,.signed-in-card,.studio-card{margin-left:12px;margin-right:12px}
   .nav-list{padding:0 12px}
   .sec-lbl,.sb-version{padding-left:14px;padding-right:14px}
   .det-head{padding:16px 18px 12px}
@@ -587,11 +611,14 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   .dash-shell{padding:16px 14px 20px}
   .dash-hero{padding:20px}
   .dash-title{font-size:28px}
+  .dash-tagline{font-size:14px}
   .dash-rail-grid,.dash-hero-metrics,.dash-edit-grid,.dash-panel-grid,.dash-dual-note{grid-template-columns:1fr}
   .dash-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
   .dash-tabs::-webkit-scrollbar{display:none}
   .dash-insight,.dash-quick-item,.dash-list-row{flex-direction:column;align-items:flex-start}
   .dash-insight-meta{width:100%;justify-content:space-between}
+  .studio-actions{flex-direction:column}
+  .studio-btn,.studio-open{width:100%;justify-content:center;text-align:center}
 }
 
 @media (max-width:480px){
@@ -614,7 +641,10 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
       <div class="logo-edit-overlay">Edit</div>
     </div>
     <input type="file" id="lfi" accept="image/*" onchange="handleLogoFile(this)" style="display:none">
-    <span class="app-name" id="appName">Mail AI</span>
+    <div class="app-meta">
+      <span class="app-name" id="appName">Mail AI</span>
+      <span class="app-subtitle" id="appSubtitle">Unified pipeline workspace</span>
+    </div>
     <button class="theme-btn" onclick="toggleTheme()">
       <svg id="themeIco" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
     </button>
@@ -633,6 +663,48 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
       <div class="signed-in-email" id="signedInEmail">—</div>
     </div>
     <button class="signed-in-out" onclick="signOut()">Sign out</button>
+  </div>
+
+  <div class="studio-card">
+    <div class="studio-head">
+      <div>
+        <div class="studio-title">Workspace Settings</div>
+        <div class="studio-copy">Keep branding, title edits, and visual tuning in one sidebar widget.</div>
+      </div>
+      <button class="studio-open" onclick="openSheet('brand')">More</button>
+    </div>
+    <div class="studio-grid">
+      <label class="studio-field">
+        <span class="studio-label">Main Title</span>
+        <input class="studio-input" id="sidebarAppName" value="Mail AI" placeholder="Workspace title" oninput="updateSidebarBrand('name',this.value)">
+      </label>
+      <label class="studio-field">
+        <span class="studio-label">Subtitle</span>
+        <input class="studio-input" id="sidebarSubtitle" value="Unified pipeline workspace" placeholder="Short brand line" oninput="updateSidebarBrand('subtitle',this.value)">
+      </label>
+      <div class="studio-color-grid">
+        <label class="studio-color-field">
+          <span class="studio-label">Accent</span>
+          <div class="studio-color-wrap">
+            <input class="studio-color" type="color" id="sidebarAccentColor" value="#007AFF" oninput="setAccentColor(this.value)">
+            <input class="studio-input" id="sidebarAccentHex" value="#007AFF" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setAccentColor(this.value)">
+          </div>
+        </label>
+        <label class="studio-color-field">
+          <span class="studio-label">Background</span>
+          <div class="studio-color-wrap">
+            <input class="studio-color" type="color" id="sidebarBgColor" value="#F5F0E8" oninput="setBackgroundColor(this.value)">
+            <input class="studio-input" id="sidebarBgHex" value="#F5F0E8" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setBackgroundColor(this.value)">
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="studio-actions">
+      <button class="studio-btn primary" onclick="openDashboard()">Open Dashboard</button>
+      <button class="studio-btn" onclick="openSheet('api')">All Settings</button>
+      <button class="studio-btn" onclick="resetBrandTheme()">Reset Look</button>
+    </div>
+    <div class="studio-note">Auto-saves across refreshes so the app stays branded.</div>
   </div>
 
   <div class="sec-lbl">Command Center</div>
@@ -701,9 +773,6 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   <div class="sec-lbl">AI</div>
   <button class="ai-action" onclick="bulkSummarize()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg> Summarize all</button>
   <button class="ai-action" onclick="scanUrgency()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg> Re-analyze urgency</button>
-  <button class="ai-action" onclick="openSheet('persona')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> AI Persona</button>
-  <button class="ai-action" onclick="openSheet('templates')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/></svg> Templates</button>
-  <button class="ai-action" onclick="openSheet('brand')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77c-.28 0-.5.22-.5.5 0 .12.05.23.13.33.41.47.64 1.06.64 1.67A2.5 2.5 0 0 1 12 22zm0-18c-4.41 0-8 3.59-8 8s3.59 8 8 8c.28 0 .5-.22.5-.5a.54.54 0 0 0-.14-.35c-.41-.46-.63-1.05-.63-1.65a2.5 2.5 0 0 1 2.5-2.5H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7z"/></svg> Branding</button>
 
   <!-- update banner -->
   <div class="update-banner" id="updateBanner">
@@ -722,7 +791,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.3.2</span>
+    <span id="versionLabel">v1.4.0</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -734,7 +803,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 <div class="list-pane">
   <div class="list-head">
     <span class="list-title" id="listTitle">All Mail</span>
-    <button class="list-icon-btn" onclick="openSheet('api')" title="Settings">
+    <button class="list-icon-btn" onclick="openSheet('brand')" title="Workspace Settings">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
     </button>
   </div>
@@ -802,6 +871,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
       <div class="fg-lbl">Identity</div>
       <div class="fg">
         <div class="fg-row"><span class="fg-label">App Name</span><input class="fg-input" id="bName" value="Mail AI" oninput="livePreview()"></div>
+        <div class="fg-row"><span class="fg-label">Subtitle</span><input class="fg-input" id="bSubtitle" value="Unified pipeline workspace" oninput="livePreview()"></div>
         <div class="fg-row"><span class="fg-label">Logo Letter</span><input class="fg-input" id="bLetter" value="M" maxlength="2" oninput="updateLetterPreview()"></div>
       </div>
       <div class="fg-lbl">Accent Color</div>
@@ -819,6 +889,13 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
         </div>
         <div class="logo-url-row">
           <input class="logo-url-input" type="text" id="colorHex" value="#007AFF" placeholder="#007AFF" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) pickColor(this.value,null)">
+        </div>
+      </div>
+      <div class="fg-lbl">Background Color</div>
+      <div class="fg" style="padding-bottom:4px">
+        <div class="logo-url-row">
+          <input class="logo-url-input" type="color" id="bgColorPicker" value="#F5F0E8" oninput="setBackgroundColor(this.value)">
+          <input class="logo-url-input" type="text" id="bgColorHex" value="#F5F0E8" placeholder="#F5F0E8" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setBackgroundColor(this.value)">
         </div>
       </div>
       <button class="sheet-save-btn" onclick="saveBrand()">Save Branding</button>
@@ -981,6 +1058,8 @@ const dashboardFieldDefs={
 let apiKey='',emails=[],selectedId=null,curFilter='all',curSort='newest',searchQ='';
 let persona={...defaultPersona};
 let accentColor='#007AFF', logoDataUrl='', logoMode='letter';
+let appSubtitle='Unified pipeline workspace';
+let backgroundColor='#F5F0E8';
 let templates=defaultTemplates.map(t=>({...t}));
 let syncSettings={...defaultSyncSettings};
 let dashboardData=clone(defaultDashboardData);
@@ -999,6 +1078,36 @@ function readJSON(key,fallback){
   }
 }
 function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
+function normalizeHex(value,fallback){
+  const raw=String(value||'').trim();
+  return /^#[0-9A-Fa-f]{6}$/.test(raw)?raw.toUpperCase():fallback;
+}
+function hexToRgb(hex){
+  const safe=normalizeHex(hex,'#000000').slice(1);
+  return {
+    r:parseInt(safe.slice(0,2),16),
+    g:parseInt(safe.slice(2,4),16),
+    b:parseInt(safe.slice(4,6),16)
+  };
+}
+function rgba(hex,alpha){
+  const {r,g,b}=hexToRgb(hex);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function mixHex(a,b,ratio=.5){
+  const first=hexToRgb(a);
+  const second=hexToRgb(b);
+  const blend=(x,y)=>Math.round(x+(y-x)*ratio).toString(16).padStart(2,'0');
+  return `#${blend(first.r,second.r)}${blend(first.g,second.g)}${blend(first.b,second.b)}`.toUpperCase();
+}
+function applyBackgroundColor(color){
+  const safe=normalizeHex(color,backgroundColor);
+  backgroundColor=safe;
+  document.documentElement.style.setProperty('--page-base',safe);
+  document.documentElement.style.setProperty('--page-tint-1',rgba(mixHex(safe,'#FFB770',0.52), currentTheme()==='dark' ? .14 : .32));
+  document.documentElement.style.setProperty('--page-tint-2',rgba(mixHex(safe,accentColor,0.58), currentTheme()==='dark' ? .18 : .24));
+  document.documentElement.style.setProperty('--page-tint-3',currentTheme()==='dark' ? 'rgba(22,28,39,0.5)' : 'rgba(255,255,255,0.58)');
+}
 function safeStoreJSON(key,value,fallbackValue){
   try{
     localStorage.setItem(key,JSON.stringify(value));
@@ -1039,10 +1148,13 @@ function syncColorSelection(hex){
 function saveSettings(){
   const appName=(document.getElementById('bName')?.value||document.getElementById('appName')?.textContent||'Mail AI').trim()||'Mail AI';
   const logoLetter=(document.getElementById('bLetter')?.value||document.getElementById('logoLetter')?.textContent||'M').trim().slice(0,2)||'M';
+  const subtitle=(document.getElementById('bSubtitle')?.value||document.getElementById('appSubtitle')?.textContent||'Unified pipeline workspace').trim()||'Unified pipeline workspace';
   const payload={
     appName,
+    appSubtitle:subtitle,
     logoLetter,
     accentColor,
+    backgroundColor,
     logoDataUrl,
     logoMode,
     apiKey,
@@ -1065,22 +1177,29 @@ function saveEmailCache(){
 function refreshSettingsInputs(){
   document.getElementById('apiInput').value=apiKey;
   document.getElementById('sfKey').value=apiKey;
+  document.getElementById('bSubtitle').value=appSubtitle;
   document.getElementById('pName').value=persona.name;
   document.getElementById('pTone').value=persona.tone;
   document.getElementById('pSig').value=persona.sig;
   document.getElementById('pInstr').value=persona.instr;
   document.getElementById('msClientIdSetting').value=syncSettings.msClientId||'';
   document.getElementById('msTenantIdSetting').value=syncSettings.msTenantId||'common';
+  syncSidebarBrandInputs();
 }
 function applyBranding(){
   const appName=(document.getElementById('bName').value||'Mail AI').trim()||'Mail AI';
+  const subtitle=(document.getElementById('bSubtitle').value||'Unified pipeline workspace').trim()||'Unified pipeline workspace';
   const logoLetter=(document.getElementById('bLetter').value||'M').trim().slice(0,2)||'M';
+  appSubtitle=subtitle;
   document.getElementById('appName').textContent=appName;
+  document.getElementById('appSubtitle').textContent=subtitle;
   document.title=appName;
   document.getElementById('logoLetter').textContent=logoLetter;
   document.documentElement.style.setProperty('--accent',accentColor);
   document.getElementById('colorHex').value=accentColor;
   syncColorSelection(accentColor);
+  applyBackgroundColor(backgroundColor);
+  syncSidebarBrandInputs();
   if(!logoDataUrl){
     const li=document.getElementById('logoImg'), ll=document.getElementById('logoLetter');
     li.style.display='none';
@@ -1111,6 +1230,8 @@ function restoreSavedState(){
   const savedDashboard=saved.dashboardData||{};
   applyTheme(saved.theme||'light');
   accentColor=saved.accentColor||accentColor;
+  appSubtitle=saved.appSubtitle||appSubtitle;
+  backgroundColor=normalizeHex(saved.backgroundColor||backgroundColor,backgroundColor);
   logoDataUrl=saved.logoDataUrl||'';
   logoMode=saved.logoMode||'letter';
   apiKey=saved.apiKey||'';
@@ -1155,6 +1276,7 @@ function restoreSavedState(){
   msClientId=syncSettings.msClientId;
   msTenantId=syncSettings.msTenantId;
   document.getElementById('bName').value=saved.appName||'Mail AI';
+  document.getElementById('bSubtitle').value=appSubtitle;
   document.getElementById('bLetter').value=saved.logoLetter||'M';
   applyBranding();
   if(logoDataUrl) setLogo(logoDataUrl,{silent:true});
@@ -1195,7 +1317,7 @@ function renderDashboardList(){
       <div class="dash-rail-card hero">
         <div class="dash-rail-kicker">Executive Snapshot</div>
         <div class="dash-rail-title">${document.getElementById('appName').textContent}</div>
-        <div class="dash-rail-copy">One command center for inbox work, pipeline movement, marketing visibility, and operating follow-through.</div>
+        <div class="dash-rail-copy">${document.getElementById('appSubtitle').textContent}</div>
         <div class="dash-rail-grid">
           ${dashboardPulseCard('Revenue',money(dashboardData.finance.revenue),'Primary finance KPI')}
           ${dashboardPulseCard('Pipeline',money(dashboardData.sales.pipeline),'Open sales value')}
@@ -1291,11 +1413,12 @@ function renderDashboardDetail(){
         <section class="dash-hero">
           <div class="dash-kicker">Pipeline Operating System</div>
           <div class="dash-title">${document.getElementById('appName').textContent} Command Center</div>
-          <div class="dash-copy">This dashboard is now the home view for the app: a single workspace for marketing stats, sales pipeline, client health, finance visibility, operations, and the inbox work that supports all of it.</div>
+          <div class="dash-tagline">${document.getElementById('appSubtitle').textContent}</div>
+          <div class="dash-copy">This dashboard is the main workspace for marketing, sales pipeline, client health, finance visibility, operations, and the inbox work that supports all of it.</div>
           <div class="dash-hero-actions">
             <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
             <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
-            <button class="dash-btn secondary" onclick="openSheet('api')">Settings</button>
+            <button class="dash-btn secondary" onclick="openSheet('brand')">Workspace Settings</button>
           </div>
           <div class="dash-hero-metrics">
             <div class="dash-stat-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.finance.revenue)}</div><div class="dash-stat-foot">Primary business KPI</div></div>
@@ -2014,18 +2137,75 @@ function updateLetterPreview(){
   const lp=document.getElementById('logoPreviewLg');
   if(lp&&lp.tagName==='DIV') lp.textContent=l;
 }
-function livePreview(){document.getElementById('appName').textContent=document.getElementById('bName').value||'Mail AI';}
+function syncSidebarBrandInputs(){
+  const accent=normalizeHex(accentColor,'#007AFF');
+  const bg=normalizeHex(backgroundColor,'#F5F0E8');
+  const titleInput=document.getElementById('sidebarAppName');
+  const subtitleInput=document.getElementById('sidebarSubtitle');
+  const accentPicker=document.getElementById('sidebarAccentColor');
+  const accentHex=document.getElementById('sidebarAccentHex');
+  const bgPicker=document.getElementById('sidebarBgColor');
+  const bgHex=document.getElementById('sidebarBgHex');
+  const bgSheetPicker=document.getElementById('bgColorPicker');
+  const bgSheetHex=document.getElementById('bgColorHex');
+  if(titleInput) titleInput.value=document.getElementById('bName').value||'Mail AI';
+  if(subtitleInput) subtitleInput.value=appSubtitle;
+  if(accentPicker) accentPicker.value=accent;
+  if(accentHex) accentHex.value=accent;
+  if(bgPicker) bgPicker.value=bg;
+  if(bgHex) bgHex.value=bg;
+  if(bgSheetPicker) bgSheetPicker.value=bg;
+  if(bgSheetHex) bgSheetHex.value=bg;
+}
+function updateSidebarBrand(field,value){
+  if(field==='name'){
+    document.getElementById('bName').value=value;
+  }else if(field==='subtitle'){
+    document.getElementById('bSubtitle').value=value;
+  }
+  applyBranding();
+  saveSettings();
+  if(currentView==='dashboard') render();
+}
+function setAccentColor(value){
+  const safe=normalizeHex(value,accentColor);
+  pickColor(safe,null);
+}
+function setBackgroundColor(value){
+  backgroundColor=normalizeHex(value,backgroundColor);
+  applyBackgroundColor(backgroundColor);
+  syncSidebarBrandInputs();
+  saveSettings();
+  if(currentView==='dashboard') render();
+}
+function resetBrandTheme(){
+  backgroundColor='#F5F0E8';
+  accentColor='#007AFF';
+  pickColor(accentColor,null);
+  setBackgroundColor(backgroundColor);
+  toast('Brand look reset ✓');
+}
+function livePreview(){
+  document.getElementById('appName').textContent=document.getElementById('bName').value||'Mail AI';
+  document.getElementById('appSubtitle').textContent=document.getElementById('bSubtitle').value||'Unified pipeline workspace';
+  syncSidebarBrandInputs();
+}
 
 /* ── BRAND ── */
 function pickColor(hex,dotEl){
-  accentColor=hex;
-  document.documentElement.style.setProperty('--accent',hex);
-  document.getElementById('colorHex').value=hex;
-  syncColorSelection(hex);
+  const safe=normalizeHex(hex,accentColor);
+  accentColor=safe;
+  document.documentElement.style.setProperty('--accent',safe);
+  document.getElementById('colorHex').value=safe;
+  syncColorSelection(safe);
   if(dotEl) dotEl.classList.add('sel');
-  document.getElementById('logoLetter').style.background=hex;
+  document.getElementById('logoLetter').style.background=safe;
   const lp=document.getElementById('logoPreviewLg');
-  if(lp&&lp.tagName==='DIV') lp.style.background=hex;
+  if(lp&&lp.tagName==='DIV') lp.style.background=safe;
+  applyBackgroundColor(backgroundColor);
+  syncSidebarBrandInputs();
+  saveSettings();
+  if(currentView==='dashboard') render();
 }
 function saveBrand(){
   applyBranding();
@@ -2112,6 +2292,7 @@ function openSheet(which){
   document.getElementById(tab).classList.add('active');
   const idx={brand:0,api:1,persona:2,templates:3}[which]||0;
   document.querySelectorAll('.seg-btn')[idx]?.classList.add('active');
+  syncSidebarBrandInputs();
   if(which==='templates') renderTemplates();
 }
 function closeSheet(id){document.getElementById(id||'settingsSheet').classList.remove('open');}
@@ -2126,7 +2307,9 @@ function switchTab(name,btn){
 /* ── THEME ── */
 function toggleTheme(){
   applyTheme(currentTheme()==='dark'?'light':'dark');
+  applyBackgroundColor(backgroundColor);
   saveSettings();
+  if(currentView==='dashboard') render();
 }
 
 /* ── SEND REPLY ── */
@@ -2183,7 +2366,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.3.2';
+const APP_VERSION = '1.4.0';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

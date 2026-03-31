@@ -1,5 +1,5 @@
 {
-  "version": "1.3.2",
-  "changelog": "Fixed the dashboard layout bug caused by an unclosed sidebar tag, restoring the three-pane app layout and making the command center cards render correctly again.",
+  "version": "1.4.0",
+  "changelog": "Made the dashboard easier to read, added a single sidebar workspace settings widget for branding, title, subtitle, accent, and background edits, and kept those brand controls synced across the app.",
   "released": "2026-03-31"
 }
