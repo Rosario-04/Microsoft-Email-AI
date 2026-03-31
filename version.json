@@ -1,5 +1,5 @@
 {
-  "version": "1.4.0",
-  "changelog": "Made the dashboard easier to read, added a single sidebar workspace settings widget for branding, title, subtitle, accent, and background edits, and kept those brand controls synced across the app.",
+  "version": "1.4.1",
+  "changelog": "Restyled the app with the ar-command executive theme and sidebar language while keeping the Mail AI structure the same, and updated the default brand/reset values to match the new look.",
   "released": "2026-03-31"
 }
