@@ -1,5 +1,5 @@
 {
-  "version": "1.4.2",
-  "changelog": "Cleaned up the sidebar into a more modern icon-and-label layout, simplified the settings widget, and removed extra descriptive text so navigation is easier to scan.",
+  "version": "1.4.3",
+  "changelog": "Made the update popup easier to read in dark mode and added a dedicated workspace settings page for branding, access, assistant behavior, and system controls.",
   "released": "2026-03-31"
 }

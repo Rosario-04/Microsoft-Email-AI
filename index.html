@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.2">
+<meta name="app-version" content="1.4.3">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -163,6 +163,10 @@ body.dashboard-mode .search-wrap,
 body.dashboard-mode .sort-pills{display:none}
 body.dashboard-mode .list-body{padding:14px}
 body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
+body.settings-mode .search-wrap,
+body.settings-mode .sort-pills{display:none}
+body.settings-mode .list-body{padding:14px}
+body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
 .dash-shell{display:flex;flex-direction:column;gap:18px;padding:20px 20px 28px}
 .dash-rail{display:grid;gap:12px}
 .dash-rail-card{background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);border-radius:24px;padding:16px;box-shadow:0 10px 24px rgba(19,28,45,.08)}
@@ -255,6 +259,46 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 .dash-stage-track{height:10px;border-radius:999px;background:rgba(120,132,154,.14);overflow:hidden}
 .dash-stage-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 52%,#9ad4ff))}
 .dash-dual-note{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.workspace-list{display:grid;gap:12px;padding:4px 2px 16px}
+.workspace-mini-card{width:100%;border:none;text-align:left;padding:16px;border-radius:20px;background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);box-shadow:0 10px 24px rgba(19,28,45,.08);cursor:pointer;display:grid;gap:6px;font-family:var(--font-sf);color:var(--label)}
+.workspace-mini-card:hover{transform:translateY(-1px)}
+.workspace-mini-kicker{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--label-3)}
+.workspace-mini-title{font-size:17px;font-weight:760;letter-spacing:-.03em}
+.workspace-mini-copy{font-size:12px;line-height:1.55;color:var(--label-2)}
+.workspace-mini-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.workspace-detail{display:flex;flex-direction:column;gap:16px;padding:20px 20px 28px}
+.workspace-hero{padding:24px 24px 22px;border-radius:28px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 10%,transparent),rgba(255,255,255,.76));border:.5px solid color-mix(in srgb,var(--accent) 18%,transparent);box-shadow:0 16px 38px rgba(17,26,42,.1)}
+.workspace-hero-title{font-size:34px;font-weight:780;letter-spacing:-.05em;line-height:1.02;max-width:12ch}
+.workspace-hero-copy{font-size:14px;line-height:1.7;color:var(--label-2);max-width:70ch;margin-top:10px}
+.workspace-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.workspace-card{background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);border-radius:24px;padding:18px;box-shadow:0 10px 24px rgba(19,28,45,.08);display:grid;gap:14px}
+.workspace-card.full{grid-column:1/-1}
+.workspace-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.workspace-card-eyebrow{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:6px}
+.workspace-card h3{font-size:20px;font-weight:760;letter-spacing:-.03em}
+.workspace-card-copy{font-size:12px;line-height:1.55;color:var(--label-2);max-width:40ch}
+.workspace-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.workspace-field{display:grid;gap:6px}
+.workspace-field.span-2{grid-column:1/-1}
+.workspace-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3)}
+.workspace-input,.workspace-select,.workspace-textarea{width:100%;border:.5px solid color-mix(in srgb,var(--panel-border) 90%,transparent);outline:none;border-radius:14px;background:color-mix(in srgb,var(--panel-inner-bg) 74%,#ffffff);padding:11px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label)}
+.workspace-textarea{min-height:120px;resize:vertical;line-height:1.6}
+.workspace-color-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.workspace-color-wrap{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--panel-inner-bg) 70%,#ffffff);border:.5px solid color-mix(in srgb,var(--panel-border) 90%,transparent)}
+.workspace-color{width:36px;height:30px;border:none;background:none;padding:0;cursor:pointer}
+.workspace-color::-webkit-color-swatch-wrapper{padding:0}
+.workspace-color::-webkit-color-swatch{border:none;border-radius:10px}
+.workspace-action-row{display:flex;gap:10px;flex-wrap:wrap}
+.workspace-btn{padding:10px 14px;border-radius:999px;border:.5px solid color-mix(in srgb,var(--panel-border) 88%,transparent);background:color-mix(in srgb,var(--panel-inner-bg) 70%,#ffffff);color:var(--label);font-family:var(--font-sf);font-size:12px;font-weight:700;cursor:pointer}
+.workspace-btn.primary{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 84%,#c4953a),color-mix(in srgb,var(--accent) 55%,#7a5315));color:#fff;border-color:transparent;box-shadow:0 12px 24px color-mix(in srgb,var(--accent) 20%,transparent)}
+.workspace-note{font-size:12px;line-height:1.55;color:var(--label-3)}
+.workspace-toggle-list{display:grid;gap:10px}
+.workspace-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:18px;background:color-mix(in srgb,var(--panel-inner-bg) 74%,#ffffff);border:.5px solid color-mix(in srgb,var(--panel-border) 86%,transparent)}
+.workspace-toggle-copy{font-size:12px;color:var(--label-2);line-height:1.5;margin-top:3px}
+.workspace-template-list{display:grid;gap:10px}
+.workspace-template-item{padding:12px 14px;border-radius:18px;background:color-mix(in srgb,var(--panel-inner-bg) 74%,#ffffff);border:.5px solid color-mix(in srgb,var(--panel-border) 86%,transparent)}
+.workspace-template-name{font-size:13px;font-weight:700}
+.workspace-template-copy{font-size:12px;color:var(--label-2);line-height:1.5;margin-top:4px}
 
 
 /* ── LIST PANE ── */
@@ -510,9 +554,14 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 .update-badge{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--r-full);letter-spacing:.04em}
 .update-title{font-size:12.5px;font-weight:600;color:var(--label);flex:1}
 .update-dismiss{font-size:16px;color:var(--label-3);background:none;border:none;cursor:pointer;padding:0;line-height:1}
-.update-desc{font-size:11.5px;color:var(--label-2);line-height:1.5;margin-bottom:8px}
+.update-desc{font-size:12px;color:var(--label-2);line-height:1.6;margin-bottom:10px}
 .update-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:8px;border-radius:var(--r-md);background:var(--blue);color:#fff;border:none;font-family:var(--font-sf);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s}
 .update-btn:hover{opacity:.88}
+[data-theme="dark"] .update-banner{background:linear-gradient(160deg,rgba(10,12,16,.97),rgba(22,26,34,.95));border-color:rgba(180,138,44,.34);box-shadow:0 22px 44px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.06)}
+[data-theme="dark"] .update-title{color:#F5F5F7}
+[data-theme="dark"] .update-desc{color:rgba(235,235,245,.82)}
+[data-theme="dark"] .update-dismiss{color:rgba(235,235,245,.68)}
+[data-theme="dark"] .update-btn{background:linear-gradient(135deg,#0A84FF,#2E6DFF);box-shadow:0 10px 24px rgba(10,132,255,.28)}
 
 /* version footer in sidebar */
 .sb-version{padding:14px 18px 10px;font-size:11px;color:var(--label-3);display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -574,7 +623,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 
 @media (max-width:1180px){
   :root{--sb-w:264px;--list-w:320px}
-  .dash-hero-metrics,.dash-panel-grid,.dash-dual-note{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dash-hero-metrics,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:repeat(2,minmax(0,1fr))}
   .studio-color-grid{grid-template-columns:1fr}
 }
 
@@ -582,7 +631,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   body{grid-template:"sb list" auto "sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
   .list-pane{max-height:40dvh}
   .det{min-width:0}
-  .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note{grid-template-columns:1fr}
+  .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:1fr}
   .dash-stage-grid{grid-template-columns:1fr}
 }
 
@@ -622,16 +671,21 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   .snooze-row{align-items:flex-start;gap:10px}
   .snooze-time{text-align:right}
   .dash-shell{padding:16px 14px 20px}
+  .workspace-detail{padding:16px 14px 20px}
+  .workspace-hero{padding:20px}
+  .workspace-hero-title{font-size:28px}
   .dash-hero{padding:20px}
   .dash-title{font-size:28px}
   .dash-tagline{font-size:14px}
-  .dash-rail-grid,.dash-hero-metrics,.dash-edit-grid,.dash-panel-grid,.dash-dual-note{grid-template-columns:1fr}
+  .dash-rail-grid,.dash-hero-metrics,.dash-edit-grid,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:1fr}
   .dash-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
   .dash-tabs::-webkit-scrollbar{display:none}
   .dash-insight,.dash-quick-item,.dash-list-row{flex-direction:column;align-items:flex-start}
   .dash-insight-meta{width:100%;justify-content:space-between}
   .studio-actions{flex-direction:column}
   .studio-btn,.studio-open{width:100%;justify-content:center;text-align:center}
+  .workspace-action-row{flex-direction:column}
+  .workspace-btn{width:100%;justify-content:center;text-align:center}
 }
 
 @media (max-width:480px){
@@ -683,7 +737,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
       <div>
         <div class="studio-title">Workspace Settings</div>
       </div>
-      <button class="studio-open" onclick="openSheet('brand')">More</button>
+      <button class="studio-open" onclick="openWorkspaceSettings()">More</button>
     </div>
     <div class="studio-grid">
       <label class="studio-field">
@@ -713,7 +767,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
     </div>
     <div class="studio-actions">
       <button class="studio-btn primary" onclick="openDashboard()">Dashboard</button>
-      <button class="studio-btn" onclick="openSheet('api')">Settings</button>
+      <button class="studio-btn" onclick="openWorkspaceSettings()">Settings</button>
       <button class="studio-btn" onclick="resetBrandTheme()">Reset</button>
     </div>
   </div>
@@ -722,6 +776,10 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   <button class="ai-action dash-action" id="dashboardBtn" onclick="openDashboard()">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
     <span class="n-label">Dashboard</span>
+  </button>
+  <button class="ai-action" id="workspaceBtn" onclick="openWorkspaceSettings()">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    <span class="n-label">Workspace</span>
   </button>
   <div class="nav-divider"></div>
 
@@ -802,7 +860,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.2</span>
+    <span id="versionLabel">v1.4.3</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -814,7 +872,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 <div class="list-pane">
   <div class="list-head">
     <span class="list-title" id="listTitle">All Mail</span>
-    <button class="list-icon-btn" onclick="openSheet('brand')" title="Workspace Settings">
+    <button class="list-icon-btn" onclick="openWorkspaceSettings()" title="Workspace Settings">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
     </button>
   </div>
@@ -1080,6 +1138,9 @@ let storageWarningShown=false;
 const AVC=['#B48A2C','#007AFF','#5856D6','#FF2D55','#FF9500','#34C759','#5AC8FA','#AF52DE','#FF3B30'];
 function avc(n){return AVC[n.charCodeAt(0)%AVC.length]}
 function clone(v){return JSON.parse(JSON.stringify(v));}
+function esc(v){
+  return String(v??'').replace(/[&<>"']/g,ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[ch]));
+}
 function readJSON(key,fallback){
   try{
     const raw=localStorage.getItem(key);
@@ -1089,6 +1150,11 @@ function readJSON(key,fallback){
   }
 }
 function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
+function shouldRenderActiveView(){return currentView==='dashboard'||currentView==='settings';}
+function clearSidebarSelections(){
+  document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
+  ['dashboardBtn','workspaceBtn'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+}
 function normalizeHex(value,fallback){
   const raw=String(value||'').trim();
   return /^#[0-9A-Fa-f]{6}$/.test(raw)?raw.toUpperCase():fallback;
@@ -1211,6 +1277,7 @@ function applyBranding(){
   syncColorSelection(accentColor);
   applyBackgroundColor(backgroundColor);
   syncSidebarBrandInputs();
+  syncWorkspaceSettingsInputs();
   if(!logoDataUrl){
     const li=document.getElementById('logoImg'), ll=document.getElementById('logoLetter');
     li.style.display='none';
@@ -1366,14 +1433,14 @@ function updateDashboardField(section,key,value,kind='number'){
   if(!dashboardData[section]) return;
   dashboardData[section][key]=kind==='text'?String(value):parseDashboardNumber(value);
   saveSettings();
-  if(currentView==='dashboard') render();
+  if(shouldRenderActiveView()) render();
 }
 function updatePipelineStageField(index,key,value,kind='number'){
   const stage=dashboardData.pipelineStages[index];
   if(!stage) return;
   stage[key]=kind==='text'?(String(value).trim()||stage[key]):parseDashboardNumber(value);
   saveSettings();
-  if(currentView==='dashboard') render();
+  if(shouldRenderActiveView()) render();
 }
 function updateDashboardNote(key,value){
   dashboardData.notes[key]=value;
@@ -1409,7 +1476,7 @@ function renderDashboardSection(urgent,unread){
     case 'finance':
       return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Finance</div><h3>Money Snapshot</h3></div><div class="dash-card-copy">Revenue, collections, and overdue exposure in one saved panel.</div></div><div class="dash-edit-grid">${renderDashboardFields('finance')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Cash Flow</div><h3>Finance Actions</h3></div><div class="dash-card-copy">Tie finance back to what the inbox and pipeline are telling you.</div></div><div class="dash-insight-list">${renderDashboardInsight('Outstanding exposure is visible',`Overdue invoices are currently set to ${money(dashboardData.finance.overdueInvoices)}.`,money(dashboardData.finance.overdueInvoices),'Open finance inbox',"setFilter('finance',document.querySelector('[data-filter=finance]'))",'#FF9500')}${renderDashboardInsight('Cash collected vs revenue',`${money(dashboardData.finance.cashCollected)} collected against ${money(dashboardData.finance.revenue)} revenue tracked.`,pct(dashboardData.finance.profitMargin),'Open sales',"setDashboardTab('sales')",'#FF9500')}${renderDashboardInsight('Finance inbox still matters',`${financeThreads} finance-category threads are still active in the inbox.`,`${financeThreads} threads`,'Open finance inbox',"setFilter('finance',document.querySelector('[data-filter=finance]'))",'#FF9500')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('finance','Finance Focus','Use this space for collection notes, invoice watchlists, and cash planning.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Connection</div><h3>Finance to Operations</h3></div><div class="dash-card-copy">Revenue is easier to manage when follow-up and execution are visible too.</div></div><div class="dash-insight-list">${renderDashboardInsight('Tasks support collections',`${dashboardData.operations.tasksDue} ops tasks are due and may block clean execution.`,`${dashboardData.operations.tasksDue} tasks`,'Open operations',"setDashboardTab('operations')",'#FF9500')}${renderDashboardInsight('Client health affects collection',`${dashboardData.clients.activeClients} active clients are tied to current revenue and renewal outcomes.`,`${dashboardData.clients.activeClients} clients`,'Open clients',"setDashboardTab('clients')",'#FF9500')}</div></div></div></section>`;
     case 'operations':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Operations</div><h3>Execution Control</h3></div><div class="dash-card-copy">Track task load, automation coverage, and response health.</div></div><div class="dash-edit-grid">${renderDashboardFields('operations')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Follow-through</div><h3>Ops Shortcuts</h3></div><div class="dash-card-copy">Keep operations tied to the parts of the app that create work.</div></div><div class="dash-insight-list">${renderDashboardInsight('Today rail needs support',`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} tasks are active right now.`,`${dashboardData.operations.tasksDue} tasks`,'Open today',"setDashboardTab('today')",'#5AC8FA')}${renderDashboardInsight('Automations are part of the workflow',`${dashboardData.operations.automationsLive} automations are currently tracked as live.`,`${dashboardData.operations.automationsLive} live`,'Open settings',"openSheet('api')",'#5AC8FA')}${renderDashboardInsight('Inbox SLA stays visible',`${pct(dashboardData.operations.responseSla)} response health with ${urgent} urgent threads currently in the inbox.`,pct(dashboardData.operations.responseSla),'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#5AC8FA')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('operations','Operations Focus','Store recurring workflow notes, bottlenecks, and systems cleanup ideas here.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Systems</div><h3>Operational Context</h3></div><div class="dash-card-copy">This is the section that should make the app feel like an actual business cockpit.</div></div><div class="dash-insight-list">${renderDashboardInsight('Brand and settings persist',`Your app branding, API key, templates, and dashboard numbers save locally unless you change them.`,'Saved state','Brand settings',"openSheet('brand')",'#5AC8FA')}${renderDashboardInsight('Operations connect the modules',`Use this tab to keep marketing, sales, finance, and client work coordinated instead of scattered.`,'Unified view','Open today',"setDashboardTab('today')",'#5AC8FA')}</div></div></div></section>`;
+      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Operations</div><h3>Execution Control</h3></div><div class="dash-card-copy">Track task load, automation coverage, and response health.</div></div><div class="dash-edit-grid">${renderDashboardFields('operations')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Follow-through</div><h3>Ops Shortcuts</h3></div><div class="dash-card-copy">Keep operations tied to the parts of the app that create work.</div></div><div class="dash-insight-list">${renderDashboardInsight('Today rail needs support',`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} tasks are active right now.`,`${dashboardData.operations.tasksDue} tasks`,'Open today',"setDashboardTab('today')",'#5AC8FA')}${renderDashboardInsight('Automations are part of the workflow',`${dashboardData.operations.automationsLive} automations are currently tracked as live.`,`${dashboardData.operations.automationsLive} live`,'Open workspace',"openWorkspaceSettings()",'#5AC8FA')}${renderDashboardInsight('Inbox SLA stays visible',`${pct(dashboardData.operations.responseSla)} response health with ${urgent} urgent threads currently in the inbox.`,pct(dashboardData.operations.responseSla),'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#5AC8FA')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('operations','Operations Focus','Store recurring workflow notes, bottlenecks, and systems cleanup ideas here.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Systems</div><h3>Operational Context</h3></div><div class="dash-card-copy">This is the section that should make the app feel like an actual business cockpit.</div></div><div class="dash-insight-list">${renderDashboardInsight('Brand and settings persist',`Your app branding, API key, templates, and dashboard numbers save locally unless you change them.`,'Saved state','Open workspace',"openWorkspaceSettings()",'#5AC8FA')}${renderDashboardInsight('Operations connect the modules',`Use this tab to keep marketing, sales, finance, and client work coordinated instead of scattered.`,'Unified view','Open today',"setDashboardTab('today')",'#5AC8FA')}</div></div></div></section>`;
     case 'today':
     default:
       return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Today</div><h3>Action Rail</h3></div><div class="dash-card-copy">These numbers are your daily operating priorities and save directly when edited.</div></div><div class="dash-edit-grid">${renderDashboardFields('today')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Shortcuts</div><h3>Immediate Work</h3></div><div class="dash-card-copy">Jump straight into the work that changes the numbers above.</div></div><div class="dash-insight-list">${renderDashboardInsight('Urgent inbox needs attention',`${urgent} urgent threads are still active and ${unread} unread messages remain.`,`${urgent} urgent`,'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#007AFF')}${renderDashboardInsight('Proposal follow-up is visible',`${dashboardData.today.proposalsDue} proposals need movement and ${dashboardData.sales.proposalsOut} are already out.`,`${dashboardData.today.proposalsDue} due`,'Open sales',"setDashboardTab('sales')",'#007AFF')}${renderDashboardInsight('Finance items stay close',`${dashboardData.today.invoicesDue} invoice follow-ups are on the board and ${financeThreads} finance threads are in the inbox.`,`${dashboardData.today.invoicesDue} due`,'Open finance',"setDashboardTab('finance')",'#007AFF')}${renderDashboardInsight('Campaign alerts are part of the day',`${dashboardData.today.campaignAlerts} marketing alerts are sitting beside your inbox actions.`,`${dashboardData.today.campaignAlerts} alerts`,'Open marketing',"setDashboardTab('marketing')",'#007AFF')}</div></div></div><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Overview</div><h3>Cross-Functional Snapshot</h3></div><div class="dash-card-copy">A quick read on the business without leaving the dashboard.</div></div><div class="dash-insight-list">${renderDashboardInsight('Revenue and pipeline are aligned on one screen',`${money(dashboardData.finance.revenue)} revenue tracked beside ${money(dashboardData.sales.pipeline)} in open pipeline.`,money(dashboardData.sales.pipeline),'Open sales',"setDashboardTab('sales')",'#007AFF')}${renderDashboardInsight('Client health stays visible',`${dashboardData.clients.activeClients} active clients with ${pct(dashboardData.clients.retention)} retention currently tracked.`,`${dashboardData.clients.activeClients} clients`,'Open clients',"setDashboardTab('clients')",'#007AFF')}${renderDashboardInsight('Operations support the pace',`${dashboardData.operations.tasksDue} tasks and ${dashboardData.operations.automationsLive} live automations support the workflow.`,`${dashboardData.operations.automationsLive} live`,'Open operations',"setDashboardTab('operations')",'#007AFF')}</div></div><div class="dash-card">${renderDashboardNoteCard('today','Today Focus','Keep your daily priorities, reminders, and blocker notes here so the dashboard stays actionable.')}</div></div></section>`;
@@ -1429,7 +1496,7 @@ function renderDashboardDetail(){
           <div class="dash-hero-actions">
             <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
             <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
-            <button class="dash-btn secondary" onclick="openSheet('brand')">Workspace Settings</button>
+            <button class="dash-btn secondary" onclick="openWorkspaceSettings()">Workspace Settings</button>
           </div>
           <div class="dash-hero-metrics">
             <div class="dash-stat-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.finance.revenue)}</div><div class="dash-stat-foot">Primary business KPI</div></div>
@@ -1450,7 +1517,206 @@ function renderDashboardDetail(){
         </div>
         ${renderDashboardSection(urgent,unread)}
       </div>
+      </div>`;
+}
+function renderWorkspaceTemplateItems(){
+  if(!templates.length) return `<div class="workspace-note">No templates saved yet. Add one to speed up confirmations, follow-ups, and client replies.</div>`;
+  return `<div class="workspace-template-list">${templates.slice(0,4).map(template=>`<div class="workspace-template-item"><div class="workspace-template-name">${esc(template.name)}</div><div class="workspace-template-copy">${esc(template.body.slice(0,110))}${template.body.length>110?'…':''}</div></div>`).join('')}</div>`;
+}
+function renderWorkspaceList(){
+  document.getElementById('listTitle').textContent='Workspace';
+  document.getElementById('listBody').innerHTML=`
+    <div class="workspace-list">
+      <button class="workspace-mini-card" onclick="document.getElementById('wsBrandCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Brand</div>
+        <div class="workspace-mini-title">${esc(document.getElementById('appName').textContent)}</div>
+        <div class="workspace-mini-copy">Title, subtitle, logo letter, accent color, and background live here.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('wsAccessCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Access</div>
+        <div class="workspace-mini-title">${apiKey ? 'Connected settings' : 'API setup'}</div>
+        <div class="workspace-mini-copy">Anthropic key plus Microsoft client and tenant settings for Outlook sync.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('wsAssistantCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Assistant</div>
+        <div class="workspace-mini-title">${esc(persona.name || 'Aria')}</div>
+        <div class="workspace-mini-copy">Tone, signature, and custom instructions for replies and summaries.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('wsAutomationCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">System</div>
+        <div class="workspace-mini-title">${syncSettings.notifications ? 'Notifications on' : 'Notifications off'}</div>
+        <div class="workspace-mini-copy">Automation toggles, template shortcuts, and system-level workspace controls.</div>
+      </button>
     </div>`;
+}
+function renderWorkspaceDetail(){
+  document.getElementById('detPane').innerHTML=`
+    <div class="det-scroll">
+      <div class="workspace-detail">
+        <section class="workspace-hero">
+          <div class="dash-kicker">System Settings</div>
+          <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} Workspace</div>
+          <div class="workspace-hero-copy">Manage branding, AI access, Microsoft sync, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
+        </section>
+        <div class="workspace-grid">
+          <section class="workspace-card" id="wsBrandCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Brand</div>
+                <h3>Workspace Identity</h3>
+              </div>
+              <div class="workspace-card-copy">Tune the look and title of the whole app.</div>
+            </div>
+            <div class="workspace-field-grid">
+              <label class="workspace-field">
+                <span class="workspace-label">Main Title</span>
+                <input class="workspace-input" id="wsAppName" oninput="updateSidebarBrand('name',this.value)">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Subtitle</span>
+                <input class="workspace-input" id="wsSubtitle" oninput="updateSidebarBrand('subtitle',this.value)">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Logo Letter</span>
+                <input class="workspace-input" id="wsLetter" maxlength="2">
+              </label>
+            </div>
+            <div class="workspace-color-row">
+              <label class="workspace-field">
+                <span class="workspace-label">Accent</span>
+                <div class="workspace-color-wrap">
+                  <input class="workspace-color" type="color" id="wsAccentColor" oninput="setAccentColor(this.value)">
+                  <input class="workspace-input" id="wsAccentHex" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setAccentColor(this.value)">
+                </div>
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Background</span>
+                <div class="workspace-color-wrap">
+                  <input class="workspace-color" type="color" id="wsBgColor" oninput="setBackgroundColor(this.value)">
+                  <input class="workspace-input" id="wsBgHex" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setBackgroundColor(this.value)">
+                </div>
+              </label>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="saveWorkspaceBrand()">Save Branding</button>
+              <button class="workspace-btn" onclick="resetBrandTheme()">Reset Look</button>
+              <button class="workspace-btn" onclick="openSheet('brand')">Advanced Sheet</button>
+            </div>
+          </section>
+          <section class="workspace-card" id="wsAccessCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Access</div>
+                <h3>API and Microsoft</h3>
+              </div>
+              <div class="workspace-card-copy">Keep AI and Outlook credentials in one place.</div>
+            </div>
+            <div class="workspace-field-grid">
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Anthropic API Key</span>
+                <input class="workspace-input" type="password" id="wsApiKey" placeholder="sk-ant-api…">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Microsoft Client ID</span>
+                <input class="workspace-input" id="wsClientId" placeholder="Azure App ID">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Tenant ID</span>
+                <input class="workspace-input" id="wsTenantId" placeholder="common">
+              </label>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="saveWorkspaceKeys()">Save Access</button>
+              <button class="workspace-btn" onclick="openChannelSheet('outlook')">Open Outlook</button>
+            </div>
+          </section>
+          <section class="workspace-card" id="wsAssistantCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Assistant</div>
+                <h3>Reply Behavior</h3>
+              </div>
+              <div class="workspace-card-copy">Set how the AI writes, signs off, and follows instructions.</div>
+            </div>
+            <div class="workspace-field-grid">
+              <label class="workspace-field">
+                <span class="workspace-label">Assistant Name</span>
+                <input class="workspace-input" id="wsPersonaName">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Reply Tone</span>
+                <select class="workspace-select" id="wsPersonaTone">
+                  <option>Professional</option><option>Warm & friendly</option><option>Formal</option><option>Direct</option>
+                </select>
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Sign-off Name</span>
+                <input class="workspace-input" id="wsPersonaSig">
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Custom Instructions</span>
+                <textarea class="workspace-textarea" id="wsPersonaInstr" placeholder="Always mention response times, keep replies concise, and use first names when appropriate."></textarea>
+              </label>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="saveWorkspacePersona()">Save Assistant</button>
+              <button class="workspace-btn" onclick="openSheet('persona')">Advanced Sheet</button>
+            </div>
+          </section>
+          <section class="workspace-card" id="wsAutomationCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">System</div>
+                <h3>Automation and Templates</h3>
+              </div>
+              <div class="workspace-card-copy">Control auto-labeling, urgency scans, alerts, and saved template access.</div>
+            </div>
+            <div class="workspace-toggle-list">
+              <div class="workspace-toggle-row">
+                <div><div class="workspace-template-name">Auto-categorize</div><div class="workspace-toggle-copy">Let AI label new inbox items as they arrive.</div></div>
+                <button class="ios-toggle" id="wsToggleAutoCategorize" onclick="toggleSyncSetting('autoCategorize',this)"></button>
+              </div>
+              <div class="workspace-toggle-row">
+                <div><div class="workspace-template-name">Auto-flag urgent</div><div class="workspace-toggle-copy">Keep important replies visible without manual review first.</div></div>
+                <button class="ios-toggle" id="wsToggleAutoFlagUrgent" onclick="toggleSyncSetting('autoFlagUrgent',this)"></button>
+              </div>
+              <div class="workspace-toggle-row">
+                <div><div class="workspace-template-name">Notifications</div><div class="workspace-toggle-copy">Use workspace alerts for updates and incoming activity.</div></div>
+                <button class="ios-toggle" id="wsToggleNotifications" onclick="toggleSyncSetting('notifications',this)"></button>
+              </div>
+            </div>
+            ${renderWorkspaceTemplateItems()}
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="openSheet('templates')">Manage Templates</button>
+              <button class="workspace-btn" onclick="addTemplate()">Add Template</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>`;
+  syncWorkspaceSettingsInputs();
+}
+function saveWorkspaceBrand(){
+  document.getElementById('bName').value=document.getElementById('wsAppName').value||'Mail AI';
+  document.getElementById('bSubtitle').value=document.getElementById('wsSubtitle').value||'Unified pipeline workspace';
+  document.getElementById('bLetter').value=(document.getElementById('wsLetter').value||'M').slice(0,2);
+  saveBrand();
+  if(currentView==='settings') render();
+}
+function saveWorkspaceKeys(){
+  document.getElementById('sfKey').value=document.getElementById('wsApiKey').value||'';
+  document.getElementById('msClientIdSetting').value=document.getElementById('wsClientId').value||'';
+  document.getElementById('msTenantIdSetting').value=document.getElementById('wsTenantId').value||'common';
+  saveKeys();
+  if(currentView==='settings') render();
+}
+function saveWorkspacePersona(){
+  document.getElementById('pName').value=document.getElementById('wsPersonaName').value||'Aria';
+  document.getElementById('pTone').value=document.getElementById('wsPersonaTone').value||'Professional';
+  document.getElementById('pSig').value=document.getElementById('wsPersonaSig').value||'';
+  document.getElementById('pInstr').value=document.getElementById('wsPersonaInstr').value||'';
+  savePersona();
+  if(currentView==='settings') render();
 }
 function setDashboardTab(tab){
   if(!dashboardSections.some(section=>section.id===tab)) return;
@@ -1461,17 +1727,37 @@ function leaveDashboard(){
   if(currentView!=='dashboard') return;
   currentView='mail';
   document.body.classList.remove('dashboard-mode');
+  document.body.classList.remove('settings-mode');
   document.getElementById('dashboardBtn').classList.remove('active');
   if(location.hash==='#dashboard') history.replaceState({},'', window.location.pathname);
+  saveSettings();
+}
+function leaveWorkspaceSettings(){
+  if(currentView!=='settings') return;
+  currentView='mail';
+  document.body.classList.remove('settings-mode');
+  document.getElementById('workspaceBtn').classList.remove('active');
+  if(location.hash==='#settings') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
 function openDashboard(tab=dashboardTab){
   if(tab&&dashboardSections.some(section=>section.id===tab)) dashboardTab=tab;
   currentView='dashboard';
   document.body.classList.add('dashboard-mode');
-  document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
+  document.body.classList.remove('settings-mode');
+  clearSidebarSelections();
   document.getElementById('dashboardBtn').classList.add('active');
   if(location.hash!=='#dashboard') history.replaceState({},'', `${window.location.pathname}#dashboard`);
+  render();
+  saveSettings();
+}
+function openWorkspaceSettings(){
+  currentView='settings';
+  document.body.classList.remove('dashboard-mode');
+  document.body.classList.add('settings-mode');
+  clearSidebarSelections();
+  document.getElementById('workspaceBtn').classList.add('active');
+  if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
   render();
   saveSettings();
 }
@@ -1514,8 +1800,9 @@ function counts(){
 /* ── FILTERS ── */
 function setFilter(f,btn){
   leaveDashboard();
+  leaveWorkspaceSettings();
   curFilter=f;
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  clearSidebarSelections();
   btn.classList.add('active');
   const labels={all:'All Mail',urgent:'Urgent',client:'Client',internal:'Internal',finance:'Finance',hr:'HR',snoozed:'Snoozed'};
   document.getElementById('listTitle').textContent=labels[f]||'Mail';
@@ -1559,6 +1846,11 @@ function render(){
   if(currentView==='dashboard'){
     renderDashboardList();
     renderDashboardDetail();
+    return;
+  }
+  if(currentView==='settings'){
+    renderWorkspaceList();
+    renderWorkspaceDetail();
     return;
   }
   const list=filtered(); const body=document.getElementById('listBody');
@@ -2168,6 +2460,43 @@ function syncSidebarBrandInputs(){
   if(bgSheetPicker) bgSheetPicker.value=bg;
   if(bgSheetHex) bgSheetHex.value=bg;
 }
+function syncWorkspaceSettingsInputs(){
+  const wsName=document.getElementById('wsAppName');
+  const wsSubtitle=document.getElementById('wsSubtitle');
+  const wsLetter=document.getElementById('wsLetter');
+  const wsAccent=document.getElementById('wsAccentColor');
+  const wsAccentHex=document.getElementById('wsAccentHex');
+  const wsBg=document.getElementById('wsBgColor');
+  const wsBgHex=document.getElementById('wsBgHex');
+  const wsApi=document.getElementById('wsApiKey');
+  const wsClient=document.getElementById('wsClientId');
+  const wsTenant=document.getElementById('wsTenantId');
+  const wsPName=document.getElementById('wsPersonaName');
+  const wsPTone=document.getElementById('wsPersonaTone');
+  const wsPSig=document.getElementById('wsPersonaSig');
+  const wsPInstr=document.getElementById('wsPersonaInstr');
+  const appName=document.getElementById('bName')?.value||document.getElementById('appName')?.textContent||'Mail AI';
+  const logoLetter=document.getElementById('bLetter')?.value||document.getElementById('logoLetter')?.textContent||'M';
+  if(wsName) wsName.value=appName;
+  if(wsSubtitle) wsSubtitle.value=appSubtitle;
+  if(wsLetter) wsLetter.value=logoLetter;
+  if(wsAccent) wsAccent.value=accentColor;
+  if(wsAccentHex) wsAccentHex.value=accentColor;
+  if(wsBg) wsBg.value=backgroundColor;
+  if(wsBgHex) wsBgHex.value=backgroundColor;
+  if(wsApi) wsApi.value=apiKey;
+  if(wsClient) wsClient.value=syncSettings.msClientId||'';
+  if(wsTenant) wsTenant.value=syncSettings.msTenantId||'common';
+  if(wsPName) wsPName.value=persona.name;
+  if(wsPTone) wsPTone.value=persona.tone;
+  if(wsPSig) wsPSig.value=persona.sig;
+  if(wsPInstr) wsPInstr.value=persona.instr;
+  ['AutoCategorize','AutoFlagUrgent','Notifications'].forEach(key=>{
+    const el=document.getElementById(`wsToggle${key}`);
+    const syncKey={AutoCategorize:'autoCategorize',AutoFlagUrgent:'autoFlagUrgent',Notifications:'notifications'}[key];
+    if(el) el.classList.toggle('on',!!syncSettings[syncKey]);
+  });
+}
 function updateSidebarBrand(field,value){
   if(field==='name'){
     document.getElementById('bName').value=value;
@@ -2186,6 +2515,7 @@ function setBackgroundColor(value){
   backgroundColor=normalizeHex(value,backgroundColor);
   applyBackgroundColor(backgroundColor);
   syncSidebarBrandInputs();
+  syncWorkspaceSettingsInputs();
   saveSettings();
   if(currentView==='dashboard') render();
 }
@@ -2215,6 +2545,7 @@ function pickColor(hex,dotEl){
   if(lp&&lp.tagName==='DIV') lp.style.background=safe;
   applyBackgroundColor(backgroundColor);
   syncSidebarBrandInputs();
+  syncWorkspaceSettingsInputs();
   saveSettings();
   if(currentView==='dashboard') render();
 }
@@ -2233,8 +2564,10 @@ function handleKey(v,persist=true){
   else d.className='api-dot';
   const compact=document.getElementById('apiInput');
   const settingsInput=document.getElementById('sfKey');
+  const workspaceInput=document.getElementById('wsApiKey');
   if(compact&&compact.value!==apiKey) compact.value=apiKey;
   if(settingsInput&&settingsInput.value!==apiKey) settingsInput.value=apiKey;
+  if(workspaceInput&&workspaceInput.value!==apiKey) workspaceInput.value=apiKey;
   if(persist) saveSettings();
 }
 function updateMsClientId(value,{persist=true}={}){
@@ -2243,8 +2576,10 @@ function updateMsClientId(value,{persist=true}={}){
   localStorage.setItem('ms_client_id',msClientId);
   const a=document.getElementById('msClientIdSetting');
   const b=document.getElementById('msClientIdInput');
+  const c=document.getElementById('wsClientId');
   if(a&&a.value!==msClientId) a.value=msClientId;
   if(b&&b.value!==msClientId) b.value=msClientId;
+  if(c&&c.value!==msClientId) c.value=msClientId;
   if(persist) saveSettings();
 }
 function updateMsTenantId(value,{persist=true}={}){
@@ -2252,12 +2587,15 @@ function updateMsTenantId(value,{persist=true}={}){
   syncSettings.msTenantId=msTenantId;
   localStorage.setItem('ms_tenant_id',msTenantId);
   const a=document.getElementById('msTenantIdSetting');
+  const b=document.getElementById('wsTenantId');
   if(a&&a.value!==msTenantId) a.value=msTenantId;
+  if(b&&b.value!==msTenantId) b.value=msTenantId;
   if(persist) saveSettings();
 }
 function toggleSyncSetting(key,btn){
   syncSettings[key]=!syncSettings[key];
   btn.classList.toggle('on',!!syncSettings[key]);
+  syncWorkspaceSettingsInputs();
   saveSettings();
 }
 function saveKeys(){
@@ -2320,7 +2658,7 @@ function toggleTheme(){
   applyTheme(currentTheme()==='dark'?'light':'dark');
   applyBackgroundColor(backgroundColor);
   saveSettings();
-  if(currentView==='dashboard') render();
+  if(shouldRenderActiveView()) render();
 }
 
 /* ── SEND REPLY ── */
@@ -2377,7 +2715,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.4.3';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
@@ -2385,10 +2723,15 @@ const VERSION_URL = (() => {
 
 document.getElementById('versionLabel').textContent = 'v' + APP_VERSION;
 restoreSavedState();
-if(location.hash==='#dashboard' || currentView==='dashboard' || !emails.length) openDashboard();
+if(location.hash==='#settings' || currentView==='settings') openWorkspaceSettings();
+else if(location.hash==='#dashboard' || currentView==='dashboard' || !emails.length) openDashboard();
 window.addEventListener('hashchange',()=>{
-  if(location.hash==='#dashboard') openDashboard();
-  else if(currentView==='dashboard') leaveDashboard();
+  if(location.hash==='#settings') openWorkspaceSettings();
+  else if(location.hash==='#dashboard') openDashboard();
+  else{
+    if(currentView==='dashboard') leaveDashboard();
+    if(currentView==='settings') leaveWorkspaceSettings();
+  }
 });
 
 async function checkForUpdates(silent=false){
