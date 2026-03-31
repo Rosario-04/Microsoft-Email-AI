@@ -1,5 +1,5 @@
 {
-  "version": "1.3.1",
-  "changelog": "Fixed a Safari dashboard blank-screen issue by making dashboard rendering resilient to browser storage limits while keeping the new command center layout and auto-saving KPI editing.",
+  "version": "1.3.2",
+  "changelog": "Fixed the dashboard layout bug caused by an unclosed sidebar tag, restoring the three-pane app layout and making the command center cards render correctly again.",
   "released": "2026-03-31"
 }
