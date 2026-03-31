@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
-  "changelog": "Merged the dashboard into the main app and added saved marketing, business, and pipeline views alongside the inbox workspace.",
-  "released": "2026-03-30"
+  "version": "1.3.0",
+  "changelog": "Promoted the dashboard into the app home view with tabbed business modules, inline auto-saving KPI editing, and a fuller pipeline command center for marketing, sales, finance, clients, and operations.",
+  "released": "2026-03-31"
 }
