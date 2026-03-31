@@ -1,5 +1,5 @@
 {
-  "version": "1.4.1",
-  "changelog": "Restyled the app with the ar-command executive theme and sidebar language while keeping the Mail AI structure the same, and updated the default brand/reset values to match the new look.",
+  "version": "1.4.2",
+  "changelog": "Cleaned up the sidebar into a more modern icon-and-label layout, simplified the settings widget, and removed extra descriptive text so navigation is easier to scan.",
   "released": "2026-03-31"
 }
