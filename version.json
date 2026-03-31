@@ -1,5 +1,5 @@
 {
-  "version": "1.3.0",
-  "changelog": "Promoted the dashboard into the app home view with tabbed business modules, inline auto-saving KPI editing, and a fuller pipeline command center for marketing, sales, finance, clients, and operations.",
+  "version": "1.3.1",
+  "changelog": "Fixed a Safari dashboard blank-screen issue by making dashboard rendering resilient to browser storage limits while keeping the new command center layout and auto-saving KPI editing.",
   "released": "2026-03-31"
 }

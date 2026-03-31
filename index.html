@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.3.0">
+<meta name="app-version" content="1.3.1">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -722,7 +722,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.3.0</span>
+    <span id="versionLabel">v1.3.1</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -985,6 +985,7 @@ let syncSettings={...defaultSyncSettings};
 let dashboardData=clone(defaultDashboardData);
 let currentView='dashboard';
 let dashboardTab='today';
+let storageWarningShown=false;
 const AVC=['#007AFF','#5856D6','#FF2D55','#FF9500','#34C759','#5AC8FA','#AF52DE','#FF3B30'];
 function avc(n){return AVC[n.charCodeAt(0)%AVC.length]}
 function clone(v){return JSON.parse(JSON.stringify(v));}
@@ -997,6 +998,29 @@ function readJSON(key,fallback){
   }
 }
 function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
+function safeStoreJSON(key,value,fallbackValue){
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
+    return true;
+  }catch(err){
+    if(fallbackValue!==undefined){
+      try{
+        localStorage.setItem(key,JSON.stringify(fallbackValue));
+        if(!storageWarningShown){
+          storageWarningShown=true;
+          toast('Storage was full, so I saved a lighter version of your workspace.');
+        }
+        return true;
+      }catch(_){}
+    }
+    console.warn('Storage write failed for',key,err);
+    if(!storageWarningShown){
+      storageWarningShown=true;
+      toast('Some settings could not be re-saved because browser storage is full.');
+    }
+    return false;
+  }
+}
 function updateThemeIcon(theme){
   document.getElementById('themeIco').innerHTML=theme==='dark'
     ?'<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/>'
@@ -1014,7 +1038,7 @@ function syncColorSelection(hex){
 function saveSettings(){
   const appName=(document.getElementById('bName')?.value||document.getElementById('appName')?.textContent||'Mail AI').trim()||'Mail AI';
   const logoLetter=(document.getElementById('bLetter')?.value||document.getElementById('logoLetter')?.textContent||'M').trim().slice(0,2)||'M';
-  localStorage.setItem(STORAGE_KEY,JSON.stringify({
+  const payload={
     appName,
     logoLetter,
     accentColor,
@@ -1029,9 +1053,14 @@ function saveSettings(){
     theme:currentTheme(),
     syncSettings,
     savedAt:new Date().toISOString()
-  }));
+  };
+  const fallbackPayload={...payload,logoDataUrl:'',logoMode:'letter'};
+  safeStoreJSON(STORAGE_KEY,payload,fallbackPayload);
 }
-function saveEmailCache(){localStorage.setItem(EMAIL_CACHE_KEY,JSON.stringify(emails));}
+function saveEmailCache(){
+  const slimEmails=emails.map(({id,unread,sender,email,subject,time,date,cat,urgent,priority,preview,snoozed,body})=>({id,unread,sender,email,subject,time,date,cat,urgent,priority,preview,snoozed,body}));
+  safeStoreJSON(EMAIL_CACHE_KEY,emails,slimEmails);
+}
 function refreshSettingsInputs(){
   document.getElementById('apiInput').value=apiKey;
   document.getElementById('sfKey').value=apiKey;
@@ -1308,8 +1337,8 @@ function openDashboard(tab=dashboardTab){
   document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
   document.getElementById('dashboardBtn').classList.add('active');
   if(location.hash!=='#dashboard') history.replaceState({},'', `${window.location.pathname}#dashboard`);
-  saveSettings();
   render();
+  saveSettings();
 }
 
 /* ── SAMPLE DATA ── */
@@ -2153,7 +2182,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.3.1';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
