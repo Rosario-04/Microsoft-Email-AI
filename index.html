@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.4">
+<meta name="app-version" content="1.4.5">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -129,6 +129,24 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .ch-live{background:rgba(52,199,89,.12);color:var(--green)}
 .ch-off{background:var(--gray5);color:var(--gray2)}
 .ch-badge svg{width:9px;height:9px}
+.channel-hover-card{position:fixed;z-index:260;width:min(280px,calc(100vw - 32px));padding:16px;border-radius:22px;background:color-mix(in srgb,var(--panel-bg) 92%,rgba(255,255,255,.88));border:1px solid color-mix(in srgb,var(--panel-border) 88%,transparent);box-shadow:0 24px 48px rgba(15,23,42,.24);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);opacity:0;pointer-events:none;transform:translateY(6px) scale(.98);transition:opacity .16s var(--ease),transform .16s var(--ease)}
+.channel-hover-card.visible{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+[data-theme="dark"] .channel-hover-card{background:linear-gradient(160deg,rgba(14,18,26,.96),rgba(27,32,43,.94));border-color:rgba(255,255,255,.08);box-shadow:0 28px 56px rgba(0,0,0,.42)}
+.channel-hover-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.channel-hover-kicker{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--label-3);margin-bottom:6px}
+.channel-hover-title{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--label);line-height:1.2}
+.channel-hover-status{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:rgba(52,199,89,.14);color:var(--green);font-size:11px;font-weight:700;white-space:nowrap}
+.channel-hover-status.off{background:var(--gray5);color:var(--label-3)}
+.channel-hover-status svg{width:9px;height:9px}
+.channel-hover-account{border-radius:16px;padding:12px 13px;background:color-mix(in srgb,var(--panel-inner-bg) 82%,transparent);border:1px solid color-mix(in srgb,var(--panel-border) 76%,transparent);margin-bottom:12px}
+.channel-hover-account-name{font-size:13px;font-weight:700;color:var(--label);line-height:1.35}
+.channel-hover-account-detail{font-size:12px;color:var(--label-2);line-height:1.55;margin-top:4px;word-break:break-word}
+.channel-hover-actions{display:flex;gap:8px}
+.channel-hover-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:14px;padding:11px 12px;font-family:var(--font-sf);font-size:13px;font-weight:700;cursor:pointer;transition:transform .14s var(--ease),opacity .14s var(--ease),background .14s var(--ease)}
+.channel-hover-btn:hover{transform:translateY(-1px);opacity:.94}
+.channel-hover-btn.primary{background:var(--accent);color:#fff}
+.channel-hover-btn.secondary{background:color-mix(in srgb,var(--panel-inner-bg) 82%,transparent);color:var(--label-2);border:1px solid color-mix(in srgb,var(--panel-border) 76%,transparent)}
+.channel-hover-btn.danger{background:rgba(255,59,48,.12);color:var(--red);border:1px solid rgba(255,59,48,.18)}
 
 .nav-divider{height:1px;background:color-mix(in srgb,var(--sidebar-border) 88%,transparent);margin:10px 14px}
 
@@ -550,15 +568,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 .sb-check-btn.spinning svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* signed-in card */
-.signed-in-card{margin:6px 14px 12px;background:color-mix(in srgb,var(--panel-bg) 96%,transparent);border:1px solid color-mix(in srgb,var(--panel-border) 88%,transparent);border-radius:18px;padding:11px 12px;display:flex;align-items:center;gap:10px;box-shadow:var(--sh1)}
-.signed-in-av{width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-.signed-in-info{flex:1;min-width:0}
-.signed-in-name{font-size:12.5px;font-weight:600;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.signed-in-email{font-size:11px;color:var(--label-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.signed-in-out{font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;font-family:var(--font-sf);padding:2px 0;font-weight:500}
-.signed-in-out:hover{opacity:.7}
-
 /* clean connect popup */
 .connect-hero{padding:36px 28px 28px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .connect-hero-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:var(--sh2)}
@@ -622,7 +631,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   .det{min-height:46dvh}
   .sb-head{padding:16px 14px 10px}
-  .api-bar,.signed-in-card{margin-left:12px;margin-right:12px}
+  .api-bar{margin-left:12px;margin-right:12px}
   .nav-list{padding:0 12px}
   .sec-lbl,.sb-version{padding-left:14px;padding-right:14px}
   .det-head{padding:16px 18px 12px}
@@ -664,6 +673,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-insight-meta{width:100%;justify-content:space-between}
   .workspace-action-row{flex-direction:column}
   .workspace-btn{width:100%;justify-content:center;text-align:center}
+  .channel-hover-card{display:none}
 }
 
 @media (max-width:480px){
@@ -699,15 +709,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <div class="api-bar">
     <div class="api-dot" id="apiDot"></div>
     <input class="api-input" type="password" id="apiInput" placeholder="Anthropic API key…" oninput="handleKey(this.value)">
-  </div>
-  <!-- Microsoft signed-in card (hidden until connected) -->
-  <div class="signed-in-card" id="signedInCard" style="display:none">
-    <div class="signed-in-av" id="signedInAv">?</div>
-    <div class="signed-in-info">
-      <div class="signed-in-name" id="signedInName">—</div>
-      <div class="signed-in-email" id="signedInEmail">—</div>
-    </div>
-    <button class="signed-in-out" onclick="signOut()">Sign out</button>
   </div>
 
   <div class="sec-lbl">Command Center</div>
@@ -755,17 +756,17 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <div class="nav-divider"></div>
   <div class="sec-lbl">Channels</div>
   <ul class="nav-list">
-    <li><button class="nav-btn" onclick="openChannelSheet('outlook')">
+    <li><button class="nav-btn channel-nav-btn" data-channel="outlook" onclick="openChannelSheet('outlook')" onmouseenter="showChannelHover('outlook',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('outlook',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
       <span class="n-label">Outlook</span>
-      <span class="ch-badge ch-live" id="ch-outlook"><svg viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Live</span>
+      <span class="ch-badge ch-off" id="ch-outlook">Connect</span>
     </button></li>
-    <li><button class="nav-btn" onclick="openChannelSheet('gvoice')">
+    <li><button class="nav-btn channel-nav-btn" data-channel="gvoice" onclick="openChannelSheet('gvoice')" onmouseenter="showChannelHover('gvoice',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gvoice',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
       <span class="n-label">Google Voice</span>
       <span class="ch-badge ch-off" id="ch-gvoice">Connect</span>
     </button></li>
-    <li><button class="nav-btn" onclick="openChannelSheet('imessage')">
+    <li><button class="nav-btn channel-nav-btn" data-channel="imessage" onclick="openChannelSheet('imessage')" onmouseenter="showChannelHover('imessage',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('imessage',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-indigo"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
       <span class="n-label">iMessage</span>
       <span class="ch-badge ch-off" id="ch-imessage">Connect</span>
@@ -794,13 +795,15 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.4</span>
+    <span id="versionLabel">v1.4.5</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
     </button>
   </div>
 </aside>
+
+<div class="channel-hover-card" id="channelHoverCard" onmouseenter="cancelChannelHoverHide()" onmouseleave="scheduleHideChannelHover()" aria-hidden="true"></div>
 
 <!-- ── LIST PANE ── -->
 <div class="list-pane">
@@ -983,6 +986,36 @@ const STORAGE_KEY='mail_ai_state_v1';
 const EMAIL_CACHE_KEY='mail_ai_cached_emails_v1';
 const defaultPersona={name:'Aria',tone:'Professional',sig:'',instr:''};
 const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common'};
+const defaultChannelProfiles={
+  gvoice:{connected:false,accountName:'',accountDetail:''},
+  imessage:{connected:false,accountName:'',accountDetail:''}
+};
+const channelMeta={
+  outlook:{
+    label:'Outlook',
+    service:'Outlook / Microsoft 365',
+    disconnectedTitle:'No Outlook account connected',
+    disconnectedDetail:'Sign in to sync your Microsoft mailbox, replies, and live inbox updates.',
+    connectedFallback:'Microsoft 365 mailbox',
+    connectedDetail:'Connected Microsoft mailbox'
+  },
+  gvoice:{
+    label:'Google Voice',
+    service:'Google Voice forwarding',
+    disconnectedTitle:'No Google Voice account connected',
+    disconnectedDetail:'Connect forwarding or Gmail sync so text messages can land in this workspace.',
+    connectedFallback:'Google Voice forwarding',
+    connectedDetail:'Forwarding is enabled for this workspace.'
+  },
+  imessage:{
+    label:'iMessage',
+    service:'iMessage / SMS bridge',
+    disconnectedTitle:'No iMessage bridge connected',
+    disconnectedDetail:'Connect a Mac bridge or SMS workflow so messages can route into this app.',
+    connectedFallback:'iMessage bridge',
+    connectedDetail:'Bridge is configured and ready for this workspace.'
+  }
+};
 const defaultTemplates=[
   {id:1,name:'Acknowledge & follow up',body:'Hi {name},\n\nThank you for reaching out. I\'ve received your message and will follow up with more detail shortly.\n\nBest,\n{sig}'},
   {id:2,name:'Schedule a call',body:'Hi {name},\n\nHappy to connect! Feel free to grab time on my calendar: [calendar link]\n\nLooking forward to speaking,\n{sig}'},
@@ -1065,10 +1098,13 @@ let appSubtitle='Unified pipeline workspace';
 let backgroundColor='#F5F5F7';
 let templates=defaultTemplates.map(t=>({...t}));
 let syncSettings={...defaultSyncSettings};
+let channelProfiles=clone(defaultChannelProfiles);
 let dashboardData=clone(defaultDashboardData);
 let currentView='dashboard';
 let dashboardTab='today';
 let storageWarningShown=false;
+let activeChannelHover=null;
+let channelHoverTimer=null;
 const AVC=['#B48A2C','#007AFF','#5856D6','#FF2D55','#FF9500','#34C759','#5AC8FA','#AF52DE','#FF3B30'];
 function avc(n){return AVC[n.charCodeAt(0)%AVC.length]}
 function clone(v){return JSON.parse(JSON.stringify(v));}
@@ -1118,6 +1154,65 @@ function applyBackgroundColor(color){
   document.documentElement.style.setProperty('--page-tint-1',rgba(mixHex(safe,'#FFB770',0.52), currentTheme()==='dark' ? .14 : .32));
   document.documentElement.style.setProperty('--page-tint-2',rgba(mixHex(safe,accentColor,0.58), currentTheme()==='dark' ? .18 : .24));
   document.documentElement.style.setProperty('--page-tint-3',currentTheme()==='dark' ? 'rgba(22,28,39,0.5)' : 'rgba(255,255,255,0.58)');
+}
+function restoreChannelProfiles(savedProfiles){
+  channelProfiles=clone(defaultChannelProfiles);
+  Object.keys(defaultChannelProfiles).forEach(key=>{
+    const saved=savedProfiles?.[key]||{};
+    channelProfiles[key]={
+      connected:!!saved.connected,
+      accountName:String(saved.accountName||''),
+      accountDetail:String(saved.accountDetail||'')
+    };
+  });
+}
+function channelConnectionState(channel){
+  const meta=channelMeta[channel];
+  if(channel==='outlook'){
+    const name=msUserName||localStorage.getItem('ms_user_name')||'';
+    const detail=msUserEmail||localStorage.getItem('ms_user_email')||'';
+    const connected=!!name;
+    return {
+      ...meta,
+      connected,
+      statusLabel:connected?'Live':'Connect',
+      accountName:connected?name:meta.disconnectedTitle,
+      accountDetail:connected?(detail||meta.connectedDetail):meta.disconnectedDetail,
+      actionLabel:connected?'Sign out':'Connect',
+      actionKind:connected?'danger':'primary'
+    };
+  }
+  const saved=channelProfiles[channel]||defaultChannelProfiles[channel];
+  const connected=!!saved.connected;
+  return {
+    ...meta,
+    connected,
+    statusLabel:connected?'Live':'Connect',
+    accountName:connected?(saved.accountName||meta.connectedFallback):meta.disconnectedTitle,
+    accountDetail:connected?(saved.accountDetail||meta.connectedDetail):meta.disconnectedDetail,
+    actionLabel:connected?'Sign out':'Connect',
+    actionKind:connected?'danger':'primary'
+  };
+}
+function updateChannelBadge(channel){
+  const badge=document.getElementById(`ch-${channel}`);
+  if(!badge) return;
+  const state=channelConnectionState(channel);
+  if(state.connected){
+    badge.className='ch-badge ch-live';
+    badge.innerHTML='<svg viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Live';
+  }else{
+    badge.className='ch-badge ch-off';
+    badge.textContent='Connect';
+  }
+}
+function syncChannelBadges(){
+  ['outlook','gvoice','imessage'].forEach(updateChannelBadge);
+}
+function refreshChannelHover(channel){
+  if(activeChannelHover!==channel) return;
+  const anchor=document.querySelector(`.channel-nav-btn[data-channel="${channel}"]`);
+  if(anchor) showChannelHover(channel,anchor);
 }
 function safeStoreJSON(key,value,fallbackValue){
   try{
@@ -1176,6 +1271,7 @@ function saveSettings(){
     dashboardTab,
     theme:currentTheme(),
     syncSettings,
+    channelProfiles,
     savedAt:new Date().toISOString()
   };
   const fallbackPayload={...payload,logoDataUrl:'',logoMode:'letter'};
@@ -1250,6 +1346,7 @@ function restoreSavedState(){
   persona={...defaultPersona,...(saved.persona||{})};
   templates=Array.isArray(saved.templates)&&saved.templates.length?saved.templates:clone(defaultTemplates);
   syncSettings={...defaultSyncSettings,...(saved.syncSettings||{})};
+  restoreChannelProfiles(saved.channelProfiles);
   dashboardData=clone(defaultDashboardData);
   dashboardData.today={...defaultDashboardData.today,...(savedDashboard.today||{})};
   dashboardData.marketing={...defaultDashboardData.marketing,...(savedDashboard.marketing||{})};
@@ -1296,6 +1393,7 @@ function restoreSavedState(){
   handleKey(apiKey,false);
   applySyncSettings();
   emails=Array.isArray(cachedEmails)?cachedEmails:[];
+  syncChannelBadges();
   counts();
   if(emails.length) render();
 }
@@ -2183,12 +2281,8 @@ async function fetchUserProfile(){
 }
 
 function updateSignedInCard(){
-  if(!msUserName){ document.getElementById('signedInCard').style.display='none'; return; }
-  const ini = msUserName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('signedInAv').textContent   = ini;
-  document.getElementById('signedInName').textContent  = msUserName;
-  document.getElementById('signedInEmail').textContent = msUserEmail;
-  document.getElementById('signedInCard').style.display = 'flex';
+  syncChannelBadges();
+  refreshChannelHover('outlook');
 }
 
 function signOut(){
@@ -2196,20 +2290,133 @@ function signOut(){
   localStorage.removeItem('ms_refresh_token');
   localStorage.removeItem('ms_user_name');
   localStorage.removeItem('ms_user_email');
-  document.getElementById('signedInCard').style.display = 'none';
-  const el = document.getElementById('ch-outlook');
-  el.className='ch-badge ch-off'; el.textContent='Connect';
+  updateChannelBadge('outlook');
+  refreshChannelHover('outlook');
+  saveSettings();
   emails = []; saveEmailCache(); render(); counts();
   toast('Signed out of Microsoft');
 }
 
-function markChannelLive(ch){
-  const el = document.getElementById(`ch-${ch}`);
-  if(el){ el.className='ch-badge ch-live'; el.innerHTML='<svg viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg> Live'; }
+function markChannelLive(ch,profile={}){
+  if(ch!=='outlook'){
+    const meta=channelMeta[ch];
+    channelProfiles[ch]={
+      connected:true,
+      accountName:String(profile.accountName||'').trim()||meta.connectedFallback,
+      accountDetail:String(profile.accountDetail||'').trim()||meta.connectedDetail
+    };
+    saveSettings();
+  }
+  updateChannelBadge(ch);
+  refreshChannelHover(ch);
+}
+
+function disconnectChannel(ch,{silent=false}={}){
+  if(ch==='outlook'){ signOut(); return; }
+  channelProfiles[ch]=clone(defaultChannelProfiles[ch]);
+  saveSettings();
+  updateChannelBadge(ch);
+  refreshChannelHover(ch);
+  if(!silent) toast(`${channelMeta[ch].label} disconnected`);
+}
+
+function channelPrimaryAction(ch){
+  const state=channelConnectionState(ch);
+  if(state.connected){
+    if(ch==='outlook') signOut();
+    else disconnectChannel(ch);
+    return;
+  }
+  openChannelSheet(ch);
+}
+
+function cancelChannelHoverHide(){
+  if(channelHoverTimer){
+    clearTimeout(channelHoverTimer);
+    channelHoverTimer=null;
+  }
+}
+
+function scheduleHideChannelHover(){
+  cancelChannelHoverHide();
+  channelHoverTimer=setTimeout(()=>{
+    hideChannelHover();
+  },140);
+}
+
+function hideChannelHover(){
+  const card=document.getElementById('channelHoverCard');
+  if(!card) return;
+  cancelChannelHoverHide();
+  activeChannelHover=null;
+  card.classList.remove('visible');
+  card.setAttribute('aria-hidden','true');
+}
+
+function positionChannelHover(anchorEl,card){
+  if(!anchorEl||!card) return;
+  const rect=anchorEl.getBoundingClientRect();
+  const cardRect=card.getBoundingClientRect();
+  const left=Math.min(rect.right+14,window.innerWidth-cardRect.width-16);
+  const top=Math.min(Math.max(16,rect.top+(rect.height/2)-(cardRect.height/2)),window.innerHeight-cardRect.height-16);
+  card.style.left=`${Math.max(16,left)}px`;
+  card.style.top=`${top}px`;
+}
+
+function showChannelHover(ch,anchorEl){
+  const card=document.getElementById('channelHoverCard');
+  if(!card || window.innerWidth<=760) return;
+  cancelChannelHoverHide();
+  activeChannelHover=ch;
+  const state=channelConnectionState(ch);
+  card.innerHTML=`
+    <div class="channel-hover-top">
+      <div>
+        <div class="channel-hover-kicker">Connected Channel</div>
+        <div class="channel-hover-title">${esc(state.label)}</div>
+      </div>
+      <span class="channel-hover-status ${state.connected?'':'off'}">${state.connected?'<svg viewBox="0 0 8 8" fill="currentColor"><circle cx="4" cy="4" r="4"/></svg>':''}${state.statusLabel}</span>
+    </div>
+    <div class="channel-hover-account">
+      <div class="channel-hover-account-name">${esc(state.accountName)}</div>
+      <div class="channel-hover-account-detail">${esc(state.accountDetail)}</div>
+    </div>
+    <div class="channel-hover-actions">
+      <button class="channel-hover-btn ${state.actionKind}" onclick="channelPrimaryAction('${ch}')">${esc(state.actionLabel)}</button>
+      <button class="channel-hover-btn secondary" onclick="openChannelSheet('${ch}')">Manage</button>
+    </div>`;
+  card.classList.add('visible');
+  card.setAttribute('aria-hidden','false');
+  positionChannelHover(anchorEl,card);
+}
+
+function connectGoogleVoice(){
+  const raw=(document.getElementById('gvoiceAccountInput')?.value||'').trim();
+  markChannelLive('gvoice',{
+    accountName:raw||'Google Voice forwarding',
+    accountDetail:raw
+      ? `Forwarding connected for ${raw}.`
+      : 'Forwarding is enabled and messages are routing into this workspace.'
+  });
+  closeSheet('chSheet');
+  toast('Google Voice forwarding set up ✓');
+}
+
+function connectIMessage(){
+  const raw=(document.getElementById('imessageAccountInput')?.value||'').trim();
+  markChannelLive('imessage',{
+    accountName:raw||'iMessage bridge',
+    accountDetail:raw
+      ? `Bridge connected for ${raw}.`
+      : 'Bridge is configured and ready to route messages into this workspace.'
+  });
+  closeSheet('chSheet');
+  toast('iMessage bridge configured ✓');
 }
 
 /* ── Channel sheets ── */
 function openChannelSheet(ch){
+  hideChannelHover();
   document.getElementById('chSheetTitle').textContent = {
     outlook:'Outlook / Microsoft 365', gvoice:'Google Voice', imessage:'iMessage / SMS'
   }[ch] || ch;
@@ -2222,8 +2429,10 @@ function openChannelSheet(ch){
 
 function buildOutlookSheet(){
   /* If already connected, show connected state */
-  if(msAccessToken && msUserName){
-    const ini = msUserName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const profileName=msUserName||localStorage.getItem('ms_user_name')||'';
+  const profileEmail=msUserEmail||localStorage.getItem('ms_user_email')||'';
+  if(profileName){
+    const ini = profileName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     return `
     <div class="connected-state">
       <div class="connected-av-wrap">
@@ -2231,15 +2440,15 @@ function buildOutlookSheet(){
         <div class="connected-check">✓</div>
       </div>
       <div>
-        <div class="connected-name">${msUserName}</div>
-        <div class="connected-email">${msUserEmail}</div>
+        <div class="connected-name">${profileName}</div>
+        <div class="connected-email">${profileEmail}</div>
       </div>
       <div class="connected-since">Connected · Outlook / Microsoft 365</div>
     </div>
     <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
-      <button class="connect-primary" onclick="fetchOutlookEmails();closeSheet('chSheet')">
+      <button class="connect-primary" onclick="${msAccessToken ? "fetchOutlookEmails();closeSheet('chSheet')" : "startOutlookOAuth()"}">
         <svg class="connect-ms-logo" viewBox="0 0 18 18" fill="none"><path d="M0 0h8.571v8.571H0z" fill="#F25022"/><path d="M9.429 0H18v8.571H9.429z" fill="#7FBA00"/><path d="M0 9.429h8.571V18H0z" fill="#00A4EF"/><path d="M9.429 9.429H18V18H9.429z" fill="#FFB900"/></svg>
-        Refresh Inbox
+        ${msAccessToken ? 'Refresh Inbox' : 'Reconnect Microsoft'}
       </button>
     </div>
     <button class="connected-signout" onclick="signOut();closeSheet('chSheet')">Sign out of Microsoft</button>`;
@@ -2305,6 +2514,25 @@ function buildOutlookSheet(){
 }
 
 function buildGVoiceSheet(){
+  const state=channelConnectionState('gvoice');
+  if(state.connected){
+    return `
+    <div class="connected-state">
+      <div class="connected-av-wrap">
+        <div class="connected-avatar" style="background:var(--green)">GV</div>
+        <div class="connected-check">✓</div>
+      </div>
+      <div>
+        <div class="connected-name">${esc(state.accountName)}</div>
+        <div class="connected-email">${esc(state.accountDetail)}</div>
+      </div>
+      <div class="connected-since">Connected · Google Voice forwarding</div>
+    </div>
+    <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
+      <button class="connect-primary" style="background:var(--green)" onclick="closeSheet('chSheet')">Keep Connected</button>
+    </div>
+    <button class="connected-signout" onclick="disconnectChannel('gvoice');closeSheet('chSheet')">Sign out of Google Voice</button>`;
+  }
   return `
   <div class="ch-connect-card">
     <div class="ch-connect-header">
@@ -2316,13 +2544,32 @@ function buildGVoiceSheet(){
       <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">B</div><div class="ch-step-text"><strong>Full API:</strong> Use <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a> to enable the Gmail API, create OAuth credentials, and add your Client ID below for two-way SMS via Gmail.</div></div>
     </div>
     <div style="padding:0 16px 14px">
-      <input placeholder="Google OAuth Client ID (optional for full sync)" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none">
+      <input id="gvoiceAccountInput" placeholder="Connected Gmail or Google Voice number" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none" value="${esc(channelProfiles.gvoice.accountName||'')}">
     </div>
   </div>
-  <button class="ch-connect-btn" style="background:var(--green)" onclick="markChannelLive('gvoice');closeSheet('chSheet');toast('Google Voice forwarding set up ✓')">Enable Email Forwarding</button>`;
+  <button class="ch-connect-btn" style="background:var(--green)" onclick="connectGoogleVoice()">Enable Email Forwarding</button>`;
 }
 
 function buildIMessageSheet(){
+  const state=channelConnectionState('imessage');
+  if(state.connected){
+    return `
+    <div class="connected-state">
+      <div class="connected-av-wrap">
+        <div class="connected-avatar" style="background:var(--indigo)">IM</div>
+        <div class="connected-check">✓</div>
+      </div>
+      <div>
+        <div class="connected-name">${esc(state.accountName)}</div>
+        <div class="connected-email">${esc(state.accountDetail)}</div>
+      </div>
+      <div class="connected-since">Connected · iMessage / SMS bridge</div>
+    </div>
+    <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
+      <button class="connect-primary" style="background:var(--indigo)" onclick="closeSheet('chSheet')">Keep Connected</button>
+    </div>
+    <button class="connected-signout" onclick="disconnectChannel('imessage');closeSheet('chSheet')">Sign out of iMessage</button>`;
+  }
   return `
   <div class="ch-connect-card">
     <div class="ch-connect-header">
@@ -2336,10 +2583,10 @@ function buildIMessageSheet(){
       <div class="ch-step"><div class="ch-step-num">4</div><div class="ch-step-text">Enterprise option: Use <a href="https://twilio.com" target="_blank">Twilio</a> with a business number — paste your Twilio Account SID below for full two-way SMS</div></div>
     </div>
     <div style="padding:0 16px 14px">
-      <input placeholder="Twilio Account SID (optional)" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none">
+      <input id="imessageAccountInput" placeholder="Connected phone number or bridge device" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none" value="${esc(channelProfiles.imessage.accountName||'')}">
     </div>
   </div>
-  <button class="ch-connect-btn" style="background:var(--indigo)" onclick="markChannelLive('imessage');closeSheet('chSheet');toast('iMessage bridge configured ✓')">Configure Bridge</button>`;
+  <button class="ch-connect-btn" style="background:var(--indigo)" onclick="connectIMessage()">Configure Bridge</button>`;
 }
 
 /* ── LOGO ── */
@@ -2647,7 +2894,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.4';
+const APP_VERSION = '1.4.5';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
@@ -2657,7 +2904,10 @@ document.getElementById('versionLabel').textContent = 'v' + APP_VERSION;
 restoreSavedState();
 if(location.hash==='#settings' || currentView==='settings') openWorkspaceSettings();
 else if(location.hash==='#dashboard' || currentView==='dashboard' || !emails.length) openDashboard();
+window.addEventListener('resize',hideChannelHover);
+window.addEventListener('scroll',hideChannelHover,true);
 window.addEventListener('hashchange',()=>{
+  hideChannelHover();
   if(location.hash==='#settings') openWorkspaceSettings();
   else if(location.hash==='#dashboard') openDashboard();
   else{
