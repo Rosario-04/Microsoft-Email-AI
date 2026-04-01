@@ -1,5 +1,5 @@
 {
-  "version": "1.4.3",
-  "changelog": "Made the update popup easier to read in dark mode and added a dedicated workspace settings page for branding, access, assistant behavior, and system controls.",
-  "released": "2026-03-31"
+  "version": "1.4.4",
+  "changelog": "Removed workspace settings controls from the sidebar while keeping the dedicated workspace settings page available from the main app actions.",
+  "released": "2026-04-01"
 }

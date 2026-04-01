@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.3">
+<meta name="app-version" content="1.4.4">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -97,26 +97,6 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .api-dot.err{background:var(--red)}
 .api-input{flex:1;border:none;background:transparent;font-family:var(--font-sf);font-size:12px;color:var(--label-2);outline:none;min-width:0}
 .api-input::placeholder{color:var(--label-3)}
-
-.studio-card{margin:8px 14px 14px;padding:14px;border-radius:20px;background:linear-gradient(180deg,color-mix(in srgb,var(--panel-bg) 98%,transparent),color-mix(in srgb,var(--panel-inner-bg) 18%,var(--panel-bg)));border:1px solid color-mix(in srgb,var(--panel-border) 86%,transparent);box-shadow:var(--panel-shadow);display:grid;gap:10px}
-.studio-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.studio-title{font-size:13px;font-weight:700;letter-spacing:.01em}
-.studio-copy{display:none}
-.studio-open{padding:8px 11px;border:.5px solid color-mix(in srgb,var(--panel-border) 88%,transparent);border-radius:999px;background:color-mix(in srgb,var(--panel-inner-bg) 70%,#ffffff);color:var(--label);font-family:var(--font-sf);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;text-transform:uppercase;letter-spacing:.08em}
-.studio-grid{display:grid;gap:10px}
-.studio-field{display:grid;gap:6px}
-.studio-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3)}
-.studio-input{width:100%;border:.5px solid color-mix(in srgb,var(--panel-border) 90%,transparent);outline:none;border-radius:13px;background:color-mix(in srgb,var(--panel-inner-bg) 74%,#ffffff);padding:10px 12px;font-family:var(--font-sf);font-size:13px;color:var(--label)}
-.studio-color-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.studio-color-field{display:grid;gap:6px}
-.studio-color-wrap{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:13px;background:color-mix(in srgb,var(--panel-inner-bg) 70%,#ffffff);border:.5px solid color-mix(in srgb,var(--panel-border) 90%,transparent)}
-.studio-color{width:34px;height:28px;border:none;background:none;padding:0;cursor:pointer}
-.studio-color::-webkit-color-swatch-wrapper{padding:0}
-.studio-color::-webkit-color-swatch{border:none;border-radius:10px}
-.studio-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.studio-btn{padding:9px 10px;border:.5px solid color-mix(in srgb,var(--panel-border) 88%,transparent);border-radius:999px;background:color-mix(in srgb,var(--panel-inner-bg) 70%,#ffffff);color:var(--label);font-family:var(--font-sf);font-size:11px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}
-.studio-btn.primary{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 84%,#c4953a),color-mix(in srgb,var(--accent) 55%,#7a5315));color:#fff;border-color:transparent;box-shadow:0 12px 24px color-mix(in srgb,var(--accent) 20%,transparent)}
-.studio-note{display:none}
 
 .sec-lbl{padding:14px 18px 8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--label-3)}
 
@@ -642,7 +622,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   .det{min-height:46dvh}
   .sb-head{padding:16px 14px 10px}
-  .api-bar,.signed-in-card,.studio-card{margin-left:12px;margin-right:12px}
+  .api-bar,.signed-in-card{margin-left:12px;margin-right:12px}
   .nav-list{padding:0 12px}
   .sec-lbl,.sb-version{padding-left:14px;padding-right:14px}
   .det-head{padding:16px 18px 12px}
@@ -682,8 +662,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-tabs::-webkit-scrollbar{display:none}
   .dash-insight,.dash-quick-item,.dash-list-row{flex-direction:column;align-items:flex-start}
   .dash-insight-meta{width:100%;justify-content:space-between}
-  .studio-actions{flex-direction:column}
-  .studio-btn,.studio-open{width:100%;justify-content:center;text-align:center}
   .workspace-action-row{flex-direction:column}
   .workspace-btn{width:100%;justify-content:center;text-align:center}
 }
@@ -732,54 +710,10 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     <button class="signed-in-out" onclick="signOut()">Sign out</button>
   </div>
 
-  <div class="studio-card">
-    <div class="studio-head">
-      <div>
-        <div class="studio-title">Workspace Settings</div>
-      </div>
-      <button class="studio-open" onclick="openWorkspaceSettings()">More</button>
-    </div>
-    <div class="studio-grid">
-      <label class="studio-field">
-        <span class="studio-label">Main Title</span>
-        <input class="studio-input" id="sidebarAppName" value="Mail AI" placeholder="Workspace title" oninput="updateSidebarBrand('name',this.value)">
-      </label>
-      <label class="studio-field">
-        <span class="studio-label">Subtitle</span>
-        <input class="studio-input" id="sidebarSubtitle" value="Unified pipeline workspace" placeholder="Short brand line" oninput="updateSidebarBrand('subtitle',this.value)">
-      </label>
-      <div class="studio-color-grid">
-        <label class="studio-color-field">
-          <span class="studio-label">Accent</span>
-          <div class="studio-color-wrap">
-            <input class="studio-color" type="color" id="sidebarAccentColor" value="#B48A2C" oninput="setAccentColor(this.value)">
-            <input class="studio-input" id="sidebarAccentHex" value="#B48A2C" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setAccentColor(this.value)">
-          </div>
-        </label>
-        <label class="studio-color-field">
-          <span class="studio-label">Background</span>
-          <div class="studio-color-wrap">
-            <input class="studio-color" type="color" id="sidebarBgColor" value="#F5F5F7" oninput="setBackgroundColor(this.value)">
-            <input class="studio-input" id="sidebarBgHex" value="#F5F5F7" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) setBackgroundColor(this.value)">
-          </div>
-        </label>
-      </div>
-    </div>
-    <div class="studio-actions">
-      <button class="studio-btn primary" onclick="openDashboard()">Dashboard</button>
-      <button class="studio-btn" onclick="openWorkspaceSettings()">Settings</button>
-      <button class="studio-btn" onclick="resetBrandTheme()">Reset</button>
-    </div>
-  </div>
-
   <div class="sec-lbl">Command Center</div>
   <button class="ai-action dash-action" id="dashboardBtn" onclick="openDashboard()">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
     <span class="n-label">Dashboard</span>
-  </button>
-  <button class="ai-action" id="workspaceBtn" onclick="openWorkspaceSettings()">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-    <span class="n-label">Workspace</span>
   </button>
   <div class="nav-divider"></div>
 
@@ -860,7 +794,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.3</span>
+    <span id="versionLabel">v1.4.4</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1153,7 +1087,7 @@ function currentTheme(){return document.documentElement.getAttribute('data-theme
 function shouldRenderActiveView(){return currentView==='dashboard'||currentView==='settings';}
 function clearSidebarSelections(){
   document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
-  ['dashboardBtn','workspaceBtn'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  document.getElementById('dashboardBtn')?.classList.remove('active');
 }
 function normalizeHex(value,fallback){
   const raw=String(value||'').trim();
@@ -1736,7 +1670,6 @@ function leaveWorkspaceSettings(){
   if(currentView!=='settings') return;
   currentView='mail';
   document.body.classList.remove('settings-mode');
-  document.getElementById('workspaceBtn').classList.remove('active');
   if(location.hash==='#settings') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -1756,7 +1689,6 @@ function openWorkspaceSettings(){
   document.body.classList.remove('dashboard-mode');
   document.body.classList.add('settings-mode');
   clearSidebarSelections();
-  document.getElementById('workspaceBtn').classList.add('active');
   if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
   render();
   saveSettings();
@@ -2715,7 +2647,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.3';
+const APP_VERSION = '1.4.4';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
