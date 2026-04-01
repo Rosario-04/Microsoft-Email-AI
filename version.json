@@ -1,5 +1,5 @@
 {
-  "version": "1.4.6",
-  "changelog": "Updated the Dashboard sidebar card to use the same sizing and row structure as All Mail for a cleaner, consistent navigation layout.",
+  "version": "1.4.7",
+  "changelog": "Aligned the Dashboard sidebar button states with All Mail so its normal, hover, and selected styling now match the rest of the navigation.",
   "released": "2026-04-01"
 }
