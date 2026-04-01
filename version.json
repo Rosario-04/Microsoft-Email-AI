@@ -1,5 +1,5 @@
 {
-  "version": "1.4.5",
-  "changelog": "Cleaned up the sidebar by moving connected channel account details into hover cards with quick manage and sign-out actions for Outlook, Google Voice, and iMessage.",
+  "version": "1.4.6",
+  "changelog": "Updated the Dashboard sidebar card to use the same sizing and row structure as All Mail for a cleaner, consistent navigation layout.",
   "released": "2026-04-01"
 }

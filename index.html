@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.5">
+<meta name="app-version" content="1.4.6">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -154,6 +154,8 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .ai-action:hover{background:rgba(255,255,255,.38);border-color:color-mix(in srgb,var(--panel-border) 72%,transparent);color:var(--label);transform:translateY(-1px)}
 .ai-action svg{width:15px;height:15px;flex-shrink:0}
 .dash-action{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 12%,transparent),rgba(255,255,255,.42));border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);color:var(--label);box-shadow:0 10px 24px rgba(15,23,42,.08)}
+.dash-action .n-icon{background:color-mix(in srgb,var(--accent) 14%,rgba(255,255,255,.88));color:var(--accent)}
+[data-theme="dark"] .dash-action .n-icon{background:rgba(255,255,255,.12);color:#fff}
 .ai-action.active{background:rgba(255,255,255,.72);color:#111315;border-color:rgba(255,255,255,.8);box-shadow:0 12px 26px rgba(0,0,0,.08)}
 [data-theme="dark"] .ai-action.active{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.22);box-shadow:inset 0 1px 1px rgba(255,255,255,.2),0 12px 26px rgba(0,0,0,.25)}
 
@@ -712,10 +714,14 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   </div>
 
   <div class="sec-lbl">Command Center</div>
-  <button class="ai-action dash-action" id="dashboardBtn" onclick="openDashboard()">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-    <span class="n-label">Dashboard</span>
-  </button>
+  <ul class="nav-list">
+    <li><button class="nav-btn dash-action" id="dashboardBtn" onclick="openDashboard()">
+      <div class="n-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      </div>
+      <span class="n-label">Dashboard</span>
+    </button></li>
+  </ul>
   <div class="nav-divider"></div>
 
   <div class="sec-lbl">Mailboxes</div>
@@ -795,7 +801,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.5</span>
+    <span id="versionLabel">v1.4.6</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -2894,7 +2900,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.5';
+const APP_VERSION = '1.4.6';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
