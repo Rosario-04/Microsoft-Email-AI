@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.7">
+<meta name="app-version" content="1.4.8">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -160,6 +160,10 @@ body.dashboard-mode .search-wrap,
 body.dashboard-mode .sort-pills{display:none}
 body.dashboard-mode .list-body{padding:14px}
 body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
+body.dashboard-mode{grid-template:"sb det" 1fr / var(--sb-w) minmax(0,1fr)}
+body.dashboard-mode .list-pane{display:none}
+body.dashboard-mode .det{grid-area:det;min-width:0}
+body.dashboard-mode .det-scroll{overflow:hidden}
 body.settings-mode .search-wrap,
 body.settings-mode .sort-pills{display:none}
 body.settings-mode .list-body{padding:14px}
@@ -256,6 +260,73 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 .dash-stage-track{height:10px;border-radius:999px;background:rgba(120,132,154,.14);overflow:hidden}
 .dash-stage-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 52%,#9ad4ff))}
 .dash-dual-note{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.dash-detail-scroll{overflow:hidden}
+.dash-simple-shell{height:100%;min-height:0;gap:12px;padding:16px 16px 18px}
+.dash-hero-simple{padding:18px 20px;border-radius:26px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 10%,transparent),color-mix(in srgb,var(--sys-grouped) 92%,#ffffff));border-color:color-mix(in srgb,var(--accent) 14%,transparent);box-shadow:none}
+.dash-hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.dash-hero-simple .dash-title{font-size:28px;max-width:none;margin-bottom:8px}
+.dash-hero-simple .dash-copy{font-size:13px;line-height:1.55;max-width:60ch}
+.dash-hero-simple .dash-hero-actions{margin-top:0;flex-shrink:0}
+.dash-hero-metrics-simple{margin-top:16px}
+.dash-workspace{display:grid;grid-template-columns:minmax(0,1.28fr) minmax(300px,.9fr);gap:12px;flex:1;min-height:0}
+.dash-main-column,.dash-side-column{display:grid;gap:12px;min-height:0}
+.dash-card-compact{padding:16px 18px;border-radius:22px;box-shadow:none}
+.dash-card.scrollable{min-height:0;overflow:auto}
+.dash-card.scrollable::-webkit-scrollbar{display:none}
+.dash-edit-grid.compact{gap:10px}
+.dash-edit-grid.compact .dash-edit-card{padding:12px 13px;border-radius:16px}
+.dash-edit-grid.compact .dash-edit-help{min-height:auto}
+.dash-edit-grid.compact .dash-input-shell{margin-top:8px;padding:10px 11px}
+.dash-edit-grid.compact .dash-input{font-size:21px}
+.dash-mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dash-mini-card{padding:14px;border-radius:18px;background:color-mix(in srgb,var(--sys-grouped-2) 92%,#ffffff);border:.5px solid rgba(120,132,154,.14)}
+.dash-mini-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--label-3);margin-bottom:7px}
+.dash-mini-value{font-size:22px;font-weight:760;letter-spacing:-.04em;color:var(--label)}
+.dash-mini-sub{font-size:12px;color:var(--label-2);margin-top:5px;line-height:1.45}
+.dash-signal-list{display:grid;gap:2px}
+.dash-signal-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-top:.5px solid rgba(120,132,154,.16)}
+.dash-signal-row:first-child{border-top:none;padding-top:0}
+.dash-signal-main{min-width:0}
+.dash-signal-title{font-size:13px;font-weight:700;color:var(--label)}
+.dash-signal-copy{font-size:12px;color:var(--label-2);line-height:1.5;margin-top:4px}
+.dash-signal-side{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.dash-signal-value{font-size:12px;font-weight:700;color:var(--label)}
+.dash-signal-btn{padding:8px 11px;border:none;border-radius:999px;background:var(--accent);color:#fff;cursor:pointer;font-family:var(--font-sf);font-size:12px;font-weight:600}
+.dash-note.compact{padding:16px;border-radius:22px}
+.dash-note.compact .dash-note-ta{min-height:150px}
+[data-theme="dark"] .dash-hero-simple{background:linear-gradient(155deg,rgba(24,30,41,.96),rgba(14,18,26,.94));border-color:rgba(180,138,44,.22);box-shadow:none}
+[data-theme="dark"] .dash-card,
+[data-theme="dark"] .dash-note,
+[data-theme="dark"] .dash-rail-card{background:rgba(18,22,30,.9);border-color:rgba(255,255,255,.08);box-shadow:none}
+[data-theme="dark"] .dash-stat-card,
+[data-theme="dark"] .dash-mini-card,
+[data-theme="dark"] .dash-edit-card,
+[data-theme="dark"] .dash-stage,
+[data-theme="dark"] .dash-note-ta,
+[data-theme="dark"] .dash-module-item,
+[data-theme="dark"] .dash-quick-item,
+[data-theme="dark"] .dash-list-row,
+[data-theme="dark"] .dash-insight,
+[data-theme="dark"] .dash-chip,
+[data-theme="dark"] .dash-tab{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .dash-copy,
+[data-theme="dark"] .dash-card-copy,
+[data-theme="dark"] .dash-row-sub,
+[data-theme="dark"] .dash-quick-copy,
+[data-theme="dark"] .dash-empty-note,
+[data-theme="dark"] .dash-signal-copy,
+[data-theme="dark"] .dash-mini-sub,
+[data-theme="dark"] .dash-stat-foot,
+[data-theme="dark"] .dash-edit-help,
+[data-theme="dark"] .dash-input-meta{color:rgba(235,235,245,.76)}
+[data-theme="dark"] .dash-kicker,
+[data-theme="dark"] .dash-card-eyebrow,
+[data-theme="dark"] .dash-mini-label,
+[data-theme="dark"] .dash-stat-label{color:rgba(235,235,245,.58)}
+[data-theme="dark"] .dash-tab.active{background:color-mix(in srgb,var(--dash-tone) 22%,rgba(255,255,255,.08));border-color:color-mix(in srgb,var(--dash-tone) 26%,rgba(255,255,255,.14));color:#fff}
+[data-theme="dark"] .dash-input-shell,
+[data-theme="dark"] .dash-stage-field{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+.dash-simple-shell .dash-chip-row{margin-top:14px}
 .workspace-list{display:grid;gap:12px;padding:4px 2px 16px}
 .workspace-mini-card{width:100%;border:none;text-align:left;padding:16px;border-radius:20px;background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);box-shadow:0 10px 24px rgba(19,28,45,.08);cursor:pointer;display:grid;gap:6px;font-family:var(--font-sf);color:var(--label)}
 .workspace-mini-card:hover{transform:translateY(-1px)}
@@ -611,23 +682,28 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
 @media (max-width:1180px){
   :root{--sb-w:264px;--list-w:320px}
-  .dash-hero-metrics,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dash-hero-metrics,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row,.dash-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dash-workspace{grid-template-columns:minmax(0,1fr)}
   .studio-color-grid{grid-template-columns:1fr}
 }
 
 @media (max-width:960px){
   body{grid-template:"sb list" auto "sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
+  body.dashboard-mode{grid-template:"sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
   .list-pane{max-height:40dvh}
   .det{min-width:0}
-  .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:1fr}
+  .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row,.dash-mini-grid{grid-template-columns:1fr}
   .dash-stage-grid{grid-template-columns:1fr}
+  .dash-hero-head{flex-direction:column}
 }
 
 @media (max-width:760px){
   body{height:auto;min-height:100dvh;overflow:auto;grid-template:"sb" auto "list" minmax(280px,42dvh) "det" minmax(0,1fr) / minmax(0,1fr)}
+  body.dashboard-mode{height:100dvh;min-height:100dvh;overflow:hidden;grid-template:"sb" auto "det" minmax(0,1fr) / minmax(0,1fr)}
   .sb,.list-pane,.det{min-width:0}
   .sb{border-right:none;border-bottom:.5px solid var(--sys-sep-op);padding-bottom:16px}
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
+  body.dashboard-mode .list-pane{display:none}
   .det{min-height:46dvh}
   .sb-head{padding:16px 14px 10px}
   .api-bar{margin-left:12px;margin-right:12px}
@@ -665,11 +741,16 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-hero{padding:20px}
   .dash-title{font-size:28px}
   .dash-tagline{font-size:14px}
-  .dash-rail-grid,.dash-hero-metrics,.dash-edit-grid,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row{grid-template-columns:1fr}
+  .dash-rail-grid,.dash-hero-metrics,.dash-edit-grid,.dash-panel-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row,.dash-mini-grid{grid-template-columns:1fr}
   .dash-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
   .dash-tabs::-webkit-scrollbar{display:none}
   .dash-insight,.dash-quick-item,.dash-list-row{flex-direction:column;align-items:flex-start}
   .dash-insight-meta{width:100%;justify-content:space-between}
+  .dash-workspace{grid-template-columns:1fr}
+  .dash-simple-shell{height:auto;overflow:auto}
+  body.dashboard-mode .det-scroll{overflow:auto}
+  .dash-hero-simple .dash-hero-actions{width:100%;margin-top:12px}
+  .dash-signal-row{flex-direction:column;align-items:flex-start}
   .workspace-action-row{flex-direction:column}
   .workspace-btn{width:100%;justify-content:center;text-align:center}
   .channel-hover-card{display:none}
@@ -798,7 +879,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.7</span>
+    <span id="versionLabel">v1.4.8</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1498,50 +1579,153 @@ function renderPipelineStages(){
   const maxStage=Math.max(...dashboardData.pipelineStages.map(stage=>Number(stage.value)||0),1);
   return dashboardData.pipelineStages.map((stage,index)=>`<div class="dash-stage"><div class="dash-stage-top"><div><div class="dash-stage-name">${stage.name}</div><div class="dash-stage-meta">${stage.count} deals · ${money(stage.value)}</div></div><span class="dash-chip">Auto-saved</span></div><div class="dash-stage-grid"><label class="dash-stage-field"><span class="dash-stage-label">Stage</span><input class="dash-stage-input" value="${stage.name}" onchange="updatePipelineStageField(${index},'name',this.value,'text')"></label><label class="dash-stage-field"><span class="dash-stage-label">Deals</span><input class="dash-stage-input" type="number" value="${stage.count}" onchange="updatePipelineStageField(${index},'count',this.value)"></label><label class="dash-stage-field"><span class="dash-stage-label">Value</span><input class="dash-stage-input" type="number" value="${stage.value}" onchange="updatePipelineStageField(${index},'value',this.value)"></label></div><div class="dash-stage-track"><div class="dash-stage-fill" style="width:${Math.max(10,Math.round((Number(stage.value)||0)/maxStage*100))}%"></div></div></div>`).join('');
 }
-function renderDashboardSection(urgent,unread){
-  const clientThreads=emails.filter(e=>e.cat==='client'&&!e.snoozed).length;
-  const financeThreads=emails.filter(e=>e.cat==='finance'&&!e.snoozed).length;
-  switch(dashboardTab){
+function dashboardSectionContent(tab){
+  const content={
+    today:{eyebrow:'Today',title:'Today priorities',copy:'Edit the few numbers that matter today, then keep one clean note beside them.',noteKey:'today',noteTitle:'Today notes',noteCopy:'Short reminders, blockers, and handoffs for the day.'},
+    marketing:{eyebrow:'Marketing',title:'Campaign metrics',copy:'Keep marketing lean: volume, conversion, and spend in one place.',noteKey:'marketing',noteTitle:'Marketing notes',noteCopy:'Weekly experiments, campaign changes, and wins to remember.'},
+    sales:{eyebrow:'Sales',title:'Pipeline metrics',copy:'Track the live pipeline, proposal load, and close rhythm without extra clutter.',noteKey:'sales',noteTitle:'Sales notes',noteCopy:'Use this space for hot deals, blockers, and close timing.'},
+    clients:{eyebrow:'Clients',title:'Client health',copy:'Stay on top of active accounts, onboarding, and retention with a lighter view.',noteKey:'clients',noteTitle:'Client notes',noteCopy:'Capture renewal risks, onboarding reminders, and relationship notes.'},
+    finance:{eyebrow:'Finance',title:'Money view',copy:'Revenue, collections, margin, and overdue exposure with less noise.',noteKey:'finance',noteTitle:'Finance notes',noteCopy:'Collection follow-ups, invoice watchlists, and cash notes.'},
+    operations:{eyebrow:'Operations',title:'Operations control',copy:'See the work load, response health, and automations in a compact layout.',noteKey:'operations',noteTitle:'Operations notes',noteCopy:'Recurring issues, staffing notes, and systems cleanup ideas.'}
+  };
+  return content[tab]||content.today;
+}
+function dashboardSignalRows(tab,context){
+  switch(tab){
     case 'marketing':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Marketing</div><h3>Campaign Scorecard</h3></div><div class="dash-card-copy">Editable campaign metrics that save inside the app.</div></div><div class="dash-edit-grid">${renderDashboardFields('marketing')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Focus</div><h3>Campaign Actions</h3></div><div class="dash-card-copy">Keep marketing connected to pipeline follow-through.</div></div><div class="dash-insight-list">${renderDashboardInsight('Lead flow is active',`${dashboardData.marketing.leads} leads and ${dashboardData.marketing.bookedCalls} booked calls are currently on the board.`,`ROAS ${dashboardData.marketing.roas}x`,'Open sales',"setDashboardTab('sales')",'#4E7BFF')}${renderDashboardInsight('Campaign alerts need triage',`${dashboardData.today.campaignAlerts} campaign items are flagged for review in Today.`,`${dashboardData.today.campaignAlerts} alerts`,'Open today',"setDashboardTab('today')",'#4E7BFF')}${renderDashboardInsight('Templates support faster replies',`${templates.length} templates are saved for outreach, follow-up, and confirmations.`,`${templates.length} saved`,'Open templates',"openSheet('templates')",'#4E7BFF')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('marketing','Marketing Focus','Keep campaign notes, experiments, and weekly priorities in one saved place.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Hand-off</div><h3>Marketing to Pipeline</h3></div><div class="dash-card-copy">Use this area to connect acquisition to real revenue outcomes.</div></div><div class="dash-insight-list">${renderDashboardInsight('Booked calls feed the pipeline',`Current booked-call count is ${dashboardData.marketing.bookedCalls}. Use it to pressure-test pipeline growth.`,money(dashboardData.sales.pipeline),'Open sales',"setDashboardTab('sales')",'#4E7BFF')}${renderDashboardInsight('Inbox still affects conversion',`${urgent} urgent threads and ${unread} unread messages can directly affect conversion.`,`${urgent} urgent`,'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#007AFF')}</div></div></div></section>`;
+      return [
+        {title:'Booked calls are the handoff',copy:`${dashboardData.marketing.bookedCalls} calls are currently feeding the sales side.`,value:`ROAS ${dashboardData.marketing.roas}x`,actionLabel:'Open sales',action:"setDashboardTab('sales')"},
+        {title:'Campaign alerts stay visible',copy:`${dashboardData.today.campaignAlerts} alerts are waiting in Today.`,value:`${dashboardData.today.campaignAlerts} alerts`,actionLabel:'Open today',action:"setDashboardTab('today')"},
+        {title:'Templates support outreach',copy:`${templates.length} templates are ready for outreach and follow-up.`,value:`${templates.length} saved`,actionLabel:'Templates',action:"openSheet('templates')"}
+      ];
     case 'sales':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Sales</div><h3>Pipeline Snapshot</h3></div><div class="dash-card-copy">Track open pipeline, proposal load, and expected close value.</div></div><div class="dash-edit-grid">${renderDashboardFields('sales')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Pipeline</div><h3>Stage Board</h3></div><div class="dash-card-copy">Inline stage editing replaces the old popup flow.</div></div><div class="dash-stage-list">${renderPipelineStages()}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('sales','Sales Focus','Capture proposal blockers, hot deals, and next close targets here.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Signals</div><h3>Deal Movement</h3></div><div class="dash-card-copy">Use the surrounding modules to keep the pipeline honest.</div></div><div class="dash-insight-list">${renderDashboardInsight('Client conversations support closes',`${clientThreads} client threads are still active in the inbox.`,`${clientThreads} threads`,'Open client inbox',"setFilter('client',document.querySelector('[data-filter=client]'))",'#5856D6')}${renderDashboardInsight('Forecast should match finance',`Forecast is ${money(dashboardData.sales.forecast)} while tracked revenue is ${money(dashboardData.finance.revenue)}.`,money(dashboardData.finance.revenue),'Open finance',"setDashboardTab('finance')",'#5856D6')}${renderDashboardInsight('Proposal load is visible',`${dashboardData.sales.proposalsOut} proposals are currently out and ${dashboardData.today.proposalsDue} are due soon.`,`${dashboardData.sales.proposalsOut} open`,'Open today',"setDashboardTab('today')",'#5856D6')}</div></div></div></section>`;
+      return [
+        {title:'Client threads still influence closes',copy:`${context.clientThreads} client conversations are still live in the inbox.`,value:`${context.clientThreads} threads`,actionLabel:'Client inbox',action:"setFilter('client',document.querySelector('[data-filter=client]'))"},
+        {title:'Forecast should stay tied to finance',copy:`Forecast is ${money(dashboardData.sales.forecast)} against ${money(dashboardData.finance.revenue)} tracked revenue.`,value:money(dashboardData.sales.forecast),actionLabel:'Open finance',action:"setDashboardTab('finance')"},
+        {title:'Proposals are still moving',copy:`${dashboardData.sales.proposalsOut} proposals are out and ${dashboardData.today.proposalsDue} need movement soon.`,value:`${dashboardData.sales.proposalsOut} open`,actionLabel:'Open today',action:"setDashboardTab('today')"}
+      ];
     case 'clients':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Clients</div><h3>Account Health</h3></div><div class="dash-card-copy">Track active relationships, onboarding volume, and retention signals.</div></div><div class="dash-edit-grid">${renderDashboardFields('clients')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Relationships</div><h3>Client Workbench</h3></div><div class="dash-card-copy">Connect account health with the inbox and sales view.</div></div><div class="dash-insight-list">${renderDashboardInsight('Client inbox is active',`${clientThreads} client conversations are currently visible and waiting inside the app.`,`${clientThreads} threads`,'Open client inbox',"setFilter('client',document.querySelector('[data-filter=client]'))",'#34C759')}${renderDashboardInsight('Onboarding needs watch time',`${dashboardData.clients.onboarding} onboarding accounts are active right now.`,`${dashboardData.clients.onboarding} active`,'Open operations',"setDashboardTab('operations')",'#34C759')}${renderDashboardInsight('Retention drives revenue quality',`Retention is currently set to ${pct(dashboardData.clients.retention)}. Keep renewals and follow-through close to the team.`,pct(dashboardData.clients.retention),'Open finance',"setDashboardTab('finance')",'#34C759')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('clients','Client Focus','Keep renewal risks, onboarding watch-outs, and relationship notes together.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Coverage</div><h3>Service Signals</h3></div><div class="dash-card-copy">These quick numbers help the dashboard feel operational, not just decorative.</div></div><div class="dash-insight-list">${renderDashboardInsight('Templates help consistency',`${templates.length} templates are available for onboarding, confirmations, and quick replies.`,`${templates.length} saved`,'Open templates',"openSheet('templates')",'#34C759')}${renderDashboardInsight('Unread replies can affect experience',`${unread} unread threads are still sitting in the inbox.`,`${unread} unread`,'Open inbox',"setFilter('all',document.querySelector('[data-filter=all]'))",'#34C759')}</div></div></div></section>`;
+      return [
+        {title:'Client inbox remains active',copy:`${context.clientThreads} client threads are still sitting in the workspace.`,value:`${context.clientThreads} threads`,actionLabel:'Client inbox',action:"setFilter('client',document.querySelector('[data-filter=client]'))"},
+        {title:'Onboarding load stays visible',copy:`${dashboardData.clients.onboarding} onboarding accounts are active right now.`,value:`${dashboardData.clients.onboarding} active`,actionLabel:'Operations',action:"setDashboardTab('operations')"},
+        {title:'Unread replies affect experience',copy:`${context.unread} unread messages still need attention.`,value:`${context.unread} unread`,actionLabel:'Open inbox',action:"setFilter('all',document.querySelector('[data-filter=all]'))"}
+      ];
     case 'finance':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Finance</div><h3>Money Snapshot</h3></div><div class="dash-card-copy">Revenue, collections, and overdue exposure in one saved panel.</div></div><div class="dash-edit-grid">${renderDashboardFields('finance')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Cash Flow</div><h3>Finance Actions</h3></div><div class="dash-card-copy">Tie finance back to what the inbox and pipeline are telling you.</div></div><div class="dash-insight-list">${renderDashboardInsight('Outstanding exposure is visible',`Overdue invoices are currently set to ${money(dashboardData.finance.overdueInvoices)}.`,money(dashboardData.finance.overdueInvoices),'Open finance inbox',"setFilter('finance',document.querySelector('[data-filter=finance]'))",'#FF9500')}${renderDashboardInsight('Cash collected vs revenue',`${money(dashboardData.finance.cashCollected)} collected against ${money(dashboardData.finance.revenue)} revenue tracked.`,pct(dashboardData.finance.profitMargin),'Open sales',"setDashboardTab('sales')",'#FF9500')}${renderDashboardInsight('Finance inbox still matters',`${financeThreads} finance-category threads are still active in the inbox.`,`${financeThreads} threads`,'Open finance inbox',"setFilter('finance',document.querySelector('[data-filter=finance]'))",'#FF9500')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('finance','Finance Focus','Use this space for collection notes, invoice watchlists, and cash planning.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Connection</div><h3>Finance to Operations</h3></div><div class="dash-card-copy">Revenue is easier to manage when follow-up and execution are visible too.</div></div><div class="dash-insight-list">${renderDashboardInsight('Tasks support collections',`${dashboardData.operations.tasksDue} ops tasks are due and may block clean execution.`,`${dashboardData.operations.tasksDue} tasks`,'Open operations',"setDashboardTab('operations')",'#FF9500')}${renderDashboardInsight('Client health affects collection',`${dashboardData.clients.activeClients} active clients are tied to current revenue and renewal outcomes.`,`${dashboardData.clients.activeClients} clients`,'Open clients',"setDashboardTab('clients')",'#FF9500')}</div></div></div></section>`;
+      return [
+        {title:'Overdue exposure is tracked',copy:`Overdue invoices currently sit at ${money(dashboardData.finance.overdueInvoices)}.`,value:money(dashboardData.finance.overdueInvoices),actionLabel:'Finance inbox',action:"setFilter('finance',document.querySelector('[data-filter=finance]'))"},
+        {title:'Cash collected vs revenue',copy:`${money(dashboardData.finance.cashCollected)} collected against ${money(dashboardData.finance.revenue)} revenue tracked.`,value:pct(dashboardData.finance.profitMargin),actionLabel:'Open sales',action:"setDashboardTab('sales')"},
+        {title:'Finance follow-up remains visible',copy:`${context.financeThreads} finance threads are still active in the inbox.`,value:`${context.financeThreads} threads`,actionLabel:'Finance inbox',action:"setFilter('finance',document.querySelector('[data-filter=finance]'))"}
+      ];
     case 'operations':
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Operations</div><h3>Execution Control</h3></div><div class="dash-card-copy">Track task load, automation coverage, and response health.</div></div><div class="dash-edit-grid">${renderDashboardFields('operations')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Follow-through</div><h3>Ops Shortcuts</h3></div><div class="dash-card-copy">Keep operations tied to the parts of the app that create work.</div></div><div class="dash-insight-list">${renderDashboardInsight('Today rail needs support',`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} tasks are active right now.`,`${dashboardData.operations.tasksDue} tasks`,'Open today',"setDashboardTab('today')",'#5AC8FA')}${renderDashboardInsight('Automations are part of the workflow',`${dashboardData.operations.automationsLive} automations are currently tracked as live.`,`${dashboardData.operations.automationsLive} live`,'Open workspace',"openWorkspaceSettings()",'#5AC8FA')}${renderDashboardInsight('Inbox SLA stays visible',`${pct(dashboardData.operations.responseSla)} response health with ${urgent} urgent threads currently in the inbox.`,pct(dashboardData.operations.responseSla),'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#5AC8FA')}</div></div></div><div class="dash-panel-grid"><div class="dash-card">${renderDashboardNoteCard('operations','Operations Focus','Store recurring workflow notes, bottlenecks, and systems cleanup ideas here.')}</div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Systems</div><h3>Operational Context</h3></div><div class="dash-card-copy">This is the section that should make the app feel like an actual business cockpit.</div></div><div class="dash-insight-list">${renderDashboardInsight('Brand and settings persist',`Your app branding, API key, templates, and dashboard numbers save locally unless you change them.`,'Saved state','Open workspace',"openWorkspaceSettings()",'#5AC8FA')}${renderDashboardInsight('Operations connect the modules',`Use this tab to keep marketing, sales, finance, and client work coordinated instead of scattered.`,'Unified view','Open today',"setDashboardTab('today')",'#5AC8FA')}</div></div></div></section>`;
+      return [
+        {title:'Today load is clear',copy:`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} tasks are on the board.`,value:`${dashboardData.operations.tasksDue} tasks`,actionLabel:'Open today',action:"setDashboardTab('today')"},
+        {title:'Automations stay visible',copy:`${dashboardData.operations.automationsLive} automations are marked live in the workspace.`,value:`${dashboardData.operations.automationsLive} live`,actionLabel:'Workspace',action:"openWorkspaceSettings()"},
+        {title:'Urgent inbox still matters',copy:`${context.urgent} urgent threads are still sitting in the inbox.`,value:pct(dashboardData.operations.responseSla),actionLabel:'Urgent inbox',action:"setFilter('urgent',document.querySelector('[data-filter=urgent]'))"}
+      ];
     case 'today':
     default:
-      return `<section class="dash-panel"><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Today</div><h3>Action Rail</h3></div><div class="dash-card-copy">These numbers are your daily operating priorities and save directly when edited.</div></div><div class="dash-edit-grid">${renderDashboardFields('today')}</div></div><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Shortcuts</div><h3>Immediate Work</h3></div><div class="dash-card-copy">Jump straight into the work that changes the numbers above.</div></div><div class="dash-insight-list">${renderDashboardInsight('Urgent inbox needs attention',`${urgent} urgent threads are still active and ${unread} unread messages remain.`,`${urgent} urgent`,'Open urgent inbox',"setFilter('urgent',document.querySelector('[data-filter=urgent]'))",'#007AFF')}${renderDashboardInsight('Proposal follow-up is visible',`${dashboardData.today.proposalsDue} proposals need movement and ${dashboardData.sales.proposalsOut} are already out.`,`${dashboardData.today.proposalsDue} due`,'Open sales',"setDashboardTab('sales')",'#007AFF')}${renderDashboardInsight('Finance items stay close',`${dashboardData.today.invoicesDue} invoice follow-ups are on the board and ${financeThreads} finance threads are in the inbox.`,`${dashboardData.today.invoicesDue} due`,'Open finance',"setDashboardTab('finance')",'#007AFF')}${renderDashboardInsight('Campaign alerts are part of the day',`${dashboardData.today.campaignAlerts} marketing alerts are sitting beside your inbox actions.`,`${dashboardData.today.campaignAlerts} alerts`,'Open marketing',"setDashboardTab('marketing')",'#007AFF')}</div></div></div><div class="dash-panel-grid"><div class="dash-card"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Overview</div><h3>Cross-Functional Snapshot</h3></div><div class="dash-card-copy">A quick read on the business without leaving the dashboard.</div></div><div class="dash-insight-list">${renderDashboardInsight('Revenue and pipeline are aligned on one screen',`${money(dashboardData.finance.revenue)} revenue tracked beside ${money(dashboardData.sales.pipeline)} in open pipeline.`,money(dashboardData.sales.pipeline),'Open sales',"setDashboardTab('sales')",'#007AFF')}${renderDashboardInsight('Client health stays visible',`${dashboardData.clients.activeClients} active clients with ${pct(dashboardData.clients.retention)} retention currently tracked.`,`${dashboardData.clients.activeClients} clients`,'Open clients',"setDashboardTab('clients')",'#007AFF')}${renderDashboardInsight('Operations support the pace',`${dashboardData.operations.tasksDue} tasks and ${dashboardData.operations.automationsLive} live automations support the workflow.`,`${dashboardData.operations.automationsLive} live`,'Open operations',"setDashboardTab('operations')",'#007AFF')}</div></div><div class="dash-card">${renderDashboardNoteCard('today','Today Focus','Keep your daily priorities, reminders, and blocker notes here so the dashboard stays actionable.')}</div></div></section>`;
+      return [
+        {title:'Urgent inbox needs attention',copy:`${context.urgent} urgent threads and ${context.unread} unread messages remain.`,value:`${context.urgent} urgent`,actionLabel:'Urgent inbox',action:"setFilter('urgent',document.querySelector('[data-filter=urgent]'))"},
+        {title:'Proposal work is visible',copy:`${dashboardData.today.proposalsDue} proposals need movement and ${dashboardData.sales.proposalsOut} are already out.`,value:`${dashboardData.today.proposalsDue} due`,actionLabel:'Open sales',action:"setDashboardTab('sales')"},
+        {title:'Finance items stay close',copy:`${dashboardData.today.invoicesDue} invoice follow-ups are on the board.`,value:`${dashboardData.today.invoicesDue} due`,actionLabel:'Open finance',action:"setDashboardTab('finance')"}
+      ];
   }
 }
+function dashboardSnapshotItems(tab,context){
+  switch(tab){
+    case 'marketing':
+      return [
+        {label:'Leads',value:dashboardData.marketing.leads,sub:'New flow'},
+        {label:'Booked',value:dashboardData.marketing.bookedCalls,sub:'Calls booked'},
+        {label:'Spend',value:money(dashboardData.marketing.spend),sub:'Tracked spend'},
+        {label:'CPL',value:money(dashboardData.marketing.costPerLead),sub:'Cost per lead'}
+      ];
+    case 'sales':
+      return [
+        {label:'Pipeline',value:money(dashboardData.sales.pipeline),sub:'Open value'},
+        {label:'Forecast',value:money(dashboardData.sales.forecast),sub:'Expected close'},
+        {label:'Close rate',value:pct(dashboardData.sales.closeRate),sub:'Win rate'},
+        {label:'Proposals',value:dashboardData.sales.proposalsOut,sub:'Still open'}
+      ];
+    case 'clients':
+      return [
+        {label:'Active',value:dashboardData.clients.activeClients,sub:'Client accounts'},
+        {label:'Onboarding',value:dashboardData.clients.onboarding,sub:'In progress'},
+        {label:'Retention',value:pct(dashboardData.clients.retention),sub:'Account health'},
+        {label:'NPS',value:dashboardData.clients.nps,sub:'Satisfaction'}
+      ];
+    case 'finance':
+      return [
+        {label:'Revenue',value:money(dashboardData.finance.revenue),sub:'Tracked revenue'},
+        {label:'Collected',value:money(dashboardData.finance.cashCollected),sub:'Cash in'},
+        {label:'Margin',value:pct(dashboardData.finance.profitMargin),sub:'Profitability'},
+        {label:'Overdue',value:money(dashboardData.finance.overdueInvoices),sub:'Outstanding'}
+      ];
+    case 'operations':
+      return [
+        {label:'Tasks',value:dashboardData.operations.tasksDue,sub:'Need follow-up'},
+        {label:'SLA',value:pct(dashboardData.operations.responseSla),sub:'Response health'},
+        {label:'Auto',value:dashboardData.operations.automationsLive,sub:'Automations live'},
+        {label:'Utilization',value:pct(dashboardData.operations.teamUtilization),sub:'Team pace'}
+      ];
+    case 'today':
+    default:
+      return [
+        {label:'Follow-ups',value:dashboardData.today.followUps,sub:'Need action'},
+        {label:'Proposals',value:dashboardData.today.proposalsDue,sub:'Need movement'},
+        {label:'Invoices',value:dashboardData.today.invoicesDue,sub:'Need collection'},
+        {label:'Alerts',value:dashboardData.today.campaignAlerts,sub:'Campaign watch'}
+      ];
+  }
+}
+function renderDashboardSignalRows(rows){
+  return `<div class="dash-signal-list">${rows.map(row=>`<div class="dash-signal-row"><div class="dash-signal-main"><div class="dash-signal-title">${row.title}</div><div class="dash-signal-copy">${row.copy}</div></div><div class="dash-signal-side"><span class="dash-signal-value">${row.value}</span>${row.actionLabel?`<button class="dash-signal-btn" onclick="${row.action}">${row.actionLabel}</button>`:''}</div></div>`).join('')}</div>`;
+}
+function renderDashboardMiniStats(items){
+  return `<div class="dash-mini-grid">${items.map(item=>`<div class="dash-mini-card"><div class="dash-mini-label">${item.label}</div><div class="dash-mini-value">${item.value}</div><div class="dash-mini-sub">${item.sub}</div></div>`).join('')}</div>`;
+}
+function renderDashboardSecondaryCard(tab,context){
+  if(tab==='sales'){
+    return `<div class="dash-card dash-card-compact scrollable"><div class="dash-card-head"><div><div class="dash-card-eyebrow">Sales</div><h3>Pipeline stages</h3></div><div class="dash-card-copy">Compact stage editing with values always visible.</div></div><div class="dash-stage-list">${renderPipelineStages()}</div></div>`;
+  }
+  return `<div class="dash-card dash-card-compact"><div class="dash-card-head"><div><div class="dash-card-eyebrow">${dashboardSectionContent(tab).eyebrow}</div><h3>Quick actions</h3></div><div class="dash-card-copy">Simple follow-through tied to the selected section.</div></div>${renderDashboardSignalRows(dashboardSignalRows(tab,context))}</div>`;
+}
+function renderDashboardSection(context){
+  const meta=dashboardSectionContent(dashboardTab);
+  return `<section class="dash-workspace"><div class="dash-main-column"><div class="dash-card dash-card-compact"><div class="dash-card-head"><div><div class="dash-card-eyebrow">${meta.eyebrow}</div><h3>${meta.title}</h3></div><div class="dash-card-copy">${meta.copy}</div></div><div class="dash-edit-grid compact">${renderDashboardFields(dashboardTab)}</div></div>${renderDashboardSecondaryCard(dashboardTab,context)}</div><div class="dash-side-column"><div class="dash-card dash-card-compact"><div class="dash-card-head"><div><div class="dash-card-eyebrow">${meta.eyebrow}</div><h3>Snapshot</h3></div><div class="dash-card-copy">A compact readout for this part of the business.</div></div>${renderDashboardMiniStats(dashboardSnapshotItems(dashboardTab,context))}</div><div class="dash-note compact"><div class="dash-note-head"><div class="dash-note-title">${meta.noteTitle}</div></div><div class="dash-card-copy" style="max-width:none;margin-bottom:10px">${meta.noteCopy}</div><textarea class="dash-note-ta" oninput="updateDashboardNote('${meta.noteKey}',this.value)">${dashboardData.notes[meta.noteKey]||''}</textarea></div></div></section>`;
+}
 function renderDashboardDetail(){
-  const urgent=emails.filter(e=>e.urgent&&!e.snoozed).length;
-  const unread=emails.filter(e=>e.unread&&!e.snoozed).length;
+  const context={
+    urgent:emails.filter(e=>e.urgent&&!e.snoozed).length,
+    unread:emails.filter(e=>e.unread&&!e.snoozed).length,
+    clientThreads:emails.filter(e=>e.cat==='client'&&!e.snoozed).length,
+    financeThreads:emails.filter(e=>e.cat==='finance'&&!e.snoozed).length
+  };
   document.getElementById('detPane').innerHTML=`
-    <div class="det-scroll">
-      <div class="dash-shell">
-        <section class="dash-hero">
-          <div class="dash-kicker">Pipeline Operating System</div>
-          <div class="dash-title">${document.getElementById('appName').textContent} Command Center</div>
-          <div class="dash-tagline">${document.getElementById('appSubtitle').textContent}</div>
-          <div class="dash-copy">This dashboard is the main workspace for marketing, sales pipeline, client health, finance visibility, operations, and the inbox work that supports all of it.</div>
-          <div class="dash-hero-actions">
-            <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
-            <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
-            <button class="dash-btn secondary" onclick="openWorkspaceSettings()">Workspace Settings</button>
+    <div class="det-scroll dash-detail-scroll">
+      <div class="dash-shell dash-simple-shell">
+        <section class="dash-hero dash-hero-simple">
+          <div class="dash-hero-head">
+            <div>
+              <div class="dash-kicker">Simplified Command Center</div>
+              <div class="dash-title">${document.getElementById('appName').textContent} Dashboard</div>
+              <div class="dash-tagline">${dashboardSection(dashboardTab).label} view</div>
+              <div class="dash-copy">A cleaner business view with fewer words, stronger contrast, and only the numbers and notes you need on screen.</div>
+            </div>
+            <div class="dash-hero-actions">
+              <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
+              <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
+              <button class="dash-btn secondary" onclick="openWorkspaceSettings()">Workspace</button>
+            </div>
           </div>
-          <div class="dash-hero-metrics">
-            <div class="dash-stat-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.finance.revenue)}</div><div class="dash-stat-foot">Primary business KPI</div></div>
+          <div class="dash-hero-metrics dash-hero-metrics-simple">
+            <div class="dash-stat-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.finance.revenue)}</div><div class="dash-stat-foot">Tracked revenue</div></div>
             <div class="dash-stat-card"><div class="dash-stat-label">Pipeline</div><div class="dash-stat-value">${money(dashboardData.sales.pipeline)}</div><div class="dash-stat-foot">Open sales value</div></div>
-            <div class="dash-stat-card"><div class="dash-stat-label">Urgent Follow-Ups</div><div class="dash-stat-value">${dashboardData.today.followUps}</div><div class="dash-stat-foot">Daily action count</div></div>
-            <div class="dash-stat-card"><div class="dash-stat-label">New Leads</div><div class="dash-stat-value">${dashboardData.marketing.leads}</div><div class="dash-stat-foot">Marketing inflow</div></div>
+            <div class="dash-stat-card"><div class="dash-stat-label">Follow-Ups</div><div class="dash-stat-value">${dashboardData.today.followUps}</div><div class="dash-stat-foot">Need action today</div></div>
+            <div class="dash-stat-card"><div class="dash-stat-label">Unread</div><div class="dash-stat-value">${context.unread}</div><div class="dash-stat-foot">Still in inbox</div></div>
           </div>
           <div class="dash-chip-row">
-            <span class="dash-chip">${urgent} urgent inbox threads</span>
-            <span class="dash-chip">${unread} unread messages</span>
+            <span class="dash-chip">${context.urgent} urgent threads</span>
             <span class="dash-chip">${dashboardData.clients.activeClients} active clients</span>
             <span class="dash-chip">${dashboardData.operations.automationsLive} live automations</span>
             <span class="dash-chip">${templates.length} saved templates</span>
@@ -1550,9 +1734,9 @@ function renderDashboardDetail(){
         <div class="dash-tabs">
           ${dashboardSections.map(section=>`<button class="dash-tab ${dashboardTab===section.id?'active':''}" style="--dash-tone:${section.tone}" onclick="setDashboardTab('${section.id}')"><span class="dash-tab-dot"></span>${section.label}</button>`).join('')}
         </div>
-        ${renderDashboardSection(urgent,unread)}
+        ${renderDashboardSection(context)}
       </div>
-      </div>`;
+    </div>`;
 }
 function renderWorkspaceTemplateItems(){
   if(!templates.length) return `<div class="workspace-note">No templates saved yet. Add one to speed up confirmations, follow-ups, and client replies.</div>`;
@@ -2897,7 +3081,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.7';
+const APP_VERSION = '1.4.8';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

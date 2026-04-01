@@ -1,5 +1,5 @@
 {
-  "version": "1.4.7",
-  "changelog": "Aligned the Dashboard sidebar button states with All Mail so its normal, hover, and selected styling now match the rest of the navigation.",
+  "version": "1.4.8",
+  "changelog": "Redesigned the dashboard into a simpler full-width workspace with stronger dark-mode contrast and a more screen-fitted layout.",
   "released": "2026-04-01"
 }
