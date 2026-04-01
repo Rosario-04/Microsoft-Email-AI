@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.5.0">
+<meta name="app-version" content="1.5.1">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -879,7 +879,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.5.0</span>
+    <span id="versionLabel">v1.5.1</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1069,7 +1069,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 const STORAGE_KEY='mail_ai_state_v1';
 const EMAIL_CACHE_KEY='mail_ai_cached_emails_v1';
 const defaultPersona={name:'Aria',tone:'Professional',sig:'',instr:''};
-const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',twilioAccountLabel:'',twilioPhoneNumber:'',twilioSyncUrl:'',twilioSendUrl:''};
+const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',twilioAccountLabel:'',twilioPhoneNumber:'',twilioSyncUrl:'',twilioSendUrl:'',twilioBridgeKey:''};
 const defaultChannelProfiles={
   gvoice:{connected:false,accountName:'',accountDetail:''},
   imessage:{connected:false,accountName:'',accountDetail:''}
@@ -1489,6 +1489,7 @@ function restoreSavedState(){
   syncSettings.twilioPhoneNumber=syncSettings.twilioPhoneNumber||localStorage.getItem('twilio_phone_number')||'';
   syncSettings.twilioSyncUrl=syncSettings.twilioSyncUrl||localStorage.getItem('twilio_sync_url')||'';
   syncSettings.twilioSendUrl=syncSettings.twilioSendUrl||localStorage.getItem('twilio_send_url')||'';
+  syncSettings.twilioBridgeKey=syncSettings.twilioBridgeKey||localStorage.getItem('twilio_bridge_key')||'';
   msClientId=syncSettings.msClientId;
   msTenantId=syncSettings.msTenantId;
   if(!syncSettings.twilioSyncUrl && !syncSettings.twilioSendUrl && !syncSettings.twilioPhoneNumber){
@@ -1886,6 +1887,10 @@ function renderWorkspaceDetail(){
                 <span class="workspace-label">Twilio Send URL</span>
                 <input class="workspace-input" id="wsTwilioSendUrl" placeholder="https://your-bridge.example.com/twilio/send">
               </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Twilio Bridge Key</span>
+                <input class="workspace-input" type="password" id="wsTwilioBridgeKey" placeholder="Optional bearer key for the bridge">
+              </label>
             </div>
             <div class="workspace-note">Use your Twilio bridge URLs here so the app can fetch recent SMS threads and send replies without putting Twilio secrets in the browser.</div>
             <div class="workspace-action-row">
@@ -1975,6 +1980,7 @@ function saveWorkspaceKeys(){
   updateTwilioConfig('twilioPhoneNumber',document.getElementById('wsTwilioNumber')?.value||'',{persist:false});
   updateTwilioConfig('twilioSyncUrl',document.getElementById('wsTwilioSyncUrl')?.value||'',{persist:false});
   updateTwilioConfig('twilioSendUrl',document.getElementById('wsTwilioSendUrl')?.value||'',{persist:false});
+  updateTwilioConfig('twilioBridgeKey',document.getElementById('wsTwilioBridgeKey')?.value||'',{persist:false});
   saveKeys();
   if(currentView==='settings') render();
 }
@@ -2361,7 +2367,8 @@ function twilioConfig(){
     accountLabel:(syncSettings.twilioAccountLabel||'').trim(),
     phoneNumber:(syncSettings.twilioPhoneNumber||'').trim(),
     syncUrl:(syncSettings.twilioSyncUrl||'').trim(),
-    sendUrl:(syncSettings.twilioSendUrl||'').trim()
+    sendUrl:(syncSettings.twilioSendUrl||'').trim(),
+    bridgeKey:(syncSettings.twilioBridgeKey||'').trim()
   };
 }
 function twilioAccountName(){
@@ -2514,7 +2521,10 @@ async function fetchTwilioMessages({silent=false}={}){
   }
   try{
     const res=await fetch(cfg.syncUrl,{
-      headers:{Accept:'application/json'}
+      headers:{
+        Accept:'application/json',
+        ...(cfg.bridgeKey ? {Authorization:`Bearer ${cfg.bridgeKey}`} : {})
+      }
     });
     if(!res.ok) throw new Error(`Bridge returned ${res.status}`);
     const payload=await res.json();
@@ -2544,7 +2554,11 @@ async function sendTwilioReply(emailId,replyBody){
   try{
     const res=await fetch(cfg.sendUrl,{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'Accept':'application/json',
+        ...(cfg.bridgeKey ? {Authorization:`Bearer ${cfg.bridgeKey}`} : {})
+      },
       body:JSON.stringify({
         to,
         body:replyBody,
@@ -3118,6 +3132,7 @@ function syncWorkspaceSettingsInputs(){
   const wsTwilioNumber=document.getElementById('wsTwilioNumber');
   const wsTwilioSyncUrl=document.getElementById('wsTwilioSyncUrl');
   const wsTwilioSendUrl=document.getElementById('wsTwilioSendUrl');
+  const wsTwilioBridgeKey=document.getElementById('wsTwilioBridgeKey');
   const wsPName=document.getElementById('wsPersonaName');
   const wsPTone=document.getElementById('wsPersonaTone');
   const wsPSig=document.getElementById('wsPersonaSig');
@@ -3138,6 +3153,7 @@ function syncWorkspaceSettingsInputs(){
   if(wsTwilioNumber) wsTwilioNumber.value=syncSettings.twilioPhoneNumber||'';
   if(wsTwilioSyncUrl) wsTwilioSyncUrl.value=syncSettings.twilioSyncUrl||'';
   if(wsTwilioSendUrl) wsTwilioSendUrl.value=syncSettings.twilioSendUrl||'';
+  if(wsTwilioBridgeKey) wsTwilioBridgeKey.value=syncSettings.twilioBridgeKey||'';
   if(wsPName) wsPName.value=persona.name;
   if(wsPTone) wsPTone.value=persona.tone;
   if(wsPSig) wsPSig.value=persona.sig;
@@ -3250,14 +3266,16 @@ function updateTwilioConfig(key,value,{persist=true}={}){
     twilioAccountLabel:'twilio_account_label',
     twilioPhoneNumber:'twilio_phone_number',
     twilioSyncUrl:'twilio_sync_url',
-    twilioSendUrl:'twilio_send_url'
+    twilioSendUrl:'twilio_send_url',
+    twilioBridgeKey:'twilio_bridge_key'
   }[key];
   if(storageKey) localStorage.setItem(storageKey,raw);
   const fieldMap={
     twilioAccountLabel:['wsTwilioLabel'],
     twilioPhoneNumber:['wsTwilioNumber'],
     twilioSyncUrl:['wsTwilioSyncUrl'],
-    twilioSendUrl:['wsTwilioSendUrl']
+    twilioSendUrl:['wsTwilioSendUrl'],
+    twilioBridgeKey:['wsTwilioBridgeKey']
   };
   (fieldMap[key]||[]).forEach(id=>{
     const el=document.getElementById(id);
@@ -3405,7 +3423,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

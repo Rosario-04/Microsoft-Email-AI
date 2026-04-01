@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
-  "changelog": "Replaced the Google Voice flow with a Twilio SMS bridge setup, added Twilio workspace settings, and enabled sync plus send support through secure bridge URLs.",
+  "version": "1.5.1",
+  "changelog": "Added a Twilio bridge starter to the repo and updated the app to support optional bearer-auth bridge keys for Twilio sync and send endpoints.",
   "released": "2026-04-01"
 }
