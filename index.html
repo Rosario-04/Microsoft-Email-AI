@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.5.1">
+<meta name="app-version" content="1.6.0">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -845,6 +845,11 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       <span class="n-label">Outlook</span>
       <span class="ch-badge ch-off" id="ch-outlook">Connect</span>
     </button></li>
+    <li><button class="nav-btn channel-nav-btn" data-channel="gmail" onclick="openChannelSheet('gmail')" onmouseenter="showChannelHover('gmail',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gmail',this)" onblur="scheduleHideChannelHover()">
+      <div class="n-icon" style="background:rgba(255,59,48,.12);color:#FF3B30"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 2v.4l-8 4.99L4 8.4V8h16zm0 8H4V10.77l7.47 4.67c.16.1.34.15.53.15s.37-.05.53-.15L20 10.77V16z"/></svg></div>
+      <span class="n-label">Gmail</span>
+      <span class="ch-badge ch-off" id="ch-gmail">Connect</span>
+    </button></li>
     <li><button class="nav-btn channel-nav-btn" data-channel="gvoice" onclick="openChannelSheet('gvoice')" onmouseenter="showChannelHover('gvoice',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gvoice',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
       <span class="n-label">Twilio SMS</span>
@@ -879,7 +884,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.5.1</span>
+    <span id="versionLabel">v1.6.0</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1069,8 +1074,9 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 const STORAGE_KEY='mail_ai_state_v1';
 const EMAIL_CACHE_KEY='mail_ai_cached_emails_v1';
 const defaultPersona={name:'Aria',tone:'Professional',sig:'',instr:''};
-const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',twilioAccountLabel:'',twilioPhoneNumber:'',twilioSyncUrl:'',twilioSendUrl:'',twilioBridgeKey:''};
+const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',gmailClientId:'',gmailFilterQuery:'from:voice-noreply@google.com',twilioAccountLabel:'',twilioPhoneNumber:'',twilioSyncUrl:'',twilioSendUrl:'',twilioBridgeKey:''};
 const defaultChannelProfiles={
+  gmail:{connected:false,accountName:'',accountDetail:''},
   gvoice:{connected:false,accountName:'',accountDetail:''},
   imessage:{connected:false,accountName:'',accountDetail:''}
 };
@@ -1082,6 +1088,14 @@ const channelMeta={
     disconnectedDetail:'Sign in to sync your Microsoft mailbox, replies, and live inbox updates.',
     connectedFallback:'Microsoft 365 mailbox',
     connectedDetail:'Connected Microsoft mailbox'
+  },
+  gmail:{
+    label:'Gmail',
+    service:'Gmail filtered inbox',
+    disconnectedTitle:'No Gmail account connected',
+    disconnectedDetail:'Sign in with Google and save a Gmail query so only matching messages land in this workspace.',
+    connectedFallback:'Gmail inbox',
+    connectedDetail:'Filtered Gmail sync is live for this workspace.'
   },
   gvoice:{
     label:'Twilio SMS',
@@ -1291,7 +1305,7 @@ function updateChannelBadge(channel){
   }
 }
 function syncChannelBadges(){
-  ['outlook','gvoice','imessage'].forEach(updateChannelBadge);
+  ['outlook','gmail','gvoice','imessage'].forEach(updateChannelBadge);
 }
 function refreshChannelHover(channel){
   if(activeChannelHover!==channel) return;
@@ -1485,6 +1499,8 @@ function restoreSavedState(){
   dashboardTab=dashboardSections.some(section=>section.id===saved.dashboardTab)?saved.dashboardTab:'today';
   syncSettings.msClientId=syncSettings.msClientId||localStorage.getItem('ms_client_id')||'';
   syncSettings.msTenantId=syncSettings.msTenantId||localStorage.getItem('ms_tenant_id')||'common';
+  syncSettings.gmailClientId=syncSettings.gmailClientId||localStorage.getItem('gmail_client_id')||'';
+  syncSettings.gmailFilterQuery=syncSettings.gmailFilterQuery||localStorage.getItem('gmail_filter_query')||defaultSyncSettings.gmailFilterQuery;
   syncSettings.twilioAccountLabel=syncSettings.twilioAccountLabel||localStorage.getItem('twilio_account_label')||'';
   syncSettings.twilioPhoneNumber=syncSettings.twilioPhoneNumber||localStorage.getItem('twilio_phone_number')||'';
   syncSettings.twilioSyncUrl=syncSettings.twilioSyncUrl||localStorage.getItem('twilio_sync_url')||'';
@@ -1782,7 +1798,7 @@ function renderWorkspaceList(){
       <button class="workspace-mini-card" onclick="document.getElementById('wsAccessCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
         <div class="workspace-mini-kicker">Access</div>
         <div class="workspace-mini-title">${apiKey ? 'Connected settings' : 'API setup'}</div>
-        <div class="workspace-mini-copy">Anthropic, Microsoft, and Twilio bridge settings for inbox and SMS sync.</div>
+        <div class="workspace-mini-copy">Anthropic, Microsoft, Gmail, and Twilio settings for your filtered inbox channels.</div>
       </button>
       <button class="workspace-mini-card" onclick="document.getElementById('wsAssistantCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
         <div class="workspace-mini-kicker">Assistant</div>
@@ -1803,7 +1819,7 @@ function renderWorkspaceDetail(){
         <section class="workspace-hero">
           <div class="dash-kicker">System Settings</div>
           <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} Workspace</div>
-          <div class="workspace-hero-copy">Manage branding, AI access, Outlook sync, Twilio SMS routing, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
+          <div class="workspace-hero-copy">Manage branding, AI access, Outlook sync, Gmail filters, Twilio SMS routing, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
         </section>
         <div class="workspace-grid">
           <section class="workspace-card" id="wsBrandCard">
@@ -1856,7 +1872,7 @@ function renderWorkspaceDetail(){
                 <div class="workspace-card-eyebrow">Access</div>
                 <h3>API and Channel Access</h3>
               </div>
-              <div class="workspace-card-copy">Keep AI, Outlook, and Twilio bridge settings in one place.</div>
+              <div class="workspace-card-copy">Keep AI, Outlook, Gmail, and Twilio bridge settings in one place.</div>
             </div>
             <div class="workspace-field-grid">
               <label class="workspace-field span-2">
@@ -1870,6 +1886,14 @@ function renderWorkspaceDetail(){
               <label class="workspace-field">
                 <span class="workspace-label">Tenant ID</span>
                 <input class="workspace-input" id="wsTenantId" placeholder="common">
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Google Client ID</span>
+                <input class="workspace-input" id="wsGmailClientId" placeholder="Google OAuth Web Client ID">
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Gmail Filter Query</span>
+                <input class="workspace-input" id="wsGmailFilterQuery" placeholder="from:voice-noreply@google.com">
               </label>
               <label class="workspace-field">
                 <span class="workspace-label">Twilio Line Label</span>
@@ -1896,6 +1920,7 @@ function renderWorkspaceDetail(){
             <div class="workspace-action-row">
               <button class="workspace-btn primary" onclick="saveWorkspaceKeys()">Save Access</button>
               <button class="workspace-btn" onclick="openChannelSheet('outlook')">Open Outlook</button>
+              <button class="workspace-btn" onclick="openChannelSheet('gmail')">Open Gmail</button>
               <button class="workspace-btn" onclick="openChannelSheet('gvoice')">Open Twilio SMS</button>
             </div>
           </section>
@@ -1976,6 +2001,8 @@ function saveWorkspaceKeys(){
   document.getElementById('sfKey').value=document.getElementById('wsApiKey').value||'';
   document.getElementById('msClientIdSetting').value=document.getElementById('wsClientId').value||'';
   document.getElementById('msTenantIdSetting').value=document.getElementById('wsTenantId').value||'common';
+  updateGmailConfig('gmailClientId',document.getElementById('wsGmailClientId')?.value||'',{persist:false});
+  updateGmailConfig('gmailFilterQuery',document.getElementById('wsGmailFilterQuery')?.value||'',{persist:false});
   updateTwilioConfig('twilioAccountLabel',document.getElementById('wsTwilioLabel')?.value||'',{persist:false});
   updateTwilioConfig('twilioPhoneNumber',document.getElementById('wsTwilioNumber')?.value||'',{persist:false});
   updateTwilioConfig('twilioSyncUrl',document.getElementById('wsTwilioSyncUrl')?.value||'',{persist:false});
@@ -2357,10 +2384,24 @@ let msTenantId    = localStorage.getItem('ms_tenant_id') || 'common';
 let msRedirectUri = window.location.href.split('?')[0].split('#')[0];
 let msUserName    = '';
 let msUserEmail   = '';
+let gmailAccessToken = null;
+let gmailClientId    = localStorage.getItem('gmail_client_id') || '';
+let gmailUserName    = localStorage.getItem('gmail_user_name') || '';
+let gmailUserEmail   = localStorage.getItem('gmail_user_email') || '';
 function clearLegacyGoogleVoiceState(){
   ['google_access_token','google_refresh_token','google_access_token_expires_at','google_user_name','google_user_email','google_client_id'].forEach(key=>{
     localStorage.removeItem(key);
   });
+}
+function clearGmailChannelState(){
+  gmailAccessToken=null;
+  gmailUserName='';
+  gmailUserEmail='';
+  clearTokenBundle('gmail');
+  ['gmail_user_name','gmail_user_email'].forEach(key=>localStorage.removeItem(key));
+}
+function gmailQueryValue(){
+  return String(syncSettings.gmailFilterQuery || localStorage.getItem('gmail_filter_query') || defaultSyncSettings.gmailFilterQuery).trim() || defaultSyncSettings.gmailFilterQuery;
 }
 function twilioConfig(){
   return {
@@ -2466,6 +2507,210 @@ async function outlookRequest(url,options={},retry=true){
     if(refreshed) return outlookRequest(url,options,false);
   }
   return res;
+}
+async function startGmailOAuth(){
+  if(!gmailClientId){
+    toast('Enter your Google Client ID first in Workspace Settings or the Gmail channel.');
+    return;
+  }
+  const verifier=generateVerifier();
+  const challenge=await generateChallenge(verifier);
+  sessionStorage.setItem('gmail_pkce_verifier',verifier);
+  const params=new URLSearchParams({
+    client_id:gmailClientId,
+    redirect_uri:msRedirectUri,
+    response_type:'code',
+    scope:'openid profile email https://www.googleapis.com/auth/gmail.readonly',
+    access_type:'offline',
+    include_granted_scopes:'true',
+    prompt:'consent',
+    code_challenge:challenge,
+    code_challenge_method:'S256',
+    state:'gmail_connect'
+  });
+  window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+}
+async function exchangeGmailCodeForToken(code){
+  toast('Authorizing Gmail…');
+  try{
+    const verifier=sessionStorage.getItem('gmail_pkce_verifier');
+    const body=new URLSearchParams({
+      client_id:gmailClientId,
+      grant_type:'authorization_code',
+      code,
+      redirect_uri:msRedirectUri,
+      code_verifier:verifier
+    });
+    const res=await fetch('https://oauth2.googleapis.com/token',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error_description || data.error);
+    gmailAccessToken=data.access_token;
+    storeTokenBundle('gmail',data);
+    await fetchGmailProfile();
+    closeSheet('chSheet');
+    toast('Gmail connected! Syncing filtered messages…');
+    await fetchGmailMessages();
+  }catch(err){
+    toast('Gmail auth failed: ' + err.message);
+    console.error(err);
+  }
+}
+async function refreshGmailAccessToken(){
+  const refreshToken=localStorage.getItem('gmail_refresh_token') || '';
+  if(!refreshToken || !gmailClientId) return false;
+  try{
+    const body=new URLSearchParams({
+      client_id:gmailClientId,
+      grant_type:'refresh_token',
+      refresh_token:refreshToken
+    });
+    const res=await fetch('https://oauth2.googleapis.com/token',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error_description || data.error);
+    gmailAccessToken=data.access_token;
+    storeTokenBundle('gmail',data);
+    return true;
+  }catch(err){
+    console.warn('Gmail refresh failed',err);
+    return false;
+  }
+}
+async function ensureGmailAccessToken(){
+  if(gmailAccessToken) return true;
+  gmailAccessToken=cachedAccessToken('gmail');
+  if(gmailAccessToken) return true;
+  return refreshGmailAccessToken();
+}
+async function gmailRequest(url,options={},retry=true){
+  const ready=await ensureGmailAccessToken();
+  if(!ready) throw new Error('Reconnect Gmail to sync this channel.');
+  const res=await fetch(url,{
+    ...options,
+    headers:{
+      ...(options.headers||{}),
+      Authorization:`Bearer ${gmailAccessToken}`
+    }
+  });
+  if(res.status===401 && retry){
+    gmailAccessToken=null;
+    const refreshed=await refreshGmailAccessToken();
+    if(refreshed) return gmailRequest(url,options,false);
+  }
+  return res;
+}
+function decodeBase64Url(input=''){
+  const padded=input.replace(/-/g,'+').replace(/_/g,'/');
+  const normalized=padded + '='.repeat((4 - padded.length % 4) % 4);
+  try{
+    return decodeURIComponent(escape(atob(normalized)));
+  }catch(_){
+    return atob(normalized);
+  }
+}
+function extractPayloadText(payload){
+  if(!payload) return '';
+  if(payload.mimeType==='text/plain' && payload.body?.data) return decodeBase64Url(payload.body.data);
+  if(payload.parts?.length){
+    for(const part of payload.parts){
+      const text=extractPayloadText(part);
+      if(text) return text;
+    }
+  }
+  if(payload.body?.data) return decodeBase64Url(payload.body.data);
+  return '';
+}
+function headerValue(headers,name){
+  return headers?.find(header=>header.name?.toLowerCase()===name.toLowerCase())?.value || '';
+}
+function parseMailboxHeader(value=''){
+  const trimmed=String(value||'').trim();
+  const match=trimmed.match(/^(.*?)(?:\s*<([^>]+)>)?$/);
+  const name=(match?.[1]||'').replace(/^"|"$|^'|'$/g,'').trim();
+  const email=(match?.[2]||'').trim();
+  if(email) return {name:name || email,email};
+  return {name:trimmed || 'Unknown',email:trimmed};
+}
+async function fetchGmailProfile(){
+  try{
+    const res=await gmailRequest('https://www.googleapis.com/oauth2/v3/userinfo');
+    const profile=await res.json();
+    gmailUserName=profile.name || profile.given_name || 'Gmail User';
+    gmailUserEmail=profile.email || '';
+    localStorage.setItem('gmail_user_name',gmailUserName);
+    localStorage.setItem('gmail_user_email',gmailUserEmail);
+    markChannelLive('gmail',{
+      accountName:gmailUserName,
+      accountDetail:gmailUserEmail || `Filter: ${gmailQueryValue()}`
+    });
+  }catch(err){
+    console.warn('Could not fetch Gmail profile',err);
+  }
+}
+async function fetchGmailMessages({silent=false}={}){
+  try{
+    const query=encodeURIComponent(gmailQueryValue());
+    const listRes=await gmailRequest(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=30&q=${query}`);
+    if(!listRes.ok){
+      const err=await listRes.json();
+      throw new Error(err.error?.message || 'Gmail API error');
+    }
+    const listData=await listRes.json();
+    const refs=listData.messages||[];
+    const details=await Promise.all(refs.map(async(ref)=>{
+      const res=await gmailRequest(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${ref.id}?format=full`);
+      if(!res.ok) return null;
+      return res.json();
+    }));
+    const mapped=details.filter(Boolean).map(msg=>{
+      const headers=msg.payload?.headers || [];
+      const subject=headerValue(headers,'Subject') || '(no subject)';
+      const from=parseMailboxHeader(headerValue(headers,'From'));
+      const receivedAt=new Date(Number(msg.internalDate||Date.now())).toISOString();
+      const body=stripHtml(extractPayloadText(msg.payload) || msg.snippet || '');
+      return {
+        source:'gmail',
+        channel:'gmail',
+        service:'Gmail',
+        graphId:msg.id,
+        unread:!(msg.labelIds||[]).includes('READ'),
+        sender:from.name || from.email || 'Unknown',
+        email:from.email || from.name || '',
+        subject,
+        time:formatEmailTime(receivedAt),
+        date:formatEmailDate(receivedAt),
+        receivedAt,
+        cat:'client',
+        urgent:subject.toLowerCase().includes('urgent'),
+        priority:subject.toLowerCase().includes('urgent') ? 8 : 5,
+        preview:(msg.snippet || body || '').slice(0,100),
+        body:body || msg.snippet || 'Gmail message',
+        snoozed:false,
+        summary:null,
+        aiReply:undefined,
+        canReply:true
+      };
+    });
+    replaceEmailsBySource('gmail',mapped);
+    markChannelLive('gmail',{
+      accountName:gmailUserName || gmailUserEmail || 'Gmail inbox',
+      accountDetail:gmailUserEmail ? `${gmailUserEmail} · ${gmailQueryValue()}` : `Filter: ${gmailQueryValue()}`
+    });
+    saveEmailCache();
+    render();
+    counts();
+    if(!silent) toast(mapped.length ? `${mapped.length} Gmail messages synced ✓` : 'Gmail connected, but no messages matched that filter yet.');
+  }catch(err){
+    if(!silent) toast('Gmail sync failed: ' + err.message);
+    console.error(err);
+  }
 }
 function parseBridgeMessages(payload){
   if(Array.isArray(payload)) return payload;
@@ -2786,6 +3031,11 @@ function markChannelLive(ch,profile={}){
 
 function disconnectChannel(ch,{silent=false}={}){
   if(ch==='outlook'){ signOut(); return; }
+  if(ch==='gmail'){
+    clearGmailChannelState();
+    replaceEmailsBySource('gmail',[]);
+    saveEmailCache();
+  }
   if(ch==='gvoice'){
     clearLegacyGoogleVoiceState();
     replaceEmailsBySource('twilio',[]);
@@ -2892,12 +3142,15 @@ function connectIMessage(){
 function openChannelSheet(ch){
   hideChannelHover();
   document.getElementById('chSheetTitle').textContent = {
-    outlook:'Outlook / Microsoft 365', gvoice:'Twilio SMS', imessage:'iMessage / SMS'
+    outlook:'Outlook / Microsoft 365', gmail:'Gmail', gvoice:'Twilio SMS', imessage:'iMessage / SMS'
   }[ch] || ch;
   document.getElementById('chSheetBody').innerHTML = ch==='outlook'
     ? buildOutlookSheet()
-    : ch==='gvoice' ? buildGVoiceSheet()
-    : buildIMessageSheet();
+    : ch==='gmail'
+      ? buildGmailSheet()
+      : ch==='gvoice'
+        ? buildGVoiceSheet()
+        : buildIMessageSheet();
   openSheet('chSheet');
 }
 
@@ -2985,6 +3238,64 @@ function buildOutlookSheet(){
     <div class="connect-clientid-hint">
       Need a Client ID? <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade" target="_blank">Register a free Azure app</a> → platform: Single-page application → redirect URI: <code style="font-size:10px;word-break:break-all">${window.location.href.split('?')[0]}</code>
     </div>
+  </div>`;
+}
+
+function buildGmailSheet(){
+  const state=channelConnectionState('gmail');
+  if(state.connected){
+    const initials=(state.accountName || 'GM').split(' ').map(word=>word[0]).join('').slice(0,2).toUpperCase() || 'GM';
+    const canSyncGmail=!!(gmailAccessToken || cachedAccessToken('gmail') || localStorage.getItem('gmail_refresh_token'));
+    return `
+    <div class="connected-state">
+      <div class="connected-av-wrap">
+        <div class="connected-avatar" style="background:#FF3B30">${initials}</div>
+        <div class="connected-check">✓</div>
+      </div>
+      <div>
+        <div class="connected-name">${esc(state.accountName)}</div>
+        <div class="connected-email">${esc(state.accountDetail)}</div>
+      </div>
+      <div class="connected-since">Connected · Gmail filtered inbox</div>
+    </div>
+    <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
+      <button class="connect-primary" style="background:#FF3B30" onclick="${canSyncGmail ? "fetchGmailMessages();closeSheet('chSheet')" : "startGmailOAuth()"}">${canSyncGmail ? 'Sync Gmail' : 'Reconnect Gmail'}</button>
+      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Edit Gmail Filter</button>
+    </div>
+    <button class="connected-signout" onclick="disconnectChannel('gmail');closeSheet('chSheet')">Sign out of Gmail</button>`;
+  }
+  return `
+  <div class="connect-hero">
+    <div class="connect-hero-icon" style="background:rgba(255,59,48,.1)">✉️</div>
+    <div class="connect-hero-title">Connect Gmail</div>
+    <div class="connect-hero-desc">Sign in with Google and sync only the messages that match your saved Gmail query.</div>
+  </div>
+  <div class="connect-perms">
+    <div class="connect-perm-row">
+      <div class="connect-perm-icon" style="background:rgba(255,59,48,.12)">📬</div>
+      <div class="connect-perm-text">
+        <div class="connect-perm-label">Read matching Gmail messages</div>
+        <div class="connect-perm-desc">Only the emails matching your Gmail filter query are pulled in.</div>
+      </div>
+      <div class="connect-perm-check">✓</div>
+    </div>
+    <div class="connect-perm-row">
+      <div class="connect-perm-icon" style="background:rgba(255,149,0,.12)">🔎</div>
+      <div class="connect-perm-text">
+        <div class="connect-perm-label">Use Gmail search syntax</div>
+        <div class="connect-perm-desc">Examples: <code style="font-size:11px">from:voice-noreply@google.com</code> or <code style="font-size:11px">label:business</code></div>
+      </div>
+      <div class="connect-perm-check">✓</div>
+    </div>
+  </div>
+  <div style="padding:0 20px 14px;display:grid;gap:10px">
+    <input class="connect-clientid-input" type="text" id="gmailClientIdInput" value="${esc(syncSettings.gmailClientId||gmailClientId||'')}" placeholder="Google OAuth Web Client ID" oninput="updateGmailConfig('gmailClientId',this.value)">
+    <input class="connect-clientid-input" type="text" id="gmailFilterQueryInput" value="${esc(gmailQueryValue())}" placeholder="from:voice-noreply@google.com" oninput="updateGmailConfig('gmailFilterQuery',this.value)">
+    <div class="connect-clientid-hint">Use the same redirect URI as this page: <code style="font-size:10px;word-break:break-all">${window.location.href.split('?')[0]}</code></div>
+  </div>
+  <div class="connect-btns">
+    <button class="connect-primary" style="background:#FF3B30" onclick="startGmailOAuth()">Sign in with Google</button>
+    <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
   </div>`;
 }
 
@@ -3128,6 +3439,8 @@ function syncWorkspaceSettingsInputs(){
   const wsApi=document.getElementById('wsApiKey');
   const wsClient=document.getElementById('wsClientId');
   const wsTenant=document.getElementById('wsTenantId');
+  const wsGmailClientId=document.getElementById('wsGmailClientId');
+  const wsGmailFilterQuery=document.getElementById('wsGmailFilterQuery');
   const wsTwilioLabel=document.getElementById('wsTwilioLabel');
   const wsTwilioNumber=document.getElementById('wsTwilioNumber');
   const wsTwilioSyncUrl=document.getElementById('wsTwilioSyncUrl');
@@ -3149,6 +3462,8 @@ function syncWorkspaceSettingsInputs(){
   if(wsApi) wsApi.value=apiKey;
   if(wsClient) wsClient.value=syncSettings.msClientId||'';
   if(wsTenant) wsTenant.value=syncSettings.msTenantId||'common';
+  if(wsGmailClientId) wsGmailClientId.value=syncSettings.gmailClientId||'';
+  if(wsGmailFilterQuery) wsGmailFilterQuery.value=syncSettings.gmailFilterQuery||defaultSyncSettings.gmailFilterQuery;
   if(wsTwilioLabel) wsTwilioLabel.value=syncSettings.twilioAccountLabel||'';
   if(wsTwilioNumber) wsTwilioNumber.value=syncSettings.twilioPhoneNumber||'';
   if(wsTwilioSyncUrl) wsTwilioSyncUrl.value=syncSettings.twilioSyncUrl||'';
@@ -3257,6 +3572,31 @@ function updateMsTenantId(value,{persist=true}={}){
   const b=document.getElementById('wsTenantId');
   if(a&&a.value!==msTenantId) a.value=msTenantId;
   if(b&&b.value!==msTenantId) b.value=msTenantId;
+  if(persist) saveSettings();
+}
+function updateGmailConfig(key,value,{persist=true}={}){
+  const raw=String(value||'').trim();
+  const storageKey={
+    gmailClientId:'gmail_client_id',
+    gmailFilterQuery:'gmail_filter_query'
+  }[key];
+  syncSettings[key]=raw || (key==='gmailFilterQuery' ? defaultSyncSettings.gmailFilterQuery : '');
+  if(key==='gmailClientId') gmailClientId=syncSettings.gmailClientId;
+  if(storageKey) localStorage.setItem(storageKey,syncSettings[key]);
+  const fieldMap={
+    gmailClientId:['wsGmailClientId','gmailClientIdInput'],
+    gmailFilterQuery:['wsGmailFilterQuery','gmailFilterQueryInput']
+  };
+  (fieldMap[key]||[]).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.value!==syncSettings[key]) el.value=syncSettings[key];
+  });
+  if(channelProfiles.gmail.connected){
+    markChannelLive('gmail',{
+      accountName:gmailUserName || gmailUserEmail || 'Gmail inbox',
+      accountDetail:gmailUserEmail ? `${gmailUserEmail} · ${gmailQueryValue()}` : `Filter: ${gmailQueryValue()}`
+    });
+  }
   if(persist) saveSettings();
 }
 function updateTwilioConfig(key,value,{persist=true}={}){
@@ -3390,26 +3730,49 @@ function sendReply(id){
     if(msClientId) await exchangeCodeForToken(code);
     else toast('Client ID missing — open the Outlook channel to reconnect');
   }
+  if(code && state === 'gmail_connect'){
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    gmailClientId = localStorage.getItem('gmail_client_id') || '';
+    if(gmailClientId) await exchangeGmailCodeForToken(code);
+    else toast('Google Client ID missing — open the Gmail channel to reconnect');
+  }
   if(!msClientId) msClientId = localStorage.getItem('ms_client_id') || '';
   if(!msTenantId) msTenantId = localStorage.getItem('ms_tenant_id') || 'common';
+  if(!gmailClientId) gmailClientId = localStorage.getItem('gmail_client_id') || '';
   msAccessToken = cachedAccessToken('ms');
+  gmailAccessToken = cachedAccessToken('gmail');
   const cn = localStorage.getItem('ms_user_name') || '';
   const ce = localStorage.getItem('ms_user_email') || '';
   if(cn){ msUserName=cn; msUserEmail=ce; updateSignedInCard(); }
+  const gn = localStorage.getItem('gmail_user_name') || '';
+  const ge = localStorage.getItem('gmail_user_email') || '';
+  if(gn || ge){
+    gmailUserName=gn;
+    gmailUserEmail=ge;
+    markChannelLive('gmail',{
+      accountName:gmailUserName || gmailUserEmail || 'Gmail inbox',
+      accountDetail:gmailUserEmail ? `${gmailUserEmail} · ${gmailQueryValue()}` : `Filter: ${gmailQueryValue()}`
+    });
+  }
   if(!code && localStorage.getItem('ms_refresh_token') && msClientId && !msAccessToken) await refreshOutlookAccessToken();
+  if(!code && localStorage.getItem('gmail_refresh_token') && gmailClientId && !gmailAccessToken) await refreshGmailAccessToken();
   if(localStorage.getItem('ms_refresh_token') && msClientId && !emails.some(email=>email.source==='outlook')) await fetchOutlookEmails();
+  if((localStorage.getItem('gmail_refresh_token') || gmailAccessToken) && gmailClientId && !emails.some(email=>email.source==='gmail')) await fetchGmailMessages({silent:true});
   if(channelProfiles.gvoice.connected && syncSettings.twilioSyncUrl && !emails.some(email=>email.source==='twilio')) await fetchTwilioMessages({silent:true});
 })();
 
 /* ── AUTO-REFRESH EVERY 5 MIN ── */
 setInterval(async()=>{
   const beforeOutlook=emails.filter(email=>email.source==='outlook').length;
+  const beforeGmail=emails.filter(email=>email.source==='gmail').length;
   const beforeTwilio=emails.filter(email=>email.source==='twilio').length;
   if(localStorage.getItem('ms_refresh_token') && msClientId) await fetchOutlookEmails();
+  if((localStorage.getItem('gmail_refresh_token') || gmailAccessToken) && gmailClientId) await fetchGmailMessages({silent:true});
   if(channelProfiles.gvoice.connected && syncSettings.twilioSyncUrl) await fetchTwilioMessages({silent:true});
   const afterOutlook=emails.filter(email=>email.source==='outlook').length;
+  const afterGmail=emails.filter(email=>email.source==='gmail').length;
   const afterTwilio=emails.filter(email=>email.source==='twilio').length;
-  const delta=(afterOutlook-beforeOutlook) + (afterTwilio-beforeTwilio);
+  const delta=(afterOutlook-beforeOutlook) + (afterGmail-beforeGmail) + (afterTwilio-beforeTwilio);
   toast(delta>0 ? delta+' new item'+(delta>1?'s':'')+' ✓' : 'Channels up to date ✓');
 }, 5*60*1000);
 
@@ -3423,7 +3786,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.5.1';
+const APP_VERSION = '1.6.0';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
