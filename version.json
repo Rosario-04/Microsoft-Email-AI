@@ -1,5 +1,5 @@
 {
-  "version": "1.4.9",
-  "changelog": "Fixed Outlook reconnect and token refresh behavior, and added a real Gmail-based Google Voice receive flow so forwarded messages can sync into the inbox.",
+  "version": "1.5.0",
+  "changelog": "Replaced the Google Voice flow with a Twilio SMS bridge setup, added Twilio workspace settings, and enabled sync plus send support through secure bridge URLs.",
   "released": "2026-04-01"
 }

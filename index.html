@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.4.9">
+<meta name="app-version" content="1.5.0">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -847,7 +847,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     </button></li>
     <li><button class="nav-btn channel-nav-btn" data-channel="gvoice" onclick="openChannelSheet('gvoice')" onmouseenter="showChannelHover('gvoice',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gvoice',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
-      <span class="n-label">Google Voice</span>
+      <span class="n-label">Twilio SMS</span>
       <span class="ch-badge ch-off" id="ch-gvoice">Connect</span>
     </button></li>
     <li><button class="nav-btn channel-nav-btn" data-channel="imessage" onclick="openChannelSheet('imessage')" onmouseenter="showChannelHover('imessage',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('imessage',this)" onblur="scheduleHideChannelHover()">
@@ -879,7 +879,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.4.9</span>
+    <span id="versionLabel">v1.5.0</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1069,7 +1069,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 const STORAGE_KEY='mail_ai_state_v1';
 const EMAIL_CACHE_KEY='mail_ai_cached_emails_v1';
 const defaultPersona={name:'Aria',tone:'Professional',sig:'',instr:''};
-const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',googleClientId:''};
+const defaultSyncSettings={autoCategorize:true,autoFlagUrgent:true,notifications:true,msClientId:'',msTenantId:'common',twilioAccountLabel:'',twilioPhoneNumber:'',twilioSyncUrl:'',twilioSendUrl:''};
 const defaultChannelProfiles={
   gvoice:{connected:false,accountName:'',accountDetail:''},
   imessage:{connected:false,accountName:'',accountDetail:''}
@@ -1084,12 +1084,12 @@ const channelMeta={
     connectedDetail:'Connected Microsoft mailbox'
   },
   gvoice:{
-    label:'Google Voice',
-    service:'Google Voice forwarding',
-    disconnectedTitle:'No Google Voice account connected',
-    disconnectedDetail:'Connect forwarding or Gmail sync so text messages can land in this workspace.',
-    connectedFallback:'Google Voice forwarding',
-    connectedDetail:'Forwarding is enabled for this workspace.'
+    label:'Twilio SMS',
+    service:'Twilio SMS bridge',
+    disconnectedTitle:'No Twilio SMS channel connected',
+    disconnectedDetail:'Add your Twilio bridge settings so inbound and outbound texts can route through this workspace.',
+    connectedFallback:'Twilio SMS line',
+    connectedDetail:'Twilio bridge is live for this workspace.'
   },
   imessage:{
     label:'iMessage',
@@ -1381,7 +1381,7 @@ function saveSettings(){
   safeStoreJSON(STORAGE_KEY,payload,fallbackPayload);
 }
 function saveEmailCache(){
-  const slimEmails=emails.map(({id,source,channel,service,graphId,unread,sender,email,subject,time,date,receivedAt,cat,urgent,priority,preview,snoozed,body,canReply})=>({id,source,channel,service,graphId,unread,sender,email,subject,time,date,receivedAt,cat,urgent,priority,preview,snoozed,body,canReply}));
+  const slimEmails=emails.map(({id,source,channel,service,graphId,unread,sender,email,replyTarget,subject,time,date,receivedAt,cat,urgent,priority,preview,snoozed,body,canReply})=>({id,source,channel,service,graphId,unread,sender,email,replyTarget,subject,time,date,receivedAt,cat,urgent,priority,preview,snoozed,body,canReply}));
   safeStoreJSON(EMAIL_CACHE_KEY,emails,slimEmails);
 }
 function refreshSettingsInputs(){
@@ -1485,10 +1485,16 @@ function restoreSavedState(){
   dashboardTab=dashboardSections.some(section=>section.id===saved.dashboardTab)?saved.dashboardTab:'today';
   syncSettings.msClientId=syncSettings.msClientId||localStorage.getItem('ms_client_id')||'';
   syncSettings.msTenantId=syncSettings.msTenantId||localStorage.getItem('ms_tenant_id')||'common';
-  syncSettings.googleClientId=syncSettings.googleClientId||localStorage.getItem('google_client_id')||'';
+  syncSettings.twilioAccountLabel=syncSettings.twilioAccountLabel||localStorage.getItem('twilio_account_label')||'';
+  syncSettings.twilioPhoneNumber=syncSettings.twilioPhoneNumber||localStorage.getItem('twilio_phone_number')||'';
+  syncSettings.twilioSyncUrl=syncSettings.twilioSyncUrl||localStorage.getItem('twilio_sync_url')||'';
+  syncSettings.twilioSendUrl=syncSettings.twilioSendUrl||localStorage.getItem('twilio_send_url')||'';
   msClientId=syncSettings.msClientId;
   msTenantId=syncSettings.msTenantId;
-  googleClientId=syncSettings.googleClientId;
+  if(!syncSettings.twilioSyncUrl && !syncSettings.twilioSendUrl && !syncSettings.twilioPhoneNumber){
+    channelProfiles.gvoice=clone(defaultChannelProfiles.gvoice);
+    clearLegacyGoogleVoiceState();
+  }
   document.getElementById('bName').value=saved.appName||'Mail AI';
   document.getElementById('bSubtitle').value=appSubtitle;
   document.getElementById('bLetter').value=saved.logoLetter||'M';
@@ -1775,7 +1781,7 @@ function renderWorkspaceList(){
       <button class="workspace-mini-card" onclick="document.getElementById('wsAccessCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
         <div class="workspace-mini-kicker">Access</div>
         <div class="workspace-mini-title">${apiKey ? 'Connected settings' : 'API setup'}</div>
-        <div class="workspace-mini-copy">Anthropic key plus Microsoft client and tenant settings for Outlook sync.</div>
+        <div class="workspace-mini-copy">Anthropic, Microsoft, and Twilio bridge settings for inbox and SMS sync.</div>
       </button>
       <button class="workspace-mini-card" onclick="document.getElementById('wsAssistantCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
         <div class="workspace-mini-kicker">Assistant</div>
@@ -1796,7 +1802,7 @@ function renderWorkspaceDetail(){
         <section class="workspace-hero">
           <div class="dash-kicker">System Settings</div>
           <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} Workspace</div>
-          <div class="workspace-hero-copy">Manage branding, AI access, Microsoft sync, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
+          <div class="workspace-hero-copy">Manage branding, AI access, Outlook sync, Twilio SMS routing, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
         </section>
         <div class="workspace-grid">
           <section class="workspace-card" id="wsBrandCard">
@@ -1849,7 +1855,7 @@ function renderWorkspaceDetail(){
                 <div class="workspace-card-eyebrow">Access</div>
                 <h3>API and Channel Access</h3>
               </div>
-              <div class="workspace-card-copy">Keep AI, Outlook, and Google Voice connection settings in one place.</div>
+              <div class="workspace-card-copy">Keep AI, Outlook, and Twilio bridge settings in one place.</div>
             </div>
             <div class="workspace-field-grid">
               <label class="workspace-field span-2">
@@ -1864,14 +1870,28 @@ function renderWorkspaceDetail(){
                 <span class="workspace-label">Tenant ID</span>
                 <input class="workspace-input" id="wsTenantId" placeholder="common">
               </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Twilio Line Label</span>
+                <input class="workspace-input" id="wsTwilioLabel" placeholder="Main business line">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Twilio Number</span>
+                <input class="workspace-input" id="wsTwilioNumber" placeholder="+16025551234">
+              </label>
               <label class="workspace-field span-2">
-                <span class="workspace-label">Google Client ID</span>
-                <input class="workspace-input" id="wsGoogleClientId" placeholder="Google OAuth Web Client ID">
+                <span class="workspace-label">Twilio Sync URL</span>
+                <input class="workspace-input" id="wsTwilioSyncUrl" placeholder="https://your-bridge.example.com/twilio/messages">
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Twilio Send URL</span>
+                <input class="workspace-input" id="wsTwilioSendUrl" placeholder="https://your-bridge.example.com/twilio/send">
               </label>
             </div>
+            <div class="workspace-note">Use your Twilio bridge URLs here so the app can fetch recent SMS threads and send replies without putting Twilio secrets in the browser.</div>
             <div class="workspace-action-row">
               <button class="workspace-btn primary" onclick="saveWorkspaceKeys()">Save Access</button>
               <button class="workspace-btn" onclick="openChannelSheet('outlook')">Open Outlook</button>
+              <button class="workspace-btn" onclick="openChannelSheet('gvoice')">Open Twilio SMS</button>
             </div>
           </section>
           <section class="workspace-card" id="wsAssistantCard">
@@ -1951,8 +1971,11 @@ function saveWorkspaceKeys(){
   document.getElementById('sfKey').value=document.getElementById('wsApiKey').value||'';
   document.getElementById('msClientIdSetting').value=document.getElementById('wsClientId').value||'';
   document.getElementById('msTenantIdSetting').value=document.getElementById('wsTenantId').value||'common';
+  updateTwilioConfig('twilioAccountLabel',document.getElementById('wsTwilioLabel')?.value||'',{persist:false});
+  updateTwilioConfig('twilioPhoneNumber',document.getElementById('wsTwilioNumber')?.value||'',{persist:false});
+  updateTwilioConfig('twilioSyncUrl',document.getElementById('wsTwilioSyncUrl')?.value||'',{persist:false});
+  updateTwilioConfig('twilioSendUrl',document.getElementById('wsTwilioSendUrl')?.value||'',{persist:false});
   saveKeys();
-  updateGoogleClientId(document.getElementById('wsGoogleClientId')?.value||'',{persist:true});
   if(currentView==='settings') render();
 }
 function saveWorkspacePersona(){
@@ -2328,10 +2351,31 @@ let msTenantId    = localStorage.getItem('ms_tenant_id') || 'common';
 let msRedirectUri = window.location.href.split('?')[0].split('#')[0];
 let msUserName    = '';
 let msUserEmail   = '';
-let googleAccessToken = null;
-let googleClientId    = localStorage.getItem('google_client_id') || '';
-let googleUserName    = localStorage.getItem('google_user_name') || '';
-let googleUserEmail   = localStorage.getItem('google_user_email') || '';
+function clearLegacyGoogleVoiceState(){
+  ['google_access_token','google_refresh_token','google_access_token_expires_at','google_user_name','google_user_email','google_client_id'].forEach(key=>{
+    localStorage.removeItem(key);
+  });
+}
+function twilioConfig(){
+  return {
+    accountLabel:(syncSettings.twilioAccountLabel||'').trim(),
+    phoneNumber:(syncSettings.twilioPhoneNumber||'').trim(),
+    syncUrl:(syncSettings.twilioSyncUrl||'').trim(),
+    sendUrl:(syncSettings.twilioSendUrl||'').trim()
+  };
+}
+function twilioAccountName(){
+  const cfg=twilioConfig();
+  return cfg.accountLabel || cfg.phoneNumber || 'Twilio SMS line';
+}
+function twilioAccountDetail(){
+  const cfg=twilioConfig();
+  if(cfg.phoneNumber && cfg.syncUrl && cfg.sendUrl) return `${cfg.phoneNumber} · sync + send active`;
+  if(cfg.phoneNumber && cfg.syncUrl) return `${cfg.phoneNumber} · inbox sync active`;
+  if(cfg.phoneNumber) return cfg.phoneNumber;
+  if(cfg.syncUrl || cfg.sendUrl) return 'Bridge endpoints configured for this workspace';
+  return 'Twilio bridge is configured and ready for this workspace.';
+}
 
 /* ── PKCE helpers ── */
 async function sha256(plain){
@@ -2416,164 +2460,128 @@ async function outlookRequest(url,options={},retry=true){
   }
   return res;
 }
-async function startGoogleOAuth(){
-  if(!googleClientId){ toast('Enter your Google Client ID first in Workspace Settings or the Google Voice sheet.'); return; }
-  const verifier=generateVerifier();
-  const challenge=await generateChallenge(verifier);
-  sessionStorage.setItem('google_pkce_verifier',verifier);
-  const params=new URLSearchParams({
-    client_id:googleClientId,
-    redirect_uri:msRedirectUri,
-    response_type:'code',
-    scope:'openid profile email https://www.googleapis.com/auth/gmail.readonly',
-    access_type:'offline',
-    include_granted_scopes:'true',
-    prompt:'consent',
-    code_challenge:challenge,
-    code_challenge_method:'S256',
-    state:'gvoice_connect'
-  });
-  window.location.href=`https://accounts.google.com/o/oauth2/v2/auth?${params}`;
+function parseBridgeMessages(payload){
+  if(Array.isArray(payload)) return payload;
+  if(Array.isArray(payload?.messages)) return payload.messages;
+  if(Array.isArray(payload?.items)) return payload.items;
+  if(Array.isArray(payload?.data)) return payload.data;
+  return [];
 }
-async function exchangeGoogleCodeForToken(code){
-  toast('Authorizing Google Voice inbox…');
+function normalizeTwilioTimestamp(raw){
+  const parsed=new Date(raw || Date.now());
+  return Number.isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
+}
+function normalizeTwilioMessage(message){
+  if(!message) return null;
+  const cfg=twilioConfig();
+  const direction=String(message.direction || message.messageDirection || message.type || '').toLowerCase();
+  const from=String(message.from || message.sender || message.phoneNumber || '').trim();
+  const to=String(message.to || message.recipient || '').trim();
+  const inbound=direction.includes('inbound') || direction.includes('receive') || (!!from && cfg.phoneNumber && from !== cfg.phoneNumber);
+  const replyTarget=String(message.replyTarget || message.contactNumber || message.with || (inbound ? from : to) || '').trim();
+  const receivedAt=normalizeTwilioTimestamp(message.receivedAt || message.dateCreated || message.timestamp || message.sentAt || message.created_at || message.createdAt);
+  const senderName=String(message.contactName || message.name || (inbound ? (from || 'SMS Contact') : (to || 'Outbound SMS')) || 'SMS Contact').trim();
+  const body=String(message.body || message.text || message.message || message.preview || '').trim();
+  return {
+    graphId:String(message.sid || message.id || `${replyTarget || senderName}-${receivedAt}`),
+    source:'twilio',
+    channel:'gvoice',
+    service:'Twilio SMS',
+    unread:message.unread===true || message.read===false,
+    sender:senderName,
+    email:replyTarget || cfg.phoneNumber || '',
+    replyTarget,
+    subject:String(message.subject || (inbound ? `Text from ${senderName}` : `Text to ${senderName}`)),
+    time:formatEmailTime(receivedAt),
+    date:formatEmailDate(receivedAt),
+    receivedAt,
+    cat:'client',
+    urgent:!!message.urgent,
+    priority:Number(message.priority ?? (message.urgent ? 8 : inbound ? 6 : 4)),
+    preview:(body || String(message.preview || '') || '').slice(0,100),
+    body:body || 'SMS message',
+    snoozed:false,
+    summary:null,
+    aiReply:undefined,
+    canReply:!!(cfg.sendUrl && replyTarget)
+  };
+}
+async function fetchTwilioMessages({silent=false}={}){
+  const cfg=twilioConfig();
+  if(!cfg.syncUrl){
+    if(!silent) toast('Add your Twilio Sync URL in Workspace Settings first.');
+    return;
+  }
   try{
-    const verifier=sessionStorage.getItem('google_pkce_verifier');
-    const body=new URLSearchParams({
-      client_id:googleClientId,
-      grant_type:'authorization_code',
-      code,
-      redirect_uri:msRedirectUri,
-      code_verifier:verifier
+    const res=await fetch(cfg.syncUrl,{
+      headers:{Accept:'application/json'}
     });
-    const res=await fetch('https://oauth2.googleapis.com/token',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body
+    if(!res.ok) throw new Error(`Bridge returned ${res.status}`);
+    const payload=await res.json();
+    const mapped=parseBridgeMessages(payload).map(normalizeTwilioMessage).filter(Boolean);
+    replaceEmailsBySource('twilio',mapped);
+    markChannelLive('gvoice',{
+      accountName:twilioAccountName(),
+      accountDetail:twilioAccountDetail()
     });
-    const data=await res.json();
-    if(data.error) throw new Error(data.error_description || data.error);
-    googleAccessToken=data.access_token;
-    storeTokenBundle('google',data);
-    await fetchGoogleProfile();
-    closeSheet('chSheet');
-    toast('Google Voice inbox connected! Syncing messages…');
-    await fetchGoogleVoiceMessages();
+    saveEmailCache();
+    render();
+    counts();
+    if(!silent){
+      toast(mapped.length ? `${mapped.length} Twilio messages synced ✓` : 'Twilio bridge connected, but no SMS messages were returned yet.');
+    }
   }catch(err){
-    toast('Google auth failed: ' + err.message);
+    if(!silent) toast('Twilio sync failed: ' + err.message);
     console.error(err);
   }
 }
-async function refreshGoogleAccessToken(){
-  const refreshToken=localStorage.getItem('google_refresh_token') || '';
-  if(!refreshToken || !googleClientId) return false;
+async function sendTwilioReply(emailId,replyBody){
+  const cfg=twilioConfig();
+  if(!cfg.sendUrl){ toast('Add your Twilio Send URL in Workspace Settings first.'); return; }
+  const email=emails.find(item=>item.id===emailId);
+  const to=email?.replyTarget || email?.email || '';
+  if(!to){ toast('This SMS thread is missing a reply target.'); return; }
   try{
-    const body=new URLSearchParams({
-      client_id:googleClientId,
-      grant_type:'refresh_token',
-      refresh_token:refreshToken
-    });
-    const res=await fetch('https://oauth2.googleapis.com/token',{
+    const res=await fetch(cfg.sendUrl,{
       method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        to,
+        body:replyBody,
+        from:cfg.phoneNumber || undefined,
+        sourceMessageId:email?.graphId || null,
+        channel:'twilio'
+      })
     });
-    const data=await res.json();
-    if(data.error) throw new Error(data.error_description || data.error);
-    googleAccessToken=data.access_token;
-    storeTokenBundle('google',data);
-    return true;
+    if(!res.ok){
+      const text=await res.text();
+      throw new Error(text || `Bridge returned ${res.status}`);
+    }
+    toast('Text sent via Twilio ✓');
+    email.aiReply=undefined;
+    saveEmailCache();
+    document.getElementById('aiContent').innerHTML = buildAI(email);
+    await fetchTwilioMessages({silent:true});
   }catch(err){
-    console.warn('Google refresh failed',err);
-    return false;
+    toast('Twilio send failed: ' + err.message);
+    console.error(err);
   }
 }
-async function ensureGoogleAccessToken(){
-  if(googleAccessToken) return true;
-  googleAccessToken=cachedAccessToken('google');
-  if(googleAccessToken) return true;
-  return refreshGoogleAccessToken();
-}
-async function gmailRequest(url,options={},retry=true){
-  const ready=await ensureGoogleAccessToken();
-  if(!ready) throw new Error('Reconnect Google Voice to sync messages.');
-  const res=await fetch(url,{
-    ...options,
-    headers:{
-      ...(options.headers||{}),
-      Authorization:`Bearer ${googleAccessToken}`
-    }
+function connectTwilioSms(){
+  const cfg=twilioConfig();
+  if(!cfg.syncUrl){
+    toast('Add your Twilio Sync URL in Workspace Settings before connecting.');
+    closeSheet('chSheet');
+    openWorkspaceSettings();
+    return;
+  }
+  clearLegacyGoogleVoiceState();
+  markChannelLive('gvoice',{
+    accountName:twilioAccountName(),
+    accountDetail:twilioAccountDetail()
   });
-  if(res.status===401 && retry){
-    googleAccessToken=null;
-    const refreshed=await refreshGoogleAccessToken();
-    if(refreshed) return gmailRequest(url,options,false);
-  }
-  return res;
-}
-function decodeBase64Url(input=''){
-  const padded=input.replace(/-/g,'+').replace(/_/g,'/');
-  const normalized=padded + '='.repeat((4 - padded.length % 4) % 4);
-  try{
-    return decodeURIComponent(escape(atob(normalized)));
-  }catch(_){
-    return atob(normalized);
-  }
-}
-function extractPayloadText(payload){
-  if(!payload) return '';
-  if(payload.mimeType==='text/plain' && payload.body?.data) return decodeBase64Url(payload.body.data);
-  if(payload.parts?.length){
-    for(const part of payload.parts){
-      const text=extractPayloadText(part);
-      if(text) return text;
-    }
-  }
-  if(payload.body?.data) return decodeBase64Url(payload.body.data);
-  return '';
-}
-function headerValue(headers,name){
-  return headers?.find(header=>header.name?.toLowerCase()===name.toLowerCase())?.value || '';
-}
-function inferGoogleVoiceSender(subject,body,snippet){
-  const samples=[subject,body,` ${snippet}`];
-  const patterns=[
-    /new text message from ([^\n-]+)/i,
-    /new voicemail from ([^\n-]+)/i,
-    /missed call from ([^\n-]+)/i,
-    /message from ([^\n:]+)/i,
-    /from:\s*([^\n]+)/i
-  ];
-  for(const sample of samples){
-    if(!sample) continue;
-    for(const pattern of patterns){
-      const match=sample.match(pattern);
-      if(match?.[1]) return match[1].trim();
-    }
-  }
-  return 'Google Voice Contact';
-}
-function inferGoogleVoiceType(subject,body){
-  const text=`${subject}\n${body}`.toLowerCase();
-  if(text.includes('voicemail')) return {subject:subject || 'New voicemail', cat:'client', urgent:true, priority:7};
-  if(text.includes('missed call')) return {subject:subject || 'Missed call', cat:'client', urgent:true, priority:8};
-  return {subject:subject || 'New text message', cat:'client', urgent:false, priority:5};
-}
-async function fetchGoogleProfile(){
-  try{
-    const res=await gmailRequest('https://www.googleapis.com/oauth2/v3/userinfo');
-    const profile=await res.json();
-    googleUserName=profile.name || profile.given_name || 'Google Workspace';
-    googleUserEmail=profile.email || '';
-    localStorage.setItem('google_user_name',googleUserName);
-    localStorage.setItem('google_user_email',googleUserEmail);
-    markChannelLive('gvoice',{
-      accountName:googleUserName,
-      accountDetail:googleUserEmail || 'Google Voice forwarding via Gmail'
-    });
-  }catch(err){
-    console.warn('Could not fetch Google profile',err);
-  }
+  closeSheet('chSheet');
+  fetchTwilioMessages();
 }
 
 /* ── Start PKCE login popup ── */
@@ -2765,13 +2773,8 @@ function markChannelLive(ch,profile={}){
 function disconnectChannel(ch,{silent=false}={}){
   if(ch==='outlook'){ signOut(); return; }
   if(ch==='gvoice'){
-    googleAccessToken=null;
-    googleUserName='';
-    googleUserEmail='';
-    clearTokenBundle('google');
-    localStorage.removeItem('google_user_name');
-    localStorage.removeItem('google_user_email');
-    replaceEmailsBySource('gvoice',[]);
+    clearLegacyGoogleVoiceState();
+    replaceEmailsBySource('twilio',[]);
     saveEmailCache();
   }
   channelProfiles[ch]=clone(defaultChannelProfiles[ch]);
@@ -2851,67 +2854,12 @@ function showChannelHover(ch,anchorEl){
   positionChannelHover(anchorEl,card);
 }
 
-async function fetchGoogleVoiceMessages(){
-  try{
-    const query=encodeURIComponent('from:voice-noreply@google.com newer_than:45d');
-    const listRes=await gmailRequest(`https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=25&q=${query}`);
-    if(!listRes.ok){
-      const err=await listRes.json();
-      throw new Error(err.error?.message || 'Gmail API error');
-    }
-    const listData=await listRes.json();
-    const refs=listData.messages||[];
-    const details=await Promise.all(refs.map(async(ref)=>{
-      const res=await gmailRequest(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${ref.id}?format=full`);
-      if(!res.ok) return null;
-      return res.json();
-    }));
-    const mapped=details.filter(Boolean).map(msg=>{
-      const subject=headerValue(msg.payload?.headers,'Subject');
-      const receivedAt=new Date(Number(msg.internalDate||Date.now())).toISOString();
-      const body=stripHtml(extractPayloadText(msg.payload) || msg.snippet || '');
-      const senderName=inferGoogleVoiceSender(subject,body,msg.snippet||'');
-      const info=inferGoogleVoiceType(subject,body);
-      return {
-        source:'gvoice',
-        channel:'gvoice',
-        service:'Google Voice',
-        graphId:msg.id,
-        unread:!(msg.labelIds||[]).includes('READ'),
-        sender:senderName,
-        email:googleUserEmail || 'Google Voice via Gmail',
-        subject:info.subject,
-        time:formatEmailTime(receivedAt),
-        date:formatEmailDate(receivedAt),
-        receivedAt,
-        cat:info.cat,
-        urgent:info.urgent,
-        priority:info.priority,
-        preview:(msg.snippet || body || '').slice(0,100),
-        body:body || msg.snippet || 'Google Voice notification',
-        snoozed:false,
-        summary:null,
-        aiReply:undefined,
-        canReply:false
-      };
-    });
-    replaceEmailsBySource('gvoice',mapped);
-    markChannelLive('gvoice',{
-      accountName:googleUserName || googleUserEmail || 'Google Voice via Gmail',
-      accountDetail:googleUserEmail || 'Forwarded messages are syncing through Gmail'
-    });
-    saveEmailCache();
-    render();
-    counts();
-    toast(mapped.length ? `${mapped.length} Google Voice messages synced ✓` : 'Google Voice connected, but no forwarded messages were found yet.');
-  }catch(err){
-    toast('Google Voice sync failed: ' + err.message);
-    console.error(err);
-  }
+async function fetchGoogleVoiceMessages(options){
+  return fetchTwilioMessages(options);
 }
 
 function connectGoogleVoice(){
-  startGoogleOAuth();
+  connectTwilioSms();
 }
 
 function connectIMessage(){
@@ -2930,7 +2878,7 @@ function connectIMessage(){
 function openChannelSheet(ch){
   hideChannelHover();
   document.getElementById('chSheetTitle').textContent = {
-    outlook:'Outlook / Microsoft 365', gvoice:'Google Voice', imessage:'iMessage / SMS'
+    outlook:'Outlook / Microsoft 365', gvoice:'Twilio SMS', imessage:'iMessage / SMS'
   }[ch] || ch;
   document.getElementById('chSheetBody').innerHTML = ch==='outlook'
     ? buildOutlookSheet()
@@ -3032,36 +2980,38 @@ function buildGVoiceSheet(){
     return `
     <div class="connected-state">
       <div class="connected-av-wrap">
-        <div class="connected-avatar" style="background:var(--green)">GV</div>
+        <div class="connected-avatar" style="background:var(--green)">TW</div>
         <div class="connected-check">✓</div>
       </div>
       <div>
         <div class="connected-name">${esc(state.accountName)}</div>
         <div class="connected-email">${esc(state.accountDetail)}</div>
       </div>
-      <div class="connected-since">Connected · Google Voice forwarding</div>
+      <div class="connected-since">Connected · Twilio SMS bridge</div>
     </div>
     <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
-      <button class="connect-primary" style="background:var(--green)" onclick="fetchGoogleVoiceMessages();closeSheet('chSheet')">Sync Messages</button>
+      <button class="connect-primary" style="background:var(--green)" onclick="fetchTwilioMessages();closeSheet('chSheet')">Sync Messages</button>
+      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
     </div>
-    <button class="connected-signout" onclick="disconnectChannel('gvoice');closeSheet('chSheet')">Sign out of Google Voice</button>`;
+    <button class="connected-signout" onclick="disconnectChannel('gvoice');closeSheet('chSheet')">Sign out of Twilio SMS</button>`;
   }
   return `
   <div class="ch-connect-card">
     <div class="ch-connect-header">
       <div class="ch-icon-large" style="background:rgba(52,199,89,.12);font-size:22px">📞</div>
-      <div><div class="ch-connect-title">Google Voice</div><div class="ch-connect-desc">Two ways to connect</div></div>
+      <div><div class="ch-connect-title">Twilio SMS</div><div class="ch-connect-desc">Business text channel</div></div>
     </div>
     <div class="ch-steps">
-      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">1</div><div class="ch-step-text"><strong>Enable forwarding:</strong> Open <a href="https://voice.google.com/u/0/settings" target="_blank">voice.google.com → Settings → Messages</a> and turn on <em>Forward messages to email</em>.</div></div>
-      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">2</div><div class="ch-step-text"><strong>Connect Gmail:</strong> Add your Google OAuth Client ID below so this app can read those forwarded Google Voice emails.</div></div>
-      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">3</div><div class="ch-step-text"><strong>Sync messages:</strong> After sign-in, incoming texts and missed-call emails will land inside the unified inbox here.</div></div>
-    </div>
-    <div style="padding:0 16px 14px">
-      <input id="gvoiceAccountInput" placeholder="Google OAuth Client ID" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none" value="${esc(syncSettings.googleClientId||googleClientId||'')}" oninput="updateGoogleClientId(this.value)">
+      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">1</div><div class="ch-step-text"><strong>Get a Twilio number:</strong> Buy or assign a business SMS number in <a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank">Twilio Console</a>.</div></div>
+      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">2</div><div class="ch-step-text"><strong>Set your bridge:</strong> Point your Twilio incoming message webhook at your serverless bridge or Function, then expose a sync URL and send URL for this app.</div></div>
+      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">3</div><div class="ch-step-text"><strong>Save the URLs in Workspace:</strong> Add your Twilio line label, number, sync URL, and send URL in the Workspace access page.</div></div>
     </div>
   </div>
-  <button class="ch-connect-btn" style="background:var(--green)" onclick="connectGoogleVoice()">Connect Gmail for Google Voice</button>`;
+  <div style="padding:0 16px 14px;color:var(--label-2);font-size:12px;line-height:1.55">This app stays static and secure by talking only to your bridge URLs, not directly to Twilio secrets.</div>
+  <div class="connect-btns" style="padding-top:4px">
+    <button class="connect-primary" style="background:var(--green)" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
+    <button class="connect-secondary" onclick="connectTwilioSms()">Connect Twilio SMS</button>
+  </div>`;
 }
 
 function buildIMessageSheet(){
@@ -3094,7 +3044,7 @@ function buildIMessageSheet(){
       <div class="ch-step"><div class="ch-step-num">1</div><div class="ch-step-text">On your <strong>Mac</strong>: Messages → Settings → iMessage → enable <em>Text Message Forwarding</em> to your iPhone</div></div>
       <div class="ch-step"><div class="ch-step-num">2</div><div class="ch-step-text">Install <a href="https://beeper.com" target="_blank">Beeper</a> (free) — it bridges iMessage, WhatsApp and SMS into a unified inbox with webhook support</div></div>
       <div class="ch-step"><div class="ch-step-num">3</div><div class="ch-step-text">Alternatively use <a href="https://automate.io" target="_blank">Make (Integromat)</a> to forward SMS notifications from your carrier to a webhook that posts here</div></div>
-      <div class="ch-step"><div class="ch-step-num">4</div><div class="ch-step-text">Enterprise option: Use <a href="https://twilio.com" target="_blank">Twilio</a> with a business number — paste your Twilio Account SID below for full two-way SMS</div></div>
+      <div class="ch-step"><div class="ch-step-num">4</div><div class="ch-step-text">Need business texting instead? Use the dedicated <strong>Twilio SMS</strong> channel in this app for full send and receive support.</div></div>
     </div>
     <div style="padding:0 16px 14px">
       <input id="imessageAccountInput" placeholder="Connected phone number or bridge device" style="width:100%;border:.5px solid var(--sys-sep);background:var(--sys-grouped-2);border-radius:var(--r-lg);padding:10px 12px;font-family:var(--font-sf);font-size:14px;color:var(--label);outline:none" value="${esc(channelProfiles.imessage.accountName||'')}">
@@ -3164,7 +3114,10 @@ function syncWorkspaceSettingsInputs(){
   const wsApi=document.getElementById('wsApiKey');
   const wsClient=document.getElementById('wsClientId');
   const wsTenant=document.getElementById('wsTenantId');
-  const wsGoogleClient=document.getElementById('wsGoogleClientId');
+  const wsTwilioLabel=document.getElementById('wsTwilioLabel');
+  const wsTwilioNumber=document.getElementById('wsTwilioNumber');
+  const wsTwilioSyncUrl=document.getElementById('wsTwilioSyncUrl');
+  const wsTwilioSendUrl=document.getElementById('wsTwilioSendUrl');
   const wsPName=document.getElementById('wsPersonaName');
   const wsPTone=document.getElementById('wsPersonaTone');
   const wsPSig=document.getElementById('wsPersonaSig');
@@ -3181,7 +3134,10 @@ function syncWorkspaceSettingsInputs(){
   if(wsApi) wsApi.value=apiKey;
   if(wsClient) wsClient.value=syncSettings.msClientId||'';
   if(wsTenant) wsTenant.value=syncSettings.msTenantId||'common';
-  if(wsGoogleClient) wsGoogleClient.value=syncSettings.googleClientId||'';
+  if(wsTwilioLabel) wsTwilioLabel.value=syncSettings.twilioAccountLabel||'';
+  if(wsTwilioNumber) wsTwilioNumber.value=syncSettings.twilioPhoneNumber||'';
+  if(wsTwilioSyncUrl) wsTwilioSyncUrl.value=syncSettings.twilioSyncUrl||'';
+  if(wsTwilioSendUrl) wsTwilioSendUrl.value=syncSettings.twilioSendUrl||'';
   if(wsPName) wsPName.value=persona.name;
   if(wsPTone) wsPTone.value=persona.tone;
   if(wsPSig) wsPSig.value=persona.sig;
@@ -3287,14 +3243,32 @@ function updateMsTenantId(value,{persist=true}={}){
   if(b&&b.value!==msTenantId) b.value=msTenantId;
   if(persist) saveSettings();
 }
-function updateGoogleClientId(value,{persist=true}={}){
-  googleClientId=value.trim();
-  syncSettings.googleClientId=googleClientId;
-  localStorage.setItem('google_client_id',googleClientId);
-  const a=document.getElementById('wsGoogleClientId');
-  const b=document.getElementById('gvoiceAccountInput');
-  if(a&&a.value!==googleClientId) a.value=googleClientId;
-  if(b&&b.value!==googleClientId) b.value=googleClientId;
+function updateTwilioConfig(key,value,{persist=true}={}){
+  const raw=String(value||'').trim();
+  syncSettings[key]=raw;
+  const storageKey={
+    twilioAccountLabel:'twilio_account_label',
+    twilioPhoneNumber:'twilio_phone_number',
+    twilioSyncUrl:'twilio_sync_url',
+    twilioSendUrl:'twilio_send_url'
+  }[key];
+  if(storageKey) localStorage.setItem(storageKey,raw);
+  const fieldMap={
+    twilioAccountLabel:['wsTwilioLabel'],
+    twilioPhoneNumber:['wsTwilioNumber'],
+    twilioSyncUrl:['wsTwilioSyncUrl'],
+    twilioSendUrl:['wsTwilioSendUrl']
+  };
+  (fieldMap[key]||[]).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.value!==raw) el.value=raw;
+  });
+  if(channelProfiles.gvoice.connected){
+    markChannelLive('gvoice',{
+      accountName:twilioAccountName(),
+      accountDetail:twilioAccountDetail()
+    });
+  }
   if(persist) saveSettings();
 }
 function toggleSyncSetting(key,btn){
@@ -3372,8 +3346,8 @@ function sendReply(id){
   const body=ta?ta.value:'';
   if(!body){toast('Reply is empty');return;}
   const e=emails.find(x=>x.id===id);
-  if(e?.source==='gvoice'){
-    toast('Google Voice messages sync in here, but replies still need to be sent from Google Voice.');
+  if(e?.source==='twilio'){
+    sendTwilioReply(id,body);
     return;
   }
   if(e?.source==='outlook' || e?.graphId){
@@ -3398,45 +3372,26 @@ function sendReply(id){
     if(msClientId) await exchangeCodeForToken(code);
     else toast('Client ID missing — open the Outlook channel to reconnect');
   }
-  if(code && state === 'gvoice_connect'){
-    window.history.replaceState({}, document.title, window.location.pathname);
-    googleClientId = localStorage.getItem('google_client_id') || '';
-    if(googleClientId) await exchangeGoogleCodeForToken(code);
-    else toast('Google Client ID missing — open the Google Voice channel to reconnect');
-  }
   if(!msClientId) msClientId = localStorage.getItem('ms_client_id') || '';
   if(!msTenantId) msTenantId = localStorage.getItem('ms_tenant_id') || 'common';
-  if(!googleClientId) googleClientId = localStorage.getItem('google_client_id') || '';
   msAccessToken = cachedAccessToken('ms');
-  googleAccessToken = cachedAccessToken('google');
   const cn = localStorage.getItem('ms_user_name') || '';
   const ce = localStorage.getItem('ms_user_email') || '';
   if(cn){ msUserName=cn; msUserEmail=ce; updateSignedInCard(); }
-  const gn = localStorage.getItem('google_user_name') || '';
-  const ge = localStorage.getItem('google_user_email') || '';
-  if(gn || ge){
-    googleUserName=gn;
-    googleUserEmail=ge;
-    markChannelLive('gvoice',{
-      accountName:googleUserName || googleUserEmail || 'Google Voice via Gmail',
-      accountDetail:googleUserEmail || 'Forwarded messages are syncing through Gmail'
-    });
-  }
   if(!code && localStorage.getItem('ms_refresh_token') && msClientId && !msAccessToken) await refreshOutlookAccessToken();
-  if(!code && localStorage.getItem('google_refresh_token') && googleClientId && !googleAccessToken) await refreshGoogleAccessToken();
   if(localStorage.getItem('ms_refresh_token') && msClientId && !emails.some(email=>email.source==='outlook')) await fetchOutlookEmails();
-  if(localStorage.getItem('google_refresh_token') && googleClientId && !emails.some(email=>email.source==='gvoice')) await fetchGoogleVoiceMessages();
+  if(channelProfiles.gvoice.connected && syncSettings.twilioSyncUrl && !emails.some(email=>email.source==='twilio')) await fetchTwilioMessages({silent:true});
 })();
 
 /* ── AUTO-REFRESH EVERY 5 MIN ── */
 setInterval(async()=>{
   const beforeOutlook=emails.filter(email=>email.source==='outlook').length;
-  const beforeGvoice=emails.filter(email=>email.source==='gvoice').length;
+  const beforeTwilio=emails.filter(email=>email.source==='twilio').length;
   if(localStorage.getItem('ms_refresh_token') && msClientId) await fetchOutlookEmails();
-  if(localStorage.getItem('google_refresh_token') && googleClientId) await fetchGoogleVoiceMessages();
+  if(channelProfiles.gvoice.connected && syncSettings.twilioSyncUrl) await fetchTwilioMessages({silent:true});
   const afterOutlook=emails.filter(email=>email.source==='outlook').length;
-  const afterGvoice=emails.filter(email=>email.source==='gvoice').length;
-  const delta=(afterOutlook-beforeOutlook) + (afterGvoice-beforeGvoice);
+  const afterTwilio=emails.filter(email=>email.source==='twilio').length;
+  const delta=(afterOutlook-beforeOutlook) + (afterTwilio-beforeTwilio);
   toast(delta>0 ? delta+' new item'+(delta>1?'s':'')+' ✓' : 'Channels up to date ✓');
 }, 5*60*1000);
 
@@ -3450,7 +3405,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.4.9';
+const APP_VERSION = '1.5.0';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
