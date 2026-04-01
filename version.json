@@ -1,5 +1,5 @@
 {
-  "version": "1.6.2",
-  "changelog": "Consolidated editable controls into one dedicated Settings page, removed scattered settings from the other pages, and turned the AI page into an operations-only workspace.",
+  "version": "1.6.3",
+  "changelog": "Redesigned the dashboard into a cleaner dark command board with a centered shell, stronger readability, compact navigation rail, and a layout that better matches the new reference design.",
   "released": "2026-04-01"
 }

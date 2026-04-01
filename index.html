@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.2">
+<meta name="app-version" content="1.6.3">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -327,6 +327,196 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 [data-theme="dark"] .dash-input-shell,
 [data-theme="dark"] .dash-stage-field{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
 .dash-simple-shell .dash-chip-row{margin-top:14px}
+.dash-fig-shell{display:flex;min-height:100%;padding:18px}
+.dash-fig-frame{
+  flex:1;min-height:0;max-width:1420px;margin:0 auto;padding:28px;border-radius:34px;
+  background:
+    radial-gradient(720px 340px at 88% 4%, rgba(103,124,255,0.18) 0%, transparent 58%),
+    radial-gradient(540px 280px at 6% 8%, rgba(180,138,44,0.16) 0%, transparent 62%),
+    linear-gradient(160deg, rgba(17,18,23,0.98) 0%, rgba(10,11,16,0.97) 48%, rgba(8,9,13,0.98) 100%);
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 26px 68px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05);
+  display:grid;
+  grid-template-columns:72px minmax(0,1.48fr) minmax(320px,.95fr);
+  grid-template-rows:auto auto minmax(0,1fr) auto;
+  grid-template-areas:
+    "rail top top"
+    "rail head summary"
+    "rail chart queue"
+    "rail lower queue";
+  gap:20px;
+  overflow:hidden;
+}
+.dash-fig-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.055));
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:28px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.dash-fig-top{grid-area:top;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.dash-fig-search{
+  flex:1;max-width:520px;display:flex;align-items:center;gap:12px;padding:14px 18px;
+  border-radius:999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)
+}
+.dash-fig-search svg{width:18px;height:18px;flex-shrink:0;color:rgba(255,255,255,0.56)}
+.dash-fig-search input{
+  flex:1;border:none;outline:none;background:transparent;font-family:var(--font-sf);font-size:16px;
+  color:#F6F3EE;min-width:0
+}
+.dash-fig-search input::placeholder{color:rgba(255,255,255,0.48)}
+.dash-fig-user{display:flex;align-items:center;gap:12px;color:#F5F1E8;font-size:16px;font-weight:700}
+.dash-fig-user-copy{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.dash-fig-user-sub{font-size:12px;font-weight:600;color:rgba(255,255,255,0.52)}
+.dash-fig-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(145deg, color-mix(in srgb,var(--accent) 82%,#f3d18d), color-mix(in srgb,var(--accent) 42%,#4d3210));
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;
+  box-shadow:0 12px 24px rgba(0,0,0,0.22)
+}
+.dash-fig-rail{
+  grid-area:rail;display:flex;flex-direction:column;justify-content:space-between;align-items:center;
+  padding:18px 0 4px
+}
+.dash-fig-rail-stack{display:flex;flex-direction:column;gap:14px}
+.dash-fig-rail-group{
+  padding:10px 9px;border-radius:24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);
+  display:grid;gap:10px
+}
+.dash-fig-rail-btn{
+  width:44px;height:44px;border:none;border-radius:16px;background:transparent;color:rgba(255,255,255,0.66);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .16s var(--spring),background .16s var(--ease),color .16s var(--ease),box-shadow .16s var(--ease)
+}
+.dash-fig-rail-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.08);color:#fff}
+.dash-fig-rail-btn.active{
+  background:linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,234,220,0.95));
+  color:#15171D;box-shadow:0 12px 24px rgba(0,0,0,0.2)
+}
+.dash-fig-rail-btn svg{width:18px;height:18px}
+.dash-fig-head{grid-area:head;display:grid;gap:18px;align-content:start}
+.dash-fig-head-copy{max-width:540px}
+.dash-fig-kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.42);margin-bottom:12px}
+.dash-fig-title{font-size:58px;line-height:.94;letter-spacing:-.06em;color:#F7F3EC;font-weight:780}
+.dash-fig-copy{margin-top:12px;font-size:14px;line-height:1.7;color:rgba(255,255,255,0.64);max-width:46ch}
+.dash-fig-pills{display:flex;gap:10px;flex-wrap:wrap}
+.dash-fig-pill{
+  border:none;border-radius:999px;padding:12px 18px;background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.72);font-family:var(--font-sf);font-size:14px;font-weight:600;cursor:pointer;
+  transition:background .16s var(--ease),color .16s var(--ease),transform .16s var(--ease),box-shadow .16s var(--ease)
+}
+.dash-fig-pill:hover{transform:translateY(-1px);background:rgba(255,255,255,0.11);color:#fff}
+.dash-fig-pill.active{
+  background:linear-gradient(145deg, color-mix(in srgb,var(--accent) 72%,#d4b26d), color-mix(in srgb,var(--accent) 36%,#3f2b12));
+  color:#FDF7ED;box-shadow:0 12px 22px color-mix(in srgb,var(--accent) 22%,transparent)
+}
+.dash-fig-summary{grid-area:summary;padding:22px 24px;display:grid;gap:18px}
+.dash-fig-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.dash-fig-card-label{font-size:14px;font-weight:700;color:#F5F1E8}
+.dash-fig-card-link{font-size:13px;color:rgba(255,255,255,0.62);text-decoration:none;cursor:pointer}
+.dash-fig-card-link:hover{color:#fff}
+.dash-fig-summary-balance{display:grid;gap:6px}
+.dash-fig-summary-kicker{font-size:12px;color:rgba(255,255,255,0.48)}
+.dash-fig-summary-value{font-size:46px;line-height:.95;font-weight:780;letter-spacing:-.05em;color:#FAF7F0}
+.dash-fig-summary-meta{font-size:13px;line-height:1.6;color:rgba(255,255,255,0.58)}
+.dash-fig-summary-chiprow{display:flex;flex-wrap:wrap;gap:8px}
+.dash-fig-summary-chip{
+  padding:7px 10px;border-radius:999px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);
+  font-size:11px;font-weight:700;color:rgba(255,255,255,0.7)
+}
+.dash-fig-summary-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dash-fig-summary-stat{
+  padding:12px 14px;border-radius:18px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06)
+}
+.dash-fig-summary-stat-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.42)}
+.dash-fig-summary-stat-value{margin-top:8px;font-size:22px;font-weight:760;letter-spacing:-.04em;color:#FAF6EF}
+.dash-fig-summary-stat-sub{margin-top:5px;font-size:12px;line-height:1.45;color:rgba(255,255,255,0.5)}
+.dash-fig-chart{grid-area:chart;padding:24px 24px 18px;display:grid;gap:18px;min-height:0}
+.dash-fig-chart-grid{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px}
+.dash-fig-badge{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;
+  background:rgba(255,255,255,0.06);color:#F4EFE5;font-size:12px;font-weight:700;width:max-content
+}
+.dash-fig-badge-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 16%,transparent)}
+.dash-fig-bars{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;align-items:end;min-height:240px;
+  padding:0 6px 4px
+}
+.dash-fig-bar-col{display:grid;justify-items:center;align-content:end;gap:12px;min-width:0}
+.dash-fig-bar-tag{
+  padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.06);font-size:12px;font-weight:700;color:rgba(255,255,255,0.72)
+}
+.dash-fig-bar{
+  width:100%;max-width:76px;border-radius:22px 22px 18px 18px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.14));
+  border:1px solid rgba(255,255,255,0.06);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05)
+}
+.dash-fig-bar.highlight{
+  background:linear-gradient(180deg, color-mix(in srgb,var(--accent) 78%,#e5c57e), color-mix(in srgb,var(--accent) 52%,#83601f));
+  box-shadow:0 16px 30px color-mix(in srgb,var(--accent) 18%,transparent), inset 0 1px 0 rgba(255,255,255,0.16)
+}
+.dash-fig-bar-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.6)}
+.dash-fig-chart-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:4px}
+.dash-fig-chart-note{font-size:13px;color:rgba(255,255,255,0.54);line-height:1.6;max-width:48ch}
+.dash-fig-chart-link{font-size:14px;font-weight:600;color:rgba(255,255,255,0.74);cursor:pointer}
+.dash-fig-chart-link:hover{color:#fff}
+.dash-fig-lower{grid-area:lower;display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.2fr);gap:16px;min-height:0}
+.dash-fig-health{padding:22px 20px;display:grid;gap:18px;align-content:start}
+.dash-fig-health-body{display:flex;align-items:center;gap:18px}
+.dash-fig-health-ring{
+  --score:72;
+  width:120px;height:120px;border-radius:50%;
+  background:
+    radial-gradient(circle at center, rgba(15,16,22,1) 0 43px, transparent 44px),
+    conic-gradient(#23D5AB 0 calc(var(--score) * 1%), rgba(255,255,255,0.08) 0 100%);
+  display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0
+}
+.dash-fig-health-ring::after{
+  content:"";position:absolute;inset:14px;border-radius:50%;background:rgba(11,12,17,0.98);
+  border:1px solid rgba(255,255,255,0.06)
+}
+.dash-fig-health-score{position:relative;z-index:1;text-align:center}
+.dash-fig-health-score strong{display:block;font-size:28px;line-height:1;font-weight:780;color:#FBF7F0}
+.dash-fig-health-score span{display:block;margin-top:4px;font-size:12px;color:rgba(255,255,255,0.52)}
+.dash-fig-health-legend{display:grid;gap:8px;flex:1}
+.dash-fig-health-item{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:rgba(255,255,255,0.64)}
+.dash-fig-health-key{display:flex;align-items:center;gap:8px;min-width:0}
+.dash-fig-health-swatch{width:10px;height:10px;border-radius:999px;flex-shrink:0}
+.dash-fig-health-val{font-weight:700;color:#F5F0E7}
+.dash-fig-stack{display:grid;gap:16px;min-height:0}
+.dash-fig-stack-card{padding:20px 22px;display:grid;gap:10px;align-content:start}
+.dash-fig-stack-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.dash-fig-stack-label{font-size:14px;font-weight:700;color:#F4EFE4}
+.dash-fig-stack-value{font-size:22px;font-weight:760;letter-spacing:-.04em;color:#FBF7F0}
+.dash-fig-stack-trend{font-size:12px;font-weight:700}
+.dash-fig-stack-trend.up{color:#23D5AB}
+.dash-fig-stack-trend.down{color:#FF7B7B}
+.dash-fig-stack-copy{font-size:13px;line-height:1.6;color:rgba(255,255,255,0.58)}
+.dash-fig-queue{grid-area:queue;padding:24px 24px 22px;display:grid;grid-template-rows:auto minmax(0,1fr);gap:18px;min-height:0}
+.dash-fig-queue-list{display:grid;gap:10px;align-content:start;min-height:0;overflow:auto;padding-right:2px}
+.dash-fig-queue-list::-webkit-scrollbar{display:none}
+.dash-fig-queue-row{
+  display:grid;grid-template-columns:46px minmax(0,1fr) auto;align-items:center;gap:14px;
+  padding:14px 0;border-top:1px solid rgba(255,255,255,0.07)
+}
+.dash-fig-queue-row:first-child{border-top:none;padding-top:0}
+.dash-fig-queue-icon{
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1)
+}
+.dash-fig-queue-copy{min-width:0}
+.dash-fig-queue-name{font-size:15px;font-weight:700;color:#F5F1E8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-fig-queue-sub{margin-top:4px;font-size:13px;line-height:1.5;color:rgba(255,255,255,0.54);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dash-fig-queue-meta{text-align:right}
+.dash-fig-queue-value{font-size:15px;font-weight:760;color:#FBF7F0}
+.dash-fig-queue-time{margin-top:5px;font-size:12px;color:rgba(255,255,255,0.44)}
+.dash-fig-empty{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.58)}
+[data-theme="light"] .dash-fig-frame{
+  background:
+    radial-gradient(720px 340px at 88% 4%, rgba(103,124,255,0.14) 0%, transparent 58%),
+    radial-gradient(540px 280px at 6% 8%, rgba(180,138,44,0.16) 0%, transparent 62%),
+    linear-gradient(160deg, rgba(30,31,37,0.98) 0%, rgba(22,23,29,0.98) 52%, rgba(17,18,22,0.98) 100%);
+}
 .workspace-list{display:grid;gap:12px;padding:4px 2px 16px}
 .workspace-mini-card{width:100%;border:none;text-align:left;padding:16px;border-radius:20px;background:color-mix(in srgb,var(--sys-grouped) 97%,#ffffff);border:.5px solid rgba(120,132,154,.16);box-shadow:0 10px 24px rgba(19,28,45,.08);cursor:pointer;display:grid;gap:6px;font-family:var(--font-sf);color:var(--label)}
 .workspace-mini-card:hover{transform:translateY(-1px)}
@@ -692,6 +882,29 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   body.dashboard-mode{grid-template:"sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
   .list-pane{max-height:40dvh}
   .det{min-width:0}
+  .dash-fig-shell{padding:12px}
+  .dash-fig-frame{
+    padding:20px;
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto auto auto auto auto;
+    grid-template-areas:
+      "top"
+      "head"
+      "rail"
+      "summary"
+      "chart"
+      "lower"
+      "queue";
+    overflow:auto;
+  }
+  .dash-fig-top{flex-direction:column;align-items:stretch}
+  .dash-fig-search{max-width:none}
+  .dash-fig-user{justify-content:space-between}
+  .dash-fig-rail{padding:0;display:grid;gap:12px}
+  .dash-fig-rail-stack{flex-direction:row}
+  .dash-fig-rail-group{grid-auto-flow:column;justify-content:start}
+  .dash-fig-title{font-size:40px}
+  .dash-fig-lower{grid-template-columns:1fr}
   .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row,.dash-mini-grid{grid-template-columns:1fr}
   .dash-stage-grid{grid-template-columns:1fr}
   .dash-hero-head{flex-direction:column}
@@ -749,6 +962,20 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-workspace{grid-template-columns:1fr}
   .dash-simple-shell{height:auto;overflow:auto}
   body.dashboard-mode .det-scroll{overflow:auto}
+  .dash-fig-frame{border-radius:26px;padding:16px;gap:14px}
+  .dash-fig-title{font-size:34px}
+  .dash-fig-pills{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}
+  .dash-fig-pills::-webkit-scrollbar{display:none}
+  .dash-fig-summary-stats{grid-template-columns:1fr}
+  .dash-fig-bars{gap:10px;min-height:180px}
+  .dash-fig-bar{max-width:none;border-radius:18px 18px 14px 14px}
+  .dash-fig-bar-tag{font-size:11px;padding:5px 8px}
+  .dash-fig-chart-foot{flex-direction:column;align-items:flex-start}
+  .dash-fig-health-body{flex-direction:column;align-items:flex-start}
+  .dash-fig-queue-row{grid-template-columns:42px minmax(0,1fr);grid-template-areas:"icon copy" "icon meta"}
+  .dash-fig-queue-icon{grid-area:icon;width:42px;height:42px}
+  .dash-fig-queue-copy{grid-area:copy}
+  .dash-fig-queue-meta{grid-area:meta;text-align:left;padding-left:0}
   .dash-hero-simple .dash-hero-actions{width:100%;margin-top:12px}
   .dash-signal-row{flex-direction:column;align-items:flex-start}
   .workspace-action-row{flex-direction:column}
@@ -762,6 +989,9 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .msg-name{max-width:none}
   .det-subj{font-size:18px}
   .connect-primary,.sheet-save-btn{font-size:16px}
+  .dash-fig-title{font-size:30px}
+  .dash-fig-search input{font-size:15px}
+  .dash-fig-summary-value{font-size:34px}
 }
 </style>
 </head>
@@ -1585,6 +1815,234 @@ function renderDashboardList(){
       </div>
     </div>`;
 }
+function setDashboardSearch(value){
+  searchQ=String(value||'').toLowerCase();
+}
+function openDashboardInboxSearch(){
+  setFilter('all',document.querySelector('[data-filter=all]'));
+}
+function dashboardAccentTone(tab){
+  return dashboardSection(tab).tone || accentColor || '#B48A2C';
+}
+function dashboardTrendModel(tab){
+  const models={
+    today:{
+      title:'Today Flow',
+      note:`${dashboardData.today.followUps} follow-ups, ${dashboardData.today.proposalsDue} proposals, and ${dashboardData.today.invoicesDue} finance items are active.`,
+      badge:`${dashboardData.today.followUps} planned`,
+      bars:[
+        {label:'Mon',value:Math.max(4,dashboardData.today.followUps-3)},
+        {label:'Tue',value:Math.max(5,dashboardData.today.proposalsDue+2)},
+        {label:'Wed',value:Math.max(5,dashboardData.today.invoicesDue+3)},
+        {label:'Thu',value:Math.max(6,dashboardData.today.campaignAlerts+4)},
+        {label:'Fri',value:Math.max(7,dashboardData.today.followUps+2),highlight:true},
+        {label:'Sat',value:Math.max(4,dashboardData.today.proposalsDue+1)}
+      ]
+    },
+    marketing:{
+      title:'Lead Flow',
+      note:`${dashboardData.marketing.leads} leads are tracked with ${dashboardData.marketing.bookedCalls} booked calls and ${dashboardData.marketing.roas}x ROAS.`,
+      badge:`ROAS ${dashboardData.marketing.roas}x`,
+      bars:[
+        {label:'Jun',value:Math.max(8,Math.round(dashboardData.marketing.leads*.58))},
+        {label:'Jul',value:Math.max(7,Math.round(dashboardData.marketing.leads*.44))},
+        {label:'Aug',value:Math.max(8,Math.round(dashboardData.marketing.leads*.52))},
+        {label:'Sep',value:Math.max(8,Math.round(dashboardData.marketing.bookedCalls*3.2))},
+        {label:'Oct',value:Math.max(9,Math.round(dashboardData.marketing.leads*.62)),highlight:true},
+        {label:'Nov',value:Math.max(8,Math.round(dashboardData.marketing.bookedCalls*2.7))}
+      ]
+    },
+    sales:{
+      title:'Pipeline Flow',
+      note:`Open pipeline sits at ${money(dashboardData.sales.pipeline)} with ${dashboardData.sales.proposalsOut} proposals still moving.`,
+      badge:money(dashboardData.sales.pipeline),
+      bars:[
+        {label:'Jun',value:Math.max(12,Math.round(dashboardData.sales.pipeline/24000))},
+        {label:'Jul',value:Math.max(11,Math.round(dashboardData.sales.forecast/31000))},
+        {label:'Aug',value:Math.max(12,Math.round(dashboardData.sales.pipeline/26000))},
+        {label:'Sep',value:Math.max(10,Math.round(dashboardData.sales.closeRate*.7))},
+        {label:'Oct',value:Math.max(14,Math.round(dashboardData.sales.forecast/25000)),highlight:true},
+        {label:'Nov',value:Math.max(12,Math.round(dashboardData.sales.pipeline/23500))}
+      ]
+    },
+    clients:{
+      title:'Client Health',
+      note:`${dashboardData.clients.activeClients} active clients with ${pct(dashboardData.clients.retention)} retention and ${dashboardData.clients.onboarding} onboarding.`,
+      badge:`${dashboardData.clients.activeClients} live`,
+      bars:[
+        {label:'Jun',value:Math.max(9,Math.round(dashboardData.clients.activeClients*.52))},
+        {label:'Jul',value:Math.max(8,Math.round(dashboardData.clients.onboarding*1.9))},
+        {label:'Aug',value:Math.max(9,Math.round(dashboardData.clients.retention/6))},
+        {label:'Sep',value:Math.max(9,Math.round(dashboardData.clients.nps/1.6))},
+        {label:'Oct',value:Math.max(11,Math.round(dashboardData.clients.activeClients*.58)),highlight:true},
+        {label:'Nov',value:Math.max(10,Math.round(dashboardData.clients.retention/5.8))}
+      ]
+    },
+    finance:{
+      title:'Revenue Flow',
+      note:`Tracked revenue is ${money(dashboardData.finance.revenue)} with ${money(dashboardData.finance.cashCollected)} collected so far.`,
+      badge:money(dashboardData.finance.revenue),
+      bars:[
+        {label:'Jun',value:Math.max(11,Math.round(dashboardData.finance.revenue/52000))},
+        {label:'Jul',value:Math.max(10,Math.round(dashboardData.finance.cashCollected/49000))},
+        {label:'Aug',value:Math.max(11,Math.round(dashboardData.finance.revenue/46000))},
+        {label:'Sep',value:Math.max(10,Math.round(dashboardData.finance.overdueInvoices/8500))},
+        {label:'Oct',value:Math.max(13,Math.round(dashboardData.finance.revenue/42000)),highlight:true},
+        {label:'Nov',value:Math.max(11,Math.round(dashboardData.finance.cashCollected/47000))}
+      ]
+    },
+    operations:{
+      title:'Operations Load',
+      note:`${dashboardData.operations.tasksDue} tasks are open with ${dashboardData.operations.automationsLive} automations and ${pct(dashboardData.operations.responseSla)} response health.`,
+      badge:`${dashboardData.operations.tasksDue} open`,
+      bars:[
+        {label:'Jun',value:Math.max(8,Math.round(dashboardData.operations.tasksDue*.52))},
+        {label:'Jul',value:Math.max(8,Math.round(dashboardData.operations.automationsLive*3.2))},
+        {label:'Aug',value:Math.max(9,Math.round(dashboardData.operations.responseSla/6.8))},
+        {label:'Sep',value:Math.max(9,Math.round(dashboardData.operations.teamUtilization/7.4))},
+        {label:'Oct',value:Math.max(10,Math.round(dashboardData.operations.tasksDue*.68)),highlight:true},
+        {label:'Nov',value:Math.max(9,Math.round(dashboardData.operations.responseSla/6.2))}
+      ]
+    }
+  };
+  return models[tab]||models.today;
+}
+function renderDashboardTrendCard(){
+  const trend=dashboardTrendModel(dashboardTab);
+  const max=Math.max(...trend.bars.map(item=>item.value),1);
+  return `<section class="dash-fig-card dash-fig-chart">
+    <div class="dash-fig-chart-grid">
+      <div class="dash-fig-card-head">
+        <div class="dash-fig-card-label">${trend.title}</div>
+        <div class="dash-fig-card-link" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">View inbox →</div>
+      </div>
+      <div class="dash-fig-bars">
+        ${trend.bars.map(item=>`<div class="dash-fig-bar-col">
+          <div class="dash-fig-bar-tag">${item.highlight?trend.badge:((dashboardTab==='sales'||dashboardTab==='finance') ? money(item.value*1000).replace('.00','') : item.value)}</div>
+          <div class="dash-fig-bar ${item.highlight?'highlight':''}" style="height:${Math.max(88,Math.round((item.value/max)*168)+28)}px"></div>
+          <div class="dash-fig-bar-label">${item.label}</div>
+        </div>`).join('')}
+      </div>
+      <div class="dash-fig-chart-foot">
+        <div class="dash-fig-chart-note">${trend.note}</div>
+        <div class="dash-fig-badge"><span class="dash-fig-badge-dot"></span>${dashboardSection(dashboardTab).label} active</div>
+      </div>
+    </div>
+  </section>`;
+}
+function renderDashboardSummaryCard(context){
+  const primaryValue=dashboardTab==='finance'
+    ? money(dashboardData.finance.revenue)
+    : dashboardTab==='sales'
+      ? money(dashboardData.sales.pipeline)
+      : dashboardTab==='marketing'
+        ? `${dashboardData.marketing.leads}`
+        : dashboardTab==='clients'
+          ? `${dashboardData.clients.activeClients}`
+          : dashboardTab==='operations'
+            ? `${dashboardData.operations.tasksDue}`
+            : `${dashboardData.today.followUps}`;
+  const primaryLabel=dashboardTab==='finance'
+    ? 'Revenue tracked'
+    : dashboardTab==='sales'
+      ? 'Pipeline tracked'
+      : dashboardTab==='marketing'
+        ? 'Leads tracked'
+        : dashboardTab==='clients'
+          ? 'Clients active'
+          : dashboardTab==='operations'
+            ? 'Tasks open'
+            : 'Follow-ups due';
+  return `<section class="dash-fig-card dash-fig-summary">
+    <div class="dash-fig-card-head">
+      <div class="dash-fig-card-label">Business Snapshot</div>
+      <div class="dash-fig-card-link" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open inbox →</div>
+    </div>
+    <div class="dash-fig-summary-balance">
+      <div class="dash-fig-summary-kicker">${primaryLabel}</div>
+      <div class="dash-fig-summary-value">${primaryValue}</div>
+      <div class="dash-fig-summary-meta">${document.getElementById('appName').textContent} keeps revenue, pipeline, inbox pressure, and client load in one view.</div>
+    </div>
+    <div class="dash-fig-summary-chiprow">
+      <span class="dash-fig-summary-chip">${context.urgent} urgent</span>
+      <span class="dash-fig-summary-chip">${context.unread} unread</span>
+      <span class="dash-fig-summary-chip">${templates.length} templates</span>
+    </div>
+    <div class="dash-fig-summary-stats">
+      <div class="dash-fig-summary-stat">
+        <div class="dash-fig-summary-stat-label">Cash Collected</div>
+        <div class="dash-fig-summary-stat-value">${money(dashboardData.finance.cashCollected)}</div>
+        <div class="dash-fig-summary-stat-sub">Real cash already tracked.</div>
+      </div>
+      <div class="dash-fig-summary-stat">
+        <div class="dash-fig-summary-stat-label">Close Rate</div>
+        <div class="dash-fig-summary-stat-value">${pct(dashboardData.sales.closeRate)}</div>
+        <div class="dash-fig-summary-stat-sub">Sales conversion rhythm.</div>
+      </div>
+    </div>
+  </section>`;
+}
+function renderDashboardHealthCard(){
+  const score=Math.round((Number(dashboardData.operations.responseSla)+Number(dashboardData.clients.retention)+Number(dashboardData.sales.closeRate)+Number(dashboardData.finance.profitMargin))/4);
+  const metrics=[
+    {label:'Response SLA',value:pct(dashboardData.operations.responseSla),color:'#23D5AB'},
+    {label:'Retention',value:pct(dashboardData.clients.retention),color:'#5A7CFF'},
+    {label:'Close Rate',value:pct(dashboardData.sales.closeRate),color:dashboardAccentTone(dashboardTab)},
+    {label:'Margin',value:pct(dashboardData.finance.profitMargin),color:'#7EF07B'}
+  ];
+  return `<section class="dash-fig-card dash-fig-health">
+    <div class="dash-fig-card-head">
+      <div class="dash-fig-card-label">Health Score</div>
+      <div class="dash-fig-card-link" onclick="setDashboardTab('operations')">Operations →</div>
+    </div>
+    <div class="dash-fig-health-body">
+      <div class="dash-fig-health-ring" style="--score:${Math.max(12,Math.min(100,score))}">
+        <div class="dash-fig-health-score"><strong>${score}</strong><span>score</span></div>
+      </div>
+      <div class="dash-fig-health-legend">
+        ${metrics.map(metric=>`<div class="dash-fig-health-item"><span class="dash-fig-health-key"><span class="dash-fig-health-swatch" style="background:${metric.color}"></span>${metric.label}</span><span class="dash-fig-health-val">${metric.value}</span></div>`).join('')}
+      </div>
+    </div>
+  </section>`;
+}
+function renderDashboardStackCard(label,value,copy,trend,trendClass){
+  return `<div class="dash-fig-card dash-fig-stack-card">
+    <div class="dash-fig-stack-top">
+      <div>
+        <div class="dash-fig-stack-label">${label}</div>
+        <div class="dash-fig-stack-value">${value}</div>
+      </div>
+      <div class="dash-fig-stack-trend ${trendClass}">${trend}</div>
+    </div>
+    <div class="dash-fig-stack-copy">${copy}</div>
+  </div>`;
+}
+function renderDashboardQueueCard(){
+  const recent=emails.filter(email=>!email.snoozed).slice(0,5);
+  return `<section class="dash-fig-card dash-fig-queue">
+    <div class="dash-fig-card-head">
+      <div class="dash-fig-card-label">Live Queue</div>
+      <div class="dash-fig-card-link" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">View all →</div>
+    </div>
+    <div class="dash-fig-queue-list">
+      ${recent.length ? recent.map(email=>{
+        const initials=email.sender.split(' ').map(word=>word[0]).join('').slice(0,2).toUpperCase();
+        const tone=email.urgent?'#FF6D6D':email.cat==='finance'?'#FFB347':email.cat==='client'?'#4A88FF':email.cat==='internal'?'#7A69FF':'#31D17C';
+        return `<div class="dash-fig-queue-row">
+          <div class="dash-fig-queue-icon" style="background:linear-gradient(145deg, ${tone}, color-mix(in srgb, ${tone} 42%, #111319))">${initials}</div>
+          <div class="dash-fig-queue-copy">
+            <div class="dash-fig-queue-name">${email.sender}</div>
+            <div class="dash-fig-queue-sub">${email.subject}</div>
+          </div>
+          <div class="dash-fig-queue-meta">
+            <div class="dash-fig-queue-value">${email.priority}/10</div>
+            <div class="dash-fig-queue-time">${email.time}</div>
+          </div>
+        </div>`;
+      }).join('') : `<div class="dash-fig-empty">Connect a channel or load sample inbox data to populate the live queue here.</div>`}
+    </div>
+  </section>`;
+}
 function parseDashboardNumber(value){
   const parsed=Number(String(value).replace(/[$,%\s,]/g,''));
   return Number.isFinite(parsed)?parsed:0;
@@ -1747,37 +2205,70 @@ function renderDashboardDetail(){
   };
   document.getElementById('detPane').innerHTML=`
     <div class="det-scroll dash-detail-scroll">
-      <div class="dash-shell dash-simple-shell">
-        <section class="dash-hero dash-hero-simple">
-          <div class="dash-hero-head">
-            <div>
-              <div class="dash-kicker">Simplified Command Center</div>
-              <div class="dash-title">${document.getElementById('appName').textContent} Dashboard</div>
-              <div class="dash-tagline">${dashboardSection(dashboardTab).label} view</div>
-              <div class="dash-copy">A cleaner business view with fewer words, stronger contrast, and only the numbers and notes you need on screen.</div>
+      <div class="dash-fig-shell">
+        <section class="dash-fig-frame">
+          <div class="dash-fig-top">
+            <label class="dash-fig-search">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16a6.47 6.47 0 004.23-1.57l.27.28v.79L20 21.5 21.5 20 15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              <input type="text" value="${esc(searchQ)}" placeholder="Search inbox, campaigns, or accounts" oninput="setDashboardSearch(this.value)" onkeydown="if(event.key==='Enter'){openDashboardInboxSearch()}">
+            </label>
+            <div class="dash-fig-user">
+              <div class="dash-fig-user-copy">
+                <span class="dash-fig-user-sub">${dashboardSection(dashboardTab).label} view</span>
+                <span>Hi Rosario!</span>
+              </div>
+              <div class="dash-fig-avatar">${esc((document.getElementById('appName').textContent||'R').trim().charAt(0) || 'R')}</div>
             </div>
-            <div class="dash-hero-actions">
-              <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
-              <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
+          </div>
+          <aside class="dash-fig-rail">
+            <div class="dash-fig-rail-stack">
+              <div class="dash-fig-rail-group">
+                <button class="dash-fig-rail-btn active" onclick="openDashboard()" title="Dashboard">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l8 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9l8-6z"/></svg>
+                </button>
+                <button class="dash-fig-rail-btn" onclick="setFilter('all',document.querySelector('[data-filter=all]'))" title="Inbox">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 6l-7 4-7-4V5l7 4 7-4v4z"/></svg>
+                </button>
+                <button class="dash-fig-rail-btn" onclick="setDashboardTab('sales')" title="Sales">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 9h3v10H5V9zm5-4h3v14h-3V5zm5 7h3v7h-3v-7z"/></svg>
+                </button>
+              </div>
+              <div class="dash-fig-rail-group">
+                <button class="dash-fig-rail-btn" onclick="setDashboardTab('today')" title="Today">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 11H7v-2h4V6h2v7z"/></svg>
+                </button>
+                <button class="dash-fig-rail-btn" onclick="openWorkspaceSettings()" title="Settings">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.43 7.43 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.73 7.73 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.49-.42h-3.84a.5.5 0 00-.49.42l-.36 2.54c-.57.22-1.11.54-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.68 8.84a.5.5 0 00.12.64l2.03 1.58a7.43 7.43 0 000 1.88L2.8 14.52a.5.5 0 00-.12.64l1.92 3.32a.5.5 0 00.6.22l2.39-.96c.5.39 1.05.71 1.62.94l.36 2.54a.5.5 0 00.49.42h3.84a.5.5 0 00.49-.42l.36-2.54c.57-.23 1.12-.55 1.62-.94l2.39.96a.5.5 0 00.6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8a3.5 3.5 0 010 7.5z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="dash-fig-rail-group">
+              <button class="dash-fig-rail-btn" onclick="loadEmails()" title="Load Sample Data">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 7l5 5V9c3.31 0 6 2.69 6 6a6 6 0 01-6 6 6 6 0 01-5.65-4H4.26A8 8 0 0012 23a8 8 0 000-16z"/></svg>
+              </button>
+            </div>
+          </aside>
+          <section class="dash-fig-head">
+            <div class="dash-fig-head-copy">
+              <div class="dash-fig-kicker">My Dashboard</div>
+              <div class="dash-fig-title">My Dashboard</div>
+              <div class="dash-fig-copy">${esc(document.getElementById('appName').textContent)} now uses a cleaner command-board layout with stronger contrast, calmer spacing, and a structure that tracks much closer to your reference design.</div>
+            </div>
+            <div class="dash-fig-pills">
+              ${dashboardSections.map(section=>`<button class="dash-fig-pill ${dashboardTab===section.id?'active':''}" onclick="setDashboardTab('${section.id}')">${section.label}</button>`).join('')}
+            </div>
+          </section>
+          ${renderDashboardSummaryCard(context)}
+          ${renderDashboardTrendCard()}
+          <div class="dash-fig-lower">
+            ${renderDashboardHealthCard()}
+            <div class="dash-fig-stack">
+              ${renderDashboardStackCard('Income',money(dashboardData.finance.cashCollected),`Cash already collected against ${money(dashboardData.finance.revenue)} tracked revenue this cycle.`, `+${pct(Math.max(1,dashboardData.finance.profitMargin-8))}`, 'up')}
+              ${renderDashboardStackCard('Action Load',`${dashboardData.today.followUps + dashboardData.operations.tasksDue}`,`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} operations tasks are still on the board.`, `${context.urgent} urgent`, context.urgent>0?'down':'up')}
             </div>
           </div>
-          <div class="dash-hero-metrics dash-hero-metrics-simple">
-            <div class="dash-stat-card"><div class="dash-stat-label">Revenue</div><div class="dash-stat-value">${money(dashboardData.finance.revenue)}</div><div class="dash-stat-foot">Tracked revenue</div></div>
-            <div class="dash-stat-card"><div class="dash-stat-label">Pipeline</div><div class="dash-stat-value">${money(dashboardData.sales.pipeline)}</div><div class="dash-stat-foot">Open sales value</div></div>
-            <div class="dash-stat-card"><div class="dash-stat-label">Follow-Ups</div><div class="dash-stat-value">${dashboardData.today.followUps}</div><div class="dash-stat-foot">Need action today</div></div>
-            <div class="dash-stat-card"><div class="dash-stat-label">Unread</div><div class="dash-stat-value">${context.unread}</div><div class="dash-stat-foot">Still in inbox</div></div>
-          </div>
-          <div class="dash-chip-row">
-            <span class="dash-chip">${context.urgent} urgent threads</span>
-            <span class="dash-chip">${dashboardData.clients.activeClients} active clients</span>
-            <span class="dash-chip">${dashboardData.operations.automationsLive} live automations</span>
-            <span class="dash-chip">${templates.length} saved templates</span>
-          </div>
+          ${renderDashboardQueueCard()}
         </section>
-        <div class="dash-tabs">
-          ${dashboardSections.map(section=>`<button class="dash-tab ${dashboardTab===section.id?'active':''}" style="--dash-tone:${section.tone}" onclick="setDashboardTab('${section.id}')"><span class="dash-tab-dot"></span>${section.label}</button>`).join('')}
-        </div>
-        ${renderDashboardSection(context)}
       </div>
     </div>`;
 }
@@ -3935,7 +4426,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.2';
+const APP_VERSION = '1.6.3';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
