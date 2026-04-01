@@ -1,5 +1,5 @@
 {
-  "version": "1.6.1",
-  "changelog": "Removed the sidebar API key input, added a dedicated AI workspace page for Anthropic setup and assistant controls, and kept AI actions in one cleaner place.",
+  "version": "1.6.2",
+  "changelog": "Consolidated editable controls into one dedicated Settings page, removed scattered settings from the other pages, and turned the AI page into an operations-only workspace.",
   "released": "2026-04-01"
 }

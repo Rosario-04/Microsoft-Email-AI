@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.1">
+<meta name="app-version" content="1.6.2">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -793,6 +793,12 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       </div>
       <span class="n-label">Dashboard</span>
     </button></li>
+    <li><button class="nav-btn dash-action" id="settingsBtn" onclick="openWorkspaceSettings()">
+      <div class="n-icon ic-indigo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </div>
+      <span class="n-label">Settings</span>
+    </button></li>
   </ul>
   <div class="nav-divider"></div>
 
@@ -858,7 +864,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
   <div class="nav-divider"></div>
   <div class="sec-lbl">AI</div>
-  <button class="ai-action" id="aiPageBtn" onclick="openAIWorkspace()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg><span class="n-label">AI Workspace</span></button>
+  <button class="ai-action" id="aiPageBtn" onclick="openAIWorkspace()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg><span class="n-label">AI</span></button>
 
   <!-- update banner -->
   <div class="update-banner" id="updateBanner">
@@ -877,7 +883,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.1</span>
+    <span id="versionLabel">v1.6.2</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -891,9 +897,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 <div class="list-pane">
   <div class="list-head">
     <span class="list-title" id="listTitle">All Mail</span>
-    <button class="list-icon-btn" onclick="openWorkspaceSettings()" title="Workspace Settings">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-    </button>
   </div>
   <div class="search-wrap">
     <div class="search-inner">
@@ -1215,6 +1218,7 @@ function shouldRenderActiveView(){return currentView==='dashboard'||currentView=
 function clearSidebarSelections(){
   document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
   document.getElementById('dashboardBtn')?.classList.remove('active');
+  document.getElementById('settingsBtn')?.classList.remove('active');
   document.getElementById('aiPageBtn')?.classList.remove('active');
 }
 function normalizeHex(value,fallback){
@@ -1659,7 +1663,7 @@ function dashboardSignalRows(tab,context){
     case 'operations':
       return [
         {title:'Today load is clear',copy:`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} tasks are on the board.`,value:`${dashboardData.operations.tasksDue} tasks`,actionLabel:'Open today',action:"setDashboardTab('today')"},
-        {title:'Automations stay visible',copy:`${dashboardData.operations.automationsLive} automations are marked live in the workspace.`,value:`${dashboardData.operations.automationsLive} live`,actionLabel:'Workspace',action:"openWorkspaceSettings()"},
+        {title:'Automations stay visible',copy:`${dashboardData.operations.automationsLive} automations are marked live in the workspace.`,value:`${dashboardData.operations.automationsLive} live`,actionLabel:'Open inbox',action:"setFilter('all',document.querySelector('[data-filter=all]'))"},
         {title:'Urgent inbox still matters',copy:`${context.urgent} urgent threads are still sitting in the inbox.`,value:pct(dashboardData.operations.responseSla),actionLabel:'Urgent inbox',action:"setFilter('urgent',document.querySelector('[data-filter=urgent]'))"}
       ];
     case 'today':
@@ -1755,7 +1759,6 @@ function renderDashboardDetail(){
             <div class="dash-hero-actions">
               <button class="dash-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
               <button class="dash-btn secondary" onclick="loadEmails()">Load Sample Data</button>
-              <button class="dash-btn secondary" onclick="openWorkspaceSettings()">Workspace</button>
             </div>
           </div>
           <div class="dash-hero-metrics dash-hero-metrics-simple">
@@ -1782,8 +1785,11 @@ function renderWorkspaceTemplateItems(){
   if(!templates.length) return `<div class="workspace-note">No templates saved yet. Add one to speed up confirmations, follow-ups, and client replies.</div>`;
   return `<div class="workspace-template-list">${templates.slice(0,4).map(template=>`<div class="workspace-template-item"><div class="workspace-template-name">${esc(template.name)}</div><div class="workspace-template-copy">${esc(template.body.slice(0,110))}${template.body.length>110?'…':''}</div></div>`).join('')}</div>`;
 }
+function openTemplateManager(){
+  openSheet('templates');
+}
 function renderWorkspaceList(){
-  document.getElementById('listTitle').textContent='Workspace';
+  document.getElementById('listTitle').textContent='Settings';
   document.getElementById('listBody').innerHTML=`
     <div class="workspace-list">
       <button class="workspace-mini-card" onclick="document.getElementById('wsBrandCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
@@ -1814,15 +1820,15 @@ function renderWorkspaceDetail(){
       <div class="workspace-detail">
         <section class="workspace-hero">
           <div class="dash-kicker">System Settings</div>
-          <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} Workspace</div>
-          <div class="workspace-hero-copy">Manage branding, AI access, Outlook sync, Gmail filters, Twilio SMS routing, reply behavior, and templates from one dedicated system page. Everything here keeps using the same local auto-save behavior.</div>
+          <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} Settings</div>
+          <div class="workspace-hero-copy">All editable controls now live here: brand, user setup, AI behavior, inbox connections, and workflow options. The rest of the app stays focused on work, not settings.</div>
         </section>
         <div class="workspace-grid">
           <section class="workspace-card" id="wsBrandCard">
             <div class="workspace-card-head">
               <div>
                 <div class="workspace-card-eyebrow">Brand</div>
-                <h3>Workspace Identity</h3>
+                <h3>App Identity</h3>
               </div>
               <div class="workspace-card-copy">Tune the look and title of the whole app.</div>
             </div>
@@ -1859,7 +1865,6 @@ function renderWorkspaceDetail(){
             <div class="workspace-action-row">
               <button class="workspace-btn primary" onclick="saveWorkspaceBrand()">Save Branding</button>
               <button class="workspace-btn" onclick="resetBrandTheme()">Reset Look</button>
-              <button class="workspace-btn" onclick="openSheet('brand')">Advanced Sheet</button>
             </div>
           </section>
           <section class="workspace-card" id="wsAccessCard">
@@ -1950,7 +1955,6 @@ function renderWorkspaceDetail(){
             </div>
             <div class="workspace-action-row">
               <button class="workspace-btn primary" onclick="saveWorkspacePersona()">Save Assistant</button>
-              <button class="workspace-btn" onclick="openSheet('persona')">Advanced Sheet</button>
             </div>
           </section>
           <section class="workspace-card" id="wsAutomationCard">
@@ -1977,7 +1981,7 @@ function renderWorkspaceDetail(){
             </div>
             ${renderWorkspaceTemplateItems()}
             <div class="workspace-action-row">
-              <button class="workspace-btn primary" onclick="openSheet('templates')">Manage Templates</button>
+              <button class="workspace-btn primary" onclick="openTemplateManager()">Manage Templates</button>
               <button class="workspace-btn" onclick="addTemplate()">Add Template</button>
             </div>
           </section>
@@ -1996,23 +2000,23 @@ function aiStatusLabel(){
   return 'Missing';
 }
 function renderAIList(){
-  document.getElementById('listTitle').textContent='AI Workspace';
+  document.getElementById('listTitle').textContent='AI';
   document.getElementById('listBody').innerHTML=`
     <div class="workspace-list">
-      <button class="workspace-mini-card" onclick="document.getElementById('aiAccessCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
-        <div class="workspace-mini-kicker">Access</div>
+      <button class="workspace-mini-card" onclick="document.getElementById('aiOverviewCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Overview</div>
         <div class="workspace-mini-title">${aiStatusLabel()}</div>
-        <div class="workspace-mini-copy">Anthropic key status, connection test, and provider setup.</div>
-      </button>
-      <button class="workspace-mini-card" onclick="document.getElementById('aiAssistantCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
-        <div class="workspace-mini-kicker">Assistant</div>
-        <div class="workspace-mini-title">${esc(persona.name || 'Aria')}</div>
-        <div class="workspace-mini-copy">Tone, sign-off, and instructions the AI uses in summaries and replies.</div>
+        <div class="workspace-mini-copy">Connection status, active assistant profile, and model details at a glance.</div>
       </button>
       <button class="workspace-mini-card" onclick="document.getElementById('aiActionsCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
         <div class="workspace-mini-kicker">Actions</div>
         <div class="workspace-mini-title">${emails.length} messages loaded</div>
-        <div class="workspace-mini-copy">Run summarize-all, urgency review, and manage reusable reply templates.</div>
+        <div class="workspace-mini-copy">Run summarize-all and urgency review without opening individual threads.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('aiLibraryCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Library</div>
+        <div class="workspace-mini-title">${templates.length} templates</div>
+        <div class="workspace-mini-copy">Review saved templates and jump into the inbox to use them.</div>
       </button>
     </div>`;
 }
@@ -2025,22 +2029,16 @@ function renderAIDetail(){
         <section class="workspace-hero">
           <div class="dash-kicker">AI Control</div>
           <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} AI</div>
-          <div class="workspace-hero-copy">Keep your AI key, assistant behavior, and bulk AI actions in one dedicated page. This is now the main place to manage the assistant side of the app.</div>
+          <div class="workspace-hero-copy">This page is now for AI operations only. All editable settings live in the dedicated Settings page so the rest of the app stays cleaner.</div>
         </section>
         <div class="workspace-grid">
-          <section class="workspace-card" id="aiAccessCard">
+          <section class="workspace-card" id="aiOverviewCard">
             <div class="workspace-card-head">
               <div>
-                <div class="workspace-card-eyebrow">Access</div>
-                <h3>Anthropic Connection</h3>
+                <div class="workspace-card-eyebrow">Overview</div>
+                <h3>AI Status</h3>
               </div>
-              <div class="workspace-card-copy">Your API key now lives here and in Workspace settings, not in the sidebar.</div>
-            </div>
-            <div class="workspace-field-grid">
-              <label class="workspace-field span-2">
-                <span class="workspace-label">Anthropic API Key</span>
-                <input class="workspace-input" type="password" id="aiWorkspaceKey" placeholder="sk-ant-api…" oninput="handleKey(this.value)">
-              </label>
+              <div class="workspace-card-copy">Connection and assistant details without exposing editable settings on this page.</div>
             </div>
             <div class="workspace-template-list">
               <div class="workspace-template-item">
@@ -2048,51 +2046,17 @@ function renderAIDetail(){
                 <div class="workspace-template-copy">${aiStatusLabel()} · ${esc(maskedApiKey())}</div>
               </div>
               <div class="workspace-template-item">
-                <div class="workspace-template-name">Model</div>
-                <div class="workspace-template-copy">Claude Sonnet is currently used for summaries, drafting, and urgency labeling.</div>
+                <div class="workspace-template-name">Assistant profile</div>
+                <div class="workspace-template-copy">${esc(persona.name || 'Aria')} · ${esc(persona.tone || 'Professional')} tone · ${persona.sig ? `Signs as ${esc(persona.sig)}` : 'No sign-off saved yet'}</div>
+              </div>
+              <div class="workspace-template-item">
+                <div class="workspace-template-name">Model and scope</div>
+                <div class="workspace-template-copy">Claude Sonnet is used for summaries, drafting, smart compose, and urgency labeling across the inbox.</div>
               </div>
             </div>
             <div class="workspace-action-row">
-              <button class="workspace-btn primary" onclick="saveAIWorkspaceKey()">Save Key</button>
-              <button class="workspace-btn" onclick="testAIConnection()">Test Connection</button>
-              <button class="workspace-btn" onclick="openWorkspaceSettings()">Open Workspace</button>
-            </div>
-          </section>
-          <section class="workspace-card" id="aiAssistantCard">
-            <div class="workspace-card-head">
-              <div>
-                <div class="workspace-card-eyebrow">Assistant</div>
-                <h3>Reply Behavior</h3>
-              </div>
-              <div class="workspace-card-copy">Tune how the AI sounds across summaries, drafts, and smart compose.</div>
-            </div>
-            <div class="workspace-field-grid">
-              <label class="workspace-field">
-                <span class="workspace-label">Assistant Name</span>
-                <input class="workspace-input" id="aiPersonaName" value="${esc(persona.name)}">
-              </label>
-              <label class="workspace-field">
-                <span class="workspace-label">Reply Tone</span>
-                <select class="workspace-select" id="aiPersonaTone">
-                  <option ${persona.tone==='Professional'?'selected':''}>Professional</option>
-                  <option ${persona.tone==='Warm'?'selected':''}>Warm</option>
-                  <option ${persona.tone==='Executive'?'selected':''}>Executive</option>
-                  <option ${persona.tone==='Friendly'?'selected':''}>Friendly</option>
-                  <option ${persona.tone==='Crisp'?'selected':''}>Crisp</option>
-                </select>
-              </label>
-              <label class="workspace-field span-2">
-                <span class="workspace-label">Sign-off Name</span>
-                <input class="workspace-input" id="aiPersonaSig" value="${esc(persona.sig)}">
-              </label>
-              <label class="workspace-field span-2">
-                <span class="workspace-label">Custom Instructions</span>
-                <textarea class="workspace-textarea" id="aiPersonaInstr">${esc(persona.instr)}</textarea>
-              </label>
-            </div>
-            <div class="workspace-action-row">
-              <button class="workspace-btn primary" onclick="saveAIWorkspacePersona()">Save Assistant</button>
-              <button class="workspace-btn" onclick="openSheet('persona')">Advanced Sheet</button>
+              <button class="workspace-btn primary" onclick="testAIConnection()">Test Connection</button>
+              <button class="workspace-btn" onclick="openWorkspaceSettings()">Open Settings</button>
             </div>
           </section>
           <section class="workspace-card full" id="aiActionsCard">
@@ -2112,35 +2076,31 @@ function renderAIDetail(){
             <div class="workspace-action-row">
               <button class="workspace-btn primary" onclick="bulkSummarize()">Summarize All</button>
               <button class="workspace-btn" onclick="scanUrgency()">Recheck Urgency</button>
-              <button class="workspace-btn" onclick="openSheet('templates')">Manage Templates</button>
               <button class="workspace-btn" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
             </div>
+          </section>
+          <section class="workspace-card full" id="aiLibraryCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Library</div>
+                <h3>Templates</h3>
+              </div>
+              <div class="workspace-card-copy">Saved response templates available to the AI and quick-reply tools.</div>
+            </div>
             ${renderWorkspaceTemplateItems()}
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
+              <button class="workspace-btn" onclick="openWorkspaceSettings()">Open Settings</button>
+            </div>
           </section>
         </div>
       </div>
     </div>`;
-  const aiKeyInput=document.getElementById('aiWorkspaceKey');
-  if(aiKeyInput) aiKeyInput.value=apiKey;
-}
-function saveAIWorkspaceKey(){
-  handleKey(document.getElementById('aiWorkspaceKey')?.value||'',true);
-  toast('AI key saved ✓');
-  if(currentView==='ai') render();
-}
-function saveAIWorkspacePersona(){
-  persona.name=document.getElementById('aiPersonaName')?.value||'Aria';
-  persona.tone=document.getElementById('aiPersonaTone')?.value||'Professional';
-  persona.sig=document.getElementById('aiPersonaSig')?.value||'';
-  persona.instr=document.getElementById('aiPersonaInstr')?.value||'';
-  saveSettings();
-  toast('AI assistant saved ✓');
-  if(currentView==='ai') render();
 }
 async function testAIConnection(){
   if(!apiKey){
     toast('Add your Anthropic API key first.');
-    openAIWorkspace();
+    openWorkspaceSettings();
     return;
   }
   try{
@@ -2223,6 +2183,7 @@ function openWorkspaceSettings(){
   document.body.classList.remove('dashboard-mode');
   document.body.classList.add('settings-mode');
   clearSidebarSelections();
+  document.getElementById('settingsBtn')?.classList.add('active');
   if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
   render();
   saveSettings();
@@ -2438,7 +2399,7 @@ function renderDetail(e){
 }
 
 function buildAI(e){
-  if(!apiKey) return`<div style="background:rgba(255,149,0,.08);border:.5px solid rgba(255,149,0,.25);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--orange);line-height:1.6">Add your Anthropic API key in <strong>AI Workspace</strong> or <strong>Workspace Settings</strong> to enable AI features.</div>`;
+  if(!apiKey) return`<div style="background:rgba(255,149,0,.08);border:.5px solid rgba(255,149,0,.25);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--orange);line-height:1.6">Add your Anthropic API key in <strong>Settings</strong> to enable AI features.</div>`;
   let h='';
   if(e.summary) h+=`<div class="ai-card"><div class="ai-card-lbl">Summary</div><div class="ai-card-body">${e.summary}</div></div>`;
   if(e.aiReply!==undefined) h+=`<div class="reply-card">
@@ -2453,7 +2414,7 @@ function buildAI(e){
 function setAILoad(msg){document.getElementById('aiContent').innerHTML=`<div class="thinking"><div class="dots"><span></span><span></span><span></span></div>${msg}</div>`;}
 
 async function callAI(prompt){
-  if(!apiKey){openAIWorkspace();return null;}
+  if(!apiKey){openWorkspaceSettings();return null;}
   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
   const d=await r.json(); if(d.error) throw new Error(d.error.message);
   return d.content[0].text;
@@ -2521,7 +2482,7 @@ function useTemplate(emailId,tmplId){
 }
 
 async function scanUrgency(){
-  if(!apiKey){openAIWorkspace();return;} if(!emails.length){toast('Load emails first');return;}
+  if(!apiKey){openWorkspaceSettings();return;} if(!emails.length){toast('Load emails first');return;}
   toast('Scanning…');
   for(const e of emails){try{const r=await callAI(`Reply ONLY with JSON {"urgent":true|false,"priority":1-10}\n\nSubject: ${e.subject}\n${e.body.slice(0,300)}`);
     const d=JSON.parse(r.replace(/```json|```/g,'').trim()); e.urgent=d.urgent; e.priority=d.priority||e.priority;}catch(x){}}
@@ -2529,7 +2490,7 @@ async function scanUrgency(){
   counts(); render(); if(selectedId) renderDetail(emails.find(e=>e.id===selectedId)); toast('Urgency updated ✓');
 }
 async function bulkSummarize(){
-  if(!apiKey){openAIWorkspace();return;} if(!emails.length){toast('Load emails first');return;}
+  if(!apiKey){openWorkspaceSettings();return;} if(!emails.length){toast('Load emails first');return;}
   toast('Summarizing all…');
   for(const e of emails){if(!e.summary)try{e.summary=await callAI(`Summarize in 2 sentences:\n${e.subject}\n\n${e.body}`);}catch(x){}}
   saveEmailCache();
@@ -3444,7 +3405,7 @@ function buildGmailSheet(){
     </div>
     <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
       <button class="connect-primary" style="background:#FF3B30" onclick="${canSyncGmail ? "fetchGmailMessages();closeSheet('chSheet')" : "startGmailOAuth()"}">${canSyncGmail ? 'Sync Gmail' : 'Reconnect Gmail'}</button>
-      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Edit Gmail Filter</button>
+      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Settings</button>
     </div>
     <button class="connected-signout" onclick="disconnectChannel('gmail');closeSheet('chSheet')">Sign out of Gmail</button>`;
   }
@@ -3479,7 +3440,7 @@ function buildGmailSheet(){
   </div>
   <div class="connect-btns">
     <button class="connect-primary" style="background:#FF3B30" onclick="startGmailOAuth()">Sign in with Google</button>
-    <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
+    <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Settings</button>
   </div>`;
 }
 
@@ -3500,7 +3461,7 @@ function buildGVoiceSheet(){
     </div>
     <div style="padding:0 20px 12px;display:flex;flex-direction:column;gap:8px">
       <button class="connect-primary" style="background:var(--green)" onclick="fetchTwilioMessages();closeSheet('chSheet')">Sync Messages</button>
-      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
+      <button class="connect-secondary" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Settings</button>
     </div>
     <button class="connected-signout" onclick="disconnectChannel('gvoice');closeSheet('chSheet')">Sign out of Twilio SMS</button>`;
   }
@@ -3513,12 +3474,12 @@ function buildGVoiceSheet(){
     <div class="ch-steps">
       <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">1</div><div class="ch-step-text"><strong>Get a Twilio number:</strong> Buy or assign a business SMS number in <a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank">Twilio Console</a>.</div></div>
       <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">2</div><div class="ch-step-text"><strong>Set your bridge:</strong> Point your Twilio incoming message webhook at your serverless bridge or Function, then expose a sync URL and send URL for this app.</div></div>
-      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">3</div><div class="ch-step-text"><strong>Save the URLs in Workspace:</strong> Add your Twilio line label, number, sync URL, and send URL in the Workspace access page.</div></div>
+      <div class="ch-step"><div class="ch-step-num" style="background:var(--green)">3</div><div class="ch-step-text"><strong>Save the URLs in Settings:</strong> Add your Twilio line label, number, sync URL, and send URL in the Settings access page.</div></div>
     </div>
   </div>
   <div style="padding:0 16px 14px;color:var(--label-2);font-size:12px;line-height:1.55">This app stays static and secure by talking only to your bridge URLs, not directly to Twilio secrets.</div>
   <div class="connect-btns" style="padding-top:4px">
-    <button class="connect-primary" style="background:var(--green)" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Workspace Setup</button>
+    <button class="connect-primary" style="background:var(--green)" onclick="openWorkspaceSettings();closeSheet('chSheet')">Open Settings</button>
     <button class="connect-secondary" onclick="connectTwilioSms()">Connect Twilio SMS</button>
   </div>`;
 }
@@ -3974,7 +3935,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.1';
+const APP_VERSION = '1.6.2';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
