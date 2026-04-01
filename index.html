@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.0">
+<meta name="app-version" content="1.6.1">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -785,12 +785,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     </button>
   </div>
 
-  <!-- Anthropic key bar (compact) -->
-  <div class="api-bar">
-    <div class="api-dot" id="apiDot"></div>
-    <input class="api-input" type="password" id="apiInput" placeholder="Anthropic API key…" oninput="handleKey(this.value)">
-  </div>
-
   <div class="sec-lbl">Command Center</div>
   <ul class="nav-list">
     <li><button class="nav-btn dash-action" id="dashboardBtn" onclick="openDashboard()">
@@ -864,8 +858,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
   <div class="nav-divider"></div>
   <div class="sec-lbl">AI</div>
-  <button class="ai-action" onclick="bulkSummarize()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg><span class="n-label">Summarize All</span></button>
-  <button class="ai-action" onclick="scanUrgency()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg><span class="n-label">Recheck Urgency</span></button>
+  <button class="ai-action" id="aiPageBtn" onclick="openAIWorkspace()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg><span class="n-label">AI Workspace</span></button>
 
   <!-- update banner -->
   <div class="update-banner" id="updateBanner">
@@ -884,7 +877,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.0</span>
+    <span id="versionLabel">v1.6.1</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -1218,10 +1211,11 @@ function readJSON(key,fallback){
   }
 }
 function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
-function shouldRenderActiveView(){return currentView==='dashboard'||currentView==='settings';}
+function shouldRenderActiveView(){return currentView==='dashboard'||currentView==='settings'||currentView==='ai';}
 function clearSidebarSelections(){
   document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
   document.getElementById('dashboardBtn')?.classList.remove('active');
+  document.getElementById('aiPageBtn')?.classList.remove('active');
 }
 function normalizeHex(value,fallback){
   const raw=String(value||'').trim();
@@ -1399,8 +1393,10 @@ function saveEmailCache(){
   safeStoreJSON(EMAIL_CACHE_KEY,emails,slimEmails);
 }
 function refreshSettingsInputs(){
-  document.getElementById('apiInput').value=apiKey;
-  document.getElementById('sfKey').value=apiKey;
+  const sidebarApi=document.getElementById('apiInput');
+  const settingsApi=document.getElementById('sfKey');
+  if(sidebarApi) sidebarApi.value=apiKey;
+  if(settingsApi) settingsApi.value=apiKey;
   document.getElementById('bSubtitle').value=appSubtitle;
   document.getElementById('pName').value=persona.name;
   document.getElementById('pTone').value=persona.tone;
@@ -1990,6 +1986,170 @@ function renderWorkspaceDetail(){
     </div>`;
   syncWorkspaceSettingsInputs();
 }
+function maskedApiKey(){
+  if(!apiKey) return 'Not connected';
+  return `${apiKey.slice(0,7)}••••${apiKey.slice(-4)}`;
+}
+function aiStatusLabel(){
+  if(apiKey.startsWith('sk-ant-')) return 'Connected';
+  if(apiKey) return 'Saved';
+  return 'Missing';
+}
+function renderAIList(){
+  document.getElementById('listTitle').textContent='AI Workspace';
+  document.getElementById('listBody').innerHTML=`
+    <div class="workspace-list">
+      <button class="workspace-mini-card" onclick="document.getElementById('aiAccessCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Access</div>
+        <div class="workspace-mini-title">${aiStatusLabel()}</div>
+        <div class="workspace-mini-copy">Anthropic key status, connection test, and provider setup.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('aiAssistantCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Assistant</div>
+        <div class="workspace-mini-title">${esc(persona.name || 'Aria')}</div>
+        <div class="workspace-mini-copy">Tone, sign-off, and instructions the AI uses in summaries and replies.</div>
+      </button>
+      <button class="workspace-mini-card" onclick="document.getElementById('aiActionsCard')?.scrollIntoView({behavior:'smooth',block:'start'})">
+        <div class="workspace-mini-kicker">Actions</div>
+        <div class="workspace-mini-title">${emails.length} messages loaded</div>
+        <div class="workspace-mini-copy">Run summarize-all, urgency review, and manage reusable reply templates.</div>
+      </button>
+    </div>`;
+}
+function renderAIDetail(){
+  const summaries=emails.filter(email=>email.summary).length;
+  const drafts=emails.filter(email=>email.aiReply!==undefined).length;
+  document.getElementById('detPane').innerHTML=`
+    <div class="det-scroll">
+      <div class="workspace-detail">
+        <section class="workspace-hero">
+          <div class="dash-kicker">AI Control</div>
+          <div class="workspace-hero-title">${esc(document.getElementById('appName').textContent)} AI</div>
+          <div class="workspace-hero-copy">Keep your AI key, assistant behavior, and bulk AI actions in one dedicated page. This is now the main place to manage the assistant side of the app.</div>
+        </section>
+        <div class="workspace-grid">
+          <section class="workspace-card" id="aiAccessCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Access</div>
+                <h3>Anthropic Connection</h3>
+              </div>
+              <div class="workspace-card-copy">Your API key now lives here and in Workspace settings, not in the sidebar.</div>
+            </div>
+            <div class="workspace-field-grid">
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Anthropic API Key</span>
+                <input class="workspace-input" type="password" id="aiWorkspaceKey" placeholder="sk-ant-api…" oninput="handleKey(this.value)">
+              </label>
+            </div>
+            <div class="workspace-template-list">
+              <div class="workspace-template-item">
+                <div class="workspace-template-name">Current status</div>
+                <div class="workspace-template-copy">${aiStatusLabel()} · ${esc(maskedApiKey())}</div>
+              </div>
+              <div class="workspace-template-item">
+                <div class="workspace-template-name">Model</div>
+                <div class="workspace-template-copy">Claude Sonnet is currently used for summaries, drafting, and urgency labeling.</div>
+              </div>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="saveAIWorkspaceKey()">Save Key</button>
+              <button class="workspace-btn" onclick="testAIConnection()">Test Connection</button>
+              <button class="workspace-btn" onclick="openWorkspaceSettings()">Open Workspace</button>
+            </div>
+          </section>
+          <section class="workspace-card" id="aiAssistantCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Assistant</div>
+                <h3>Reply Behavior</h3>
+              </div>
+              <div class="workspace-card-copy">Tune how the AI sounds across summaries, drafts, and smart compose.</div>
+            </div>
+            <div class="workspace-field-grid">
+              <label class="workspace-field">
+                <span class="workspace-label">Assistant Name</span>
+                <input class="workspace-input" id="aiPersonaName" value="${esc(persona.name)}">
+              </label>
+              <label class="workspace-field">
+                <span class="workspace-label">Reply Tone</span>
+                <select class="workspace-select" id="aiPersonaTone">
+                  <option ${persona.tone==='Professional'?'selected':''}>Professional</option>
+                  <option ${persona.tone==='Warm'?'selected':''}>Warm</option>
+                  <option ${persona.tone==='Executive'?'selected':''}>Executive</option>
+                  <option ${persona.tone==='Friendly'?'selected':''}>Friendly</option>
+                  <option ${persona.tone==='Crisp'?'selected':''}>Crisp</option>
+                </select>
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Sign-off Name</span>
+                <input class="workspace-input" id="aiPersonaSig" value="${esc(persona.sig)}">
+              </label>
+              <label class="workspace-field span-2">
+                <span class="workspace-label">Custom Instructions</span>
+                <textarea class="workspace-textarea" id="aiPersonaInstr">${esc(persona.instr)}</textarea>
+              </label>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="saveAIWorkspacePersona()">Save Assistant</button>
+              <button class="workspace-btn" onclick="openSheet('persona')">Advanced Sheet</button>
+            </div>
+          </section>
+          <section class="workspace-card full" id="aiActionsCard">
+            <div class="workspace-card-head">
+              <div>
+                <div class="workspace-card-eyebrow">Actions</div>
+                <h3>Bulk AI Tools</h3>
+              </div>
+              <div class="workspace-card-copy">Run assistant tasks across the inbox and keep an eye on how much AI output is already saved.</div>
+            </div>
+            <div class="dash-mini-grid">
+              <div class="dash-mini-card"><div class="dash-mini-label">Messages</div><div class="dash-mini-value">${emails.length}</div><div class="dash-mini-sub">Loaded in app</div></div>
+              <div class="dash-mini-card"><div class="dash-mini-label">Summaries</div><div class="dash-mini-value">${summaries}</div><div class="dash-mini-sub">Already generated</div></div>
+              <div class="dash-mini-card"><div class="dash-mini-label">Drafts</div><div class="dash-mini-value">${drafts}</div><div class="dash-mini-sub">Saved AI replies</div></div>
+              <div class="dash-mini-card"><div class="dash-mini-label">Templates</div><div class="dash-mini-value">${templates.length}</div><div class="dash-mini-sub">Reusable prompts</div></div>
+            </div>
+            <div class="workspace-action-row">
+              <button class="workspace-btn primary" onclick="bulkSummarize()">Summarize All</button>
+              <button class="workspace-btn" onclick="scanUrgency()">Recheck Urgency</button>
+              <button class="workspace-btn" onclick="openSheet('templates')">Manage Templates</button>
+              <button class="workspace-btn" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open Inbox</button>
+            </div>
+            ${renderWorkspaceTemplateItems()}
+          </section>
+        </div>
+      </div>
+    </div>`;
+  const aiKeyInput=document.getElementById('aiWorkspaceKey');
+  if(aiKeyInput) aiKeyInput.value=apiKey;
+}
+function saveAIWorkspaceKey(){
+  handleKey(document.getElementById('aiWorkspaceKey')?.value||'',true);
+  toast('AI key saved ✓');
+  if(currentView==='ai') render();
+}
+function saveAIWorkspacePersona(){
+  persona.name=document.getElementById('aiPersonaName')?.value||'Aria';
+  persona.tone=document.getElementById('aiPersonaTone')?.value||'Professional';
+  persona.sig=document.getElementById('aiPersonaSig')?.value||'';
+  persona.instr=document.getElementById('aiPersonaInstr')?.value||'';
+  saveSettings();
+  toast('AI assistant saved ✓');
+  if(currentView==='ai') render();
+}
+async function testAIConnection(){
+  if(!apiKey){
+    toast('Add your Anthropic API key first.');
+    openAIWorkspace();
+    return;
+  }
+  try{
+    await callAI('Reply with exactly: Connected');
+    toast('AI connection looks good ✓');
+  }catch(err){
+    toast('AI test failed: ' + err.message);
+  }
+}
 function saveWorkspaceBrand(){
   document.getElementById('bName').value=document.getElementById('wsAppName').value||'Mail AI';
   document.getElementById('bSubtitle').value=document.getElementById('wsSubtitle').value||'Unified pipeline workspace';
@@ -2040,6 +2200,13 @@ function leaveWorkspaceSettings(){
   if(location.hash==='#settings') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
+function leaveAIWorkspace(){
+  if(currentView!=='ai') return;
+  currentView='mail';
+  document.body.classList.remove('settings-mode');
+  if(location.hash==='#ai') history.replaceState({},'', window.location.pathname);
+  saveSettings();
+}
 function openDashboard(tab=dashboardTab){
   if(tab&&dashboardSections.some(section=>section.id===tab)) dashboardTab=tab;
   currentView='dashboard';
@@ -2057,6 +2224,16 @@ function openWorkspaceSettings(){
   document.body.classList.add('settings-mode');
   clearSidebarSelections();
   if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
+  render();
+  saveSettings();
+}
+function openAIWorkspace(){
+  currentView='ai';
+  document.body.classList.remove('dashboard-mode');
+  document.body.classList.add('settings-mode');
+  clearSidebarSelections();
+  document.getElementById('aiPageBtn')?.classList.add('active');
+  if(location.hash!=='#ai') history.replaceState({},'', `${window.location.pathname}#ai`);
   render();
   saveSettings();
 }
@@ -2108,6 +2285,7 @@ function counts(){
 function setFilter(f,btn){
   leaveDashboard();
   leaveWorkspaceSettings();
+  leaveAIWorkspace();
   curFilter=f;
   clearSidebarSelections();
   btn.classList.add('active');
@@ -2158,6 +2336,11 @@ function render(){
   if(currentView==='settings'){
     renderWorkspaceList();
     renderWorkspaceDetail();
+    return;
+  }
+  if(currentView==='ai'){
+    renderAIList();
+    renderAIDetail();
     return;
   }
   const list=filtered(); const body=document.getElementById('listBody');
@@ -2255,7 +2438,7 @@ function renderDetail(e){
 }
 
 function buildAI(e){
-  if(!apiKey) return`<div style="background:rgba(255,149,0,.08);border:.5px solid rgba(255,149,0,.25);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--orange);line-height:1.6">Add your Anthropic API key in <strong>Settings → API Keys</strong> to enable AI features.</div>`;
+  if(!apiKey) return`<div style="background:rgba(255,149,0,.08);border:.5px solid rgba(255,149,0,.25);border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--orange);line-height:1.6">Add your Anthropic API key in <strong>AI Workspace</strong> or <strong>Workspace Settings</strong> to enable AI features.</div>`;
   let h='';
   if(e.summary) h+=`<div class="ai-card"><div class="ai-card-lbl">Summary</div><div class="ai-card-body">${e.summary}</div></div>`;
   if(e.aiReply!==undefined) h+=`<div class="reply-card">
@@ -2270,7 +2453,7 @@ function buildAI(e){
 function setAILoad(msg){document.getElementById('aiContent').innerHTML=`<div class="thinking"><div class="dots"><span></span><span></span><span></span></div>${msg}</div>`;}
 
 async function callAI(prompt){
-  if(!apiKey){openSheet('api');return null;}
+  if(!apiKey){openAIWorkspace();return null;}
   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
   const d=await r.json(); if(d.error) throw new Error(d.error.message);
   return d.content[0].text;
@@ -2338,7 +2521,7 @@ function useTemplate(emailId,tmplId){
 }
 
 async function scanUrgency(){
-  if(!apiKey){openSheet('api');return;} if(!emails.length){toast('Load emails first');return;}
+  if(!apiKey){openAIWorkspace();return;} if(!emails.length){toast('Load emails first');return;}
   toast('Scanning…');
   for(const e of emails){try{const r=await callAI(`Reply ONLY with JSON {"urgent":true|false,"priority":1-10}\n\nSubject: ${e.subject}\n${e.body.slice(0,300)}`);
     const d=JSON.parse(r.replace(/```json|```/g,'').trim()); e.urgent=d.urgent; e.priority=d.priority||e.priority;}catch(x){}}
@@ -2346,10 +2529,11 @@ async function scanUrgency(){
   counts(); render(); if(selectedId) renderDetail(emails.find(e=>e.id===selectedId)); toast('Urgency updated ✓');
 }
 async function bulkSummarize(){
-  if(!apiKey){openSheet('api');return;} if(!emails.length){toast('Load emails first');return;}
+  if(!apiKey){openAIWorkspace();return;} if(!emails.length){toast('Load emails first');return;}
   toast('Summarizing all…');
   for(const e of emails){if(!e.summary)try{e.summary=await callAI(`Summarize in 2 sentences:\n${e.subject}\n\n${e.body}`);}catch(x){}}
   saveEmailCache();
+  if(currentView==='ai') render();
   if(selectedId) renderDetail(emails.find(e=>e.id===selectedId)); toast('All summaries ready ✓');
 }
 
@@ -3541,15 +3725,19 @@ function saveBrand(){
 function handleKey(v,persist=true){
   apiKey=v.trim();
   const d=document.getElementById('apiDot');
-  if(apiKey.startsWith('sk-ant-'))d.className='api-dot ok';
-  else if(apiKey)d.className='api-dot err';
-  else d.className='api-dot';
+  if(d){
+    if(apiKey.startsWith('sk-ant-'))d.className='api-dot ok';
+    else if(apiKey)d.className='api-dot err';
+    else d.className='api-dot';
+  }
   const compact=document.getElementById('apiInput');
   const settingsInput=document.getElementById('sfKey');
   const workspaceInput=document.getElementById('wsApiKey');
+  const aiInput=document.getElementById('aiWorkspaceKey');
   if(compact&&compact.value!==apiKey) compact.value=apiKey;
   if(settingsInput&&settingsInput.value!==apiKey) settingsInput.value=apiKey;
   if(workspaceInput&&workspaceInput.value!==apiKey) workspaceInput.value=apiKey;
+  if(aiInput&&aiInput.value!==apiKey) aiInput.value=apiKey;
   if(persist) saveSettings();
 }
 function updateMsClientId(value,{persist=true}={}){
@@ -3786,7 +3974,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.6.1';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
@@ -3794,15 +3982,18 @@ const VERSION_URL = (() => {
 
 document.getElementById('versionLabel').textContent = 'v' + APP_VERSION;
 restoreSavedState();
-if(location.hash==='#settings' || currentView==='settings') openWorkspaceSettings();
+if(location.hash==='#ai' || currentView==='ai') openAIWorkspace();
+else if(location.hash==='#settings' || currentView==='settings') openWorkspaceSettings();
 else if(location.hash==='#dashboard' || currentView==='dashboard' || !emails.length) openDashboard();
 window.addEventListener('resize',hideChannelHover);
 window.addEventListener('scroll',hideChannelHover,true);
 window.addEventListener('hashchange',()=>{
   hideChannelHover();
-  if(location.hash==='#settings') openWorkspaceSettings();
+  if(location.hash==='#ai') openAIWorkspace();
+  else if(location.hash==='#settings') openWorkspaceSettings();
   else if(location.hash==='#dashboard') openDashboard();
   else{
+    if(currentView==='ai') leaveAIWorkspace();
     if(currentView==='dashboard') leaveDashboard();
     if(currentView==='settings') leaveWorkspaceSettings();
   }

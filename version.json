@@ -1,5 +1,5 @@
 {
-  "version": "1.6.0",
-  "changelog": "Added a dedicated Gmail channel with Google sign-in, a saved Gmail filter query, and filtered Gmail inbox syncing inside the app.",
+  "version": "1.6.1",
+  "changelog": "Removed the sidebar API key input, added a dedicated AI workspace page for Anthropic setup and assistant controls, and kept AI actions in one cleaner place.",
   "released": "2026-04-01"
 }
