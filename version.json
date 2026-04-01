@@ -1,5 +1,5 @@
 {
-  "version": "1.4.8",
-  "changelog": "Redesigned the dashboard into a simpler full-width workspace with stronger dark-mode contrast and a more screen-fitted layout.",
+  "version": "1.4.9",
+  "changelog": "Fixed Outlook reconnect and token refresh behavior, and added a real Gmail-based Google Voice receive flow so forwarded messages can sync into the inbox.",
   "released": "2026-04-01"
 }
