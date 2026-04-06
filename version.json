@@ -1,5 +1,5 @@
 {
-  "version": "1.6.8",
-  "changelog": "Gave the sidebar icons a neutral glass finish, centered the logo tile, and condensed the collapsed rail to the most important workspace actions.",
+  "version": "1.6.9",
+  "changelog": "Turned the sidebar into a true hover-expand overlay rail, cleaned up the nav hierarchy, and moved the update UI out of the main navigation flow.",
   "released": "2026-04-06"
 }
