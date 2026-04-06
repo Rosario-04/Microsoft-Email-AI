@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.6">
+<meta name="app-version" content="1.6.7">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -53,7 +53,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:14px;-webkit-font-smoothing:antialiased;height:100%}
 body{font-family:var(--font-sf);background:var(--sys-bg);color:var(--label);min-height:100dvh;height:100vh;overflow:hidden;
-  display:grid;grid-template:"sb list det" 1fr / var(--sb-w) var(--list-w) 1fr;
+  display:grid;grid-template:"sb list det" 1fr / auto var(--list-w) 1fr;
   position:relative;isolation:isolate;
   background:
     radial-gradient(1200px 720px at 14% 0%, var(--page-tint-1) 0, transparent 60%),
@@ -74,30 +74,32 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 ::-webkit-scrollbar{width:0}
 
 /* ── SIDEBAR ── */
-.sb{grid-area:sb;background:color-mix(in srgb, var(--sidebar-glass) 94%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-right:1px solid var(--sidebar-border);display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;overflow:hidden;padding:14px;box-shadow:1px 0 0 var(--sidebar-border),18px 0 42px rgba(15,23,42,.08)}
-.sb-rail{
-  min-height:0;border-radius:28px;padding:16px 0 12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
-  border:1px solid rgba(255,255,255,.07);
-  display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)
+.sb{
+  grid-area:sb;width:92px;padding:14px;overflow:visible;display:block;
+  transition:width .22s var(--ease)
 }
-.sb-rail-group{display:flex;flex-direction:column;gap:12px}
-.sb-rail-btn{
-  width:46px;height:46px;border:none;border-radius:16px;background:transparent;color:rgba(255,255,255,.68);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  transition:transform .16s var(--spring),background .16s var(--ease),color .16s var(--ease),box-shadow .16s var(--ease)
+.sb:hover,.sb:focus-within{width:292px}
+.sb-shell{
+  height:100%;border-radius:34px;padding:12px 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035)),
+    linear-gradient(180deg, rgba(28,24,18,.96), rgba(18,18,21,.98));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 44px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04);
+  display:flex;flex-direction:column;overflow:hidden
 }
-.sb-rail-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09);color:#fff}
-.sb-rail-btn.active{
-  background:linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,234,220,0.95));
-  color:#15171D;box-shadow:0 12px 24px rgba(0,0,0,0.2)
+[data-theme="light"] .sb-shell{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.68)),
+    linear-gradient(180deg, rgba(244,239,229,.96), rgba(231,226,214,.98));
+  border-color:rgba(83,66,32,.1);
+  box-shadow:0 16px 38px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.85)
 }
-.sb-rail-btn svg{width:18px;height:18px}
-.sb-main{min-width:0;overflow-y:auto;padding-bottom:24px}
-.sb-main::-webkit-scrollbar{display:none}
+.sb-scroll{flex:1;overflow-y:auto;padding:2px 0 10px}
+.sb-scroll::-webkit-scrollbar{display:none}
+.sb-footer{padding:8px 0 0;margin-top:auto}
 
-.sb-head{padding:4px 4px 10px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:color-mix(in srgb, var(--sidebar-glass) 88%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
+.sb-head{padding:4px 14px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:transparent}
 .logo-wrap{position:relative;cursor:pointer;flex-shrink:0;transition:transform .2s var(--spring);padding:4px;border-radius:18px;background:color-mix(in srgb,var(--panel-bg) 86%,transparent);border:.5px solid color-mix(in srgb,var(--panel-border) 84%,transparent);box-shadow:var(--sh1)}
 .logo-wrap:hover{transform:scale(1.06)}
 .logo-img{width:40px;height:40px;border-radius:10px;object-fit:cover;display:block;box-shadow:0 2px 10px rgba(0,0,0,.15)}
@@ -181,7 +183,7 @@ body.dashboard-mode .search-wrap,
 body.dashboard-mode .sort-pills{display:none}
 body.dashboard-mode .list-body{padding:14px}
 body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, transparent)}
-body.dashboard-mode{grid-template:"sb det" 1fr / var(--sb-w) minmax(0,1fr)}
+body.dashboard-mode{grid-template:"sb det" 1fr / auto minmax(0,1fr)}
 body.dashboard-mode .list-pane{display:none}
 body.dashboard-mode .det{grid-area:det;min-width:0}
 body.dashboard-mode .det-scroll{overflow:auto}
@@ -349,6 +351,27 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 [data-theme="dark"] .dash-stage-field{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
 .dash-simple-shell .dash-chip-row{margin-top:14px}
 .sb .sec-lbl:first-of-type{padding-top:8px}
+
+@media (min-width:761px){
+  .sb:not(:hover):not(:focus-within) .app-meta,
+  .sb:not(:hover):not(:focus-within) .sec-lbl,
+  .sb:not(:hover):not(:focus-within) .update-banner,
+  .sb:not(:hover):not(:focus-within) .sb-version{
+    opacity:0;max-height:0;overflow:hidden;pointer-events:none
+  }
+  .sb:not(:hover):not(:focus-within) .theme-btn{
+    opacity:0;width:0;height:0;border:none;padding:0;overflow:hidden;pointer-events:none
+  }
+  .sb:not(:hover):not(:focus-within) .nav-btn{
+    grid-template-columns:28px 0 0;
+    width:46px;min-height:46px;padding:10px 9px;margin-left:auto;margin-right:auto;border-radius:16px
+  }
+  .sb:not(:hover):not(:focus-within) .nav-btn .n-label,
+  .sb:not(:hover):not(:focus-within) .nav-btn .nav-badge,
+  .sb:not(:hover):not(:focus-within) .nav-btn .ch-badge{
+    opacity:0;width:0;min-width:0;max-width:0;padding:0;overflow:hidden
+  }
+}
 .dash-fig-shell{display:flex;min-height:100%;padding:18px}
 .dash-fig-frame{
   flex:1;min-height:0;max-width:1420px;margin:0 auto;padding:28px;border-radius:34px;
@@ -882,7 +905,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
 @media (max-width:960px){
   body{grid-template:"sb list" auto "sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
-  body.dashboard-mode{grid-template:"sb det" minmax(0,1fr) / minmax(248px,282px) minmax(0,1fr)}
+  body.dashboard-mode{grid-template:"sb det" minmax(0,1fr) / auto minmax(0,1fr)}
   .list-pane{max-height:40dvh}
   .det{min-width:0}
   .dash-fig-shell{padding:12px}
@@ -911,6 +934,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   body{height:auto;min-height:100dvh;overflow:auto;grid-template:"sb" auto "list" minmax(280px,42dvh) "det" minmax(0,1fr) / minmax(0,1fr)}
   body.dashboard-mode{height:100dvh;min-height:100dvh;overflow:hidden;grid-template:"sb" auto "det" minmax(0,1fr) / minmax(0,1fr)}
   .sb,.list-pane,.det{min-width:0}
+  .sb,.sb:hover,.sb:focus-within{width:100%}
   .sb{border-right:none;border-bottom:.5px solid var(--sys-sep-op);padding:12px;grid-template-columns:64px minmax(0,1fr)}
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   body.dashboard-mode .list-pane{display:none}
@@ -998,26 +1022,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
 <!-- ── SIDEBAR ── -->
 <aside class="sb glass-sidebar apple-sidebar">
-  <nav class="sb-rail" aria-label="Primary navigation">
-    <div class="sb-rail-group">
-      <button class="sb-rail-btn" id="primaryDashboardBtn" onclick="openDashboard()" title="Dashboard" aria-label="Dashboard">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l8 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9l8-6z"/></svg>
-      </button>
-      <button class="sb-rail-btn" id="primaryInboxBtn" onclick="openInboxPrimary()" title="Inbox" aria-label="Inbox">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 6l-7 4-7-4V5l7 4 7-4v4z"/></svg>
-      </button>
-      <button class="sb-rail-btn" id="primaryAIBtn" onclick="openAIWorkspace()" title="AI" aria-label="AI">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg>
-      </button>
-    </div>
-    <div class="sb-rail-group">
-      <button class="sb-rail-btn" id="primarySettingsBtn" onclick="openWorkspaceSettings()" title="Settings" aria-label="Settings">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.43 7.43 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.73 7.73 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.49-.42h-3.84a.5.5 0 00-.49.42l-.36 2.54c-.57.22-1.11.54-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.68 8.84a.5.5 0 00.12.64l2.03 1.58a7.43 7.43 0 000 1.88L2.8 14.52a.5.5 0 00-.12.64l1.92 3.32a.5.5 0 00.6.22l2.39-.96c.5.39 1.05.71 1.62.94l.36 2.54a.5.5 0 00.49.42h3.84a.5.5 0 00.49-.42l.36-2.54c.57-.23 1.12-.55 1.62-.94l2.39.96a.5.5 0 00.6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8a3.5 3.5 0 010 7.5z"/></svg>
-      </button>
-    </div>
-  </nav>
-
-  <div class="sb-main">
+  <div class="sb-shell">
   <div class="sb-head">
     <div class="logo-wrap" onclick="document.getElementById('lfi').click()" title="Change logo">
       <div class="logo-letter" id="logoLetter">M</div>
@@ -1034,13 +1039,28 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     </button>
   </div>
 
-  <div class="sec-lbl">Mailboxes</div>
+  <div class="sb-scroll">
+  <div class="sec-lbl">Workspace</div>
   <ul class="nav-list">
+    <li><button class="nav-btn dash-action" id="dashboardBtn" onclick="openDashboard()">
+      <div class="n-icon ic-blue">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      </div>
+      <span class="n-label">Dashboard</span>
+    </button></li>
     <li><button class="nav-btn active" data-filter="all" onclick="setFilter('all',this)">
       <div class="n-icon ic-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
       <span class="n-label">All Mail</span>
       <span class="nav-badge gray" id="cntAll">0</span>
     </button></li>
+    <li><button class="nav-btn" id="aiPageBtn" onclick="openAIWorkspace()">
+      <div class="n-icon ic-purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg></div>
+      <span class="n-label">AI</span>
+    </button></li>
+  </ul>
+
+  <div class="sec-lbl">Mailboxes</div>
+  <ul class="nav-list">
     <li><button class="nav-btn" data-filter="urgent" onclick="setFilter('urgent',this)">
       <div class="n-icon ic-red"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg></div>
       <span class="n-label">Urgent</span>
@@ -1094,7 +1114,19 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     </button></li>
   </ul>
 
-  <!-- update banner -->
+  </div>
+
+  <div class="sb-footer">
+  <div class="nav-divider"></div>
+  <ul class="nav-list">
+    <li><button class="nav-btn dash-action" id="settingsBtn" onclick="openWorkspaceSettings()">
+      <div class="n-icon ic-indigo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </div>
+      <span class="n-label">Settings</span>
+    </button></li>
+  </ul>
+
   <div class="update-banner" id="updateBanner">
     <div class="update-banner-top">
       <span class="update-badge">NEW</span>
@@ -1111,13 +1143,14 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.6</span>
+    <span id="versionLabel">v1.6.7</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
     </button>
   </div>
-  </div>
+</div>
+</div>
 </aside>
 
 <div class="channel-hover-card" id="channelHoverCard" onmouseenter="cancelChannelHoverHide()" onmouseleave="scheduleHideChannelHover()" aria-hidden="true"></div>
@@ -4393,7 +4426,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.6';
+const APP_VERSION = '1.6.7';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

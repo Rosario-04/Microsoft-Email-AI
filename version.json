@@ -1,5 +1,5 @@
 {
-  "version": "1.6.6",
-  "changelog": "Moved the app onto a shared dashboard-style primary icon rail, linked Dashboard, Inbox, AI, and Settings into it, and pinned Settings to the bottom of the new nav.",
+  "version": "1.6.7",
+  "changelog": "Rebuilt the sidebar into one rounded expanding rail, moved the channels and mailbox links into it, and pinned Settings into the bottom of the hover-expand nav.",
   "released": "2026-04-01"
 }
