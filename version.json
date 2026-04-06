@@ -1,5 +1,5 @@
 {
-  "version": "1.6.10",
-  "changelog": "Centered the sidebar logo tile vertically in the nav header and tightened the header spacing for a cleaner rail.",
+  "version": "1.6.11",
+  "changelog": "Unified the rail icon sizing, centered the logo and icon buttons, exposed all compact nav icons, and made the sidebar scrollable.",
   "released": "2026-04-06"
 }
