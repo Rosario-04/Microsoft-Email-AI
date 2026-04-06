@@ -1,5 +1,5 @@
 {
-  "version": "1.6.4",
-  "changelog": "Fixed the dashboard overlap by removing the legacy dashboard list render and explicitly hiding the list pane whenever the new command-board dashboard is active.",
+  "version": "1.6.5",
+  "changelog": "Restructured the dashboard into separate left and right stacks so the chart and lower cards no longer overlap on taller command-board layouts.",
   "released": "2026-04-01"
 }

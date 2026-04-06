@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.4">
+<meta name="app-version" content="1.6.5">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -163,7 +163,7 @@ body.dashboard-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%,
 body.dashboard-mode{grid-template:"sb det" 1fr / var(--sb-w) minmax(0,1fr)}
 body.dashboard-mode .list-pane{display:none}
 body.dashboard-mode .det{grid-area:det;min-width:0}
-body.dashboard-mode .det-scroll{overflow:hidden}
+body.dashboard-mode .det-scroll{overflow:auto}
 body.settings-mode .search-wrap,
 body.settings-mode .sort-pills{display:none}
 body.settings-mode .list-body{padding:14px}
@@ -338,15 +338,15 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   box-shadow:0 26px 68px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05);
   display:grid;
   grid-template-columns:72px minmax(0,1.48fr) minmax(320px,.95fr);
-  grid-template-rows:auto auto minmax(0,1fr) auto;
+  grid-template-rows:auto auto minmax(0,1fr);
   grid-template-areas:
     "rail top top"
-    "rail head summary"
-    "rail chart queue"
-    "rail lower queue";
+    "rail main summary"
+    "rail main queue";
   gap:20px;
-  overflow:hidden;
+  overflow:visible;
 }
+.dash-fig-main{grid-area:main;display:grid;gap:20px;align-content:start;min-height:0;min-width:0}
 .dash-fig-card{
   background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.055));
   border:1px solid rgba(255,255,255,0.06);
@@ -393,7 +393,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   color:#15171D;box-shadow:0 12px 24px rgba(0,0,0,0.2)
 }
 .dash-fig-rail-btn svg{width:18px;height:18px}
-.dash-fig-head{grid-area:head;display:grid;gap:18px;align-content:start}
+.dash-fig-head{display:grid;gap:18px;align-content:start}
 .dash-fig-head-copy{max-width:540px}
 .dash-fig-kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.42);margin-bottom:12px}
 .dash-fig-title{font-size:58px;line-height:.94;letter-spacing:-.06em;color:#F7F3EC;font-weight:780}
@@ -430,7 +430,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 .dash-fig-summary-stat-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.42)}
 .dash-fig-summary-stat-value{margin-top:8px;font-size:22px;font-weight:760;letter-spacing:-.04em;color:#FAF6EF}
 .dash-fig-summary-stat-sub{margin-top:5px;font-size:12px;line-height:1.45;color:rgba(255,255,255,0.5)}
-.dash-fig-chart{grid-area:chart;padding:24px 24px 18px;display:grid;gap:18px;min-height:0}
+.dash-fig-chart{padding:24px 24px 18px;display:grid;gap:18px;min-height:0;min-width:0;overflow:hidden}
 .dash-fig-chart-grid{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:18px}
 .dash-fig-badge{
   display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;
@@ -460,7 +460,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 .dash-fig-chart-note{font-size:13px;color:rgba(255,255,255,0.54);line-height:1.6;max-width:48ch}
 .dash-fig-chart-link{font-size:14px;font-weight:600;color:rgba(255,255,255,0.74);cursor:pointer}
 .dash-fig-chart-link:hover{color:#fff}
-.dash-fig-lower{grid-area:lower;display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.2fr);gap:16px;min-height:0}
+.dash-fig-lower{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.2fr);gap:16px;min-height:0;min-width:0}
 .dash-fig-health{padding:22px 20px;display:grid;gap:18px;align-content:start}
 .dash-fig-health-body{display:flex;align-items:center;gap:18px}
 .dash-fig-health-ring{
@@ -886,14 +886,12 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-fig-frame{
     padding:20px;
     grid-template-columns:1fr;
-    grid-template-rows:auto auto auto auto auto auto auto;
+    grid-template-rows:auto auto auto auto auto auto;
     grid-template-areas:
       "top"
-      "head"
       "rail"
+      "main"
       "summary"
-      "chart"
-      "lower"
       "queue";
     overflow:auto;
   }
@@ -2216,25 +2214,27 @@ function renderDashboardDetail(){
               </button>
             </div>
           </aside>
-          <section class="dash-fig-head">
-            <div class="dash-fig-head-copy">
-              <div class="dash-fig-kicker">My Dashboard</div>
-              <div class="dash-fig-title">My Dashboard</div>
-              <div class="dash-fig-copy">${esc(document.getElementById('appName').textContent)} now uses a cleaner command-board layout with stronger contrast, calmer spacing, and a structure that tracks much closer to your reference design.</div>
-            </div>
-            <div class="dash-fig-pills">
-              ${dashboardSections.map(section=>`<button class="dash-fig-pill ${dashboardTab===section.id?'active':''}" onclick="setDashboardTab('${section.id}')">${section.label}</button>`).join('')}
-            </div>
-          </section>
-          ${renderDashboardSummaryCard(context)}
-          ${renderDashboardTrendCard()}
-          <div class="dash-fig-lower">
-            ${renderDashboardHealthCard()}
-            <div class="dash-fig-stack">
-              ${renderDashboardStackCard('Income',money(dashboardData.finance.cashCollected),`Cash already collected against ${money(dashboardData.finance.revenue)} tracked revenue this cycle.`, `+${pct(Math.max(1,dashboardData.finance.profitMargin-8))}`, 'up')}
-              ${renderDashboardStackCard('Action Load',`${dashboardData.today.followUps + dashboardData.operations.tasksDue}`,`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} operations tasks are still on the board.`, `${context.urgent} urgent`, context.urgent>0?'down':'up')}
+          <div class="dash-fig-main">
+            <section class="dash-fig-head">
+              <div class="dash-fig-head-copy">
+                <div class="dash-fig-kicker">My Dashboard</div>
+                <div class="dash-fig-title">My Dashboard</div>
+                <div class="dash-fig-copy">${esc(document.getElementById('appName').textContent)} now uses a cleaner command-board layout with stronger contrast, calmer spacing, and a structure that tracks much closer to your reference design.</div>
+              </div>
+              <div class="dash-fig-pills">
+                ${dashboardSections.map(section=>`<button class="dash-fig-pill ${dashboardTab===section.id?'active':''}" onclick="setDashboardTab('${section.id}')">${section.label}</button>`).join('')}
+              </div>
+            </section>
+            ${renderDashboardTrendCard()}
+            <div class="dash-fig-lower">
+              ${renderDashboardHealthCard()}
+              <div class="dash-fig-stack">
+                ${renderDashboardStackCard('Income',money(dashboardData.finance.cashCollected),`Cash already collected against ${money(dashboardData.finance.revenue)} tracked revenue this cycle.`, `+${pct(Math.max(1,dashboardData.finance.profitMargin-8))}`, 'up')}
+                ${renderDashboardStackCard('Action Load',`${dashboardData.today.followUps + dashboardData.operations.tasksDue}`,`${dashboardData.today.followUps} follow-ups and ${dashboardData.operations.tasksDue} operations tasks are still on the board.`, `${context.urgent} urgent`, context.urgent>0?'down':'up')}
+              </div>
             </div>
           </div>
+          ${renderDashboardSummaryCard(context)}
           ${renderDashboardQueueCard()}
         </section>
       </div>
@@ -4401,7 +4401,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.4';
+const APP_VERSION = '1.6.5';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
