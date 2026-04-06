@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.9">
+<meta name="app-version" content="1.6.10">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -103,7 +103,7 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .sb-scroll::-webkit-scrollbar{display:none}
 .sb-footer{padding:10px 0 12px;margin-top:auto}
 
-.sb-head{padding:8px 10px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:transparent;min-height:78px}
+.sb-head{padding:11px 10px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:transparent;min-height:78px}
 .logo-wrap{
   position:relative;cursor:pointer;flex-shrink:0;transition:transform .2s var(--spring);
   width:62px;height:62px;padding:6px;border-radius:20px;display:grid;place-items:center;
@@ -111,7 +111,8 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
     linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)),
     color-mix(in srgb,var(--panel-bg) 88%,transparent);
   border:.5px solid color-mix(in srgb,var(--panel-border) 84%,transparent);
-  box-shadow:var(--sh1)
+  box-shadow:var(--sh1);
+  align-self:center
 }
 .logo-wrap:hover{transform:translateY(-1px) scale(1.03)}
 .logo-img{
@@ -994,7 +995,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   body.dashboard-mode .list-pane{display:none}
   .det{min-height:46dvh}
-  .sb-head{padding:4px 2px 10px}
+  .sb-head{padding:8px 2px}
   .sb-rail{padding:14px 0 10px}
   .sb-rail-btn{width:42px;height:42px}
   .api-bar{margin-left:12px;margin-right:12px}
@@ -1199,7 +1200,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.9</span>
+    <span id="versionLabel">v1.6.10</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -4482,7 +4483,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.9';
+const APP_VERSION = '1.6.10';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

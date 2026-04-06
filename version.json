@@ -1,5 +1,5 @@
 {
-  "version": "1.6.9",
-  "changelog": "Turned the sidebar into a true hover-expand overlay rail, cleaned up the nav hierarchy, and moved the update UI out of the main navigation flow.",
+  "version": "1.6.10",
+  "changelog": "Centered the sidebar logo tile vertically in the nav header and tightened the header spacing for a cleaner rail.",
   "released": "2026-04-06"
 }
