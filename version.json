@@ -1,5 +1,5 @@
 {
-  "version": "1.6.5",
-  "changelog": "Restructured the dashboard into separate left and right stacks so the chart and lower cards no longer overlap on taller command-board layouts.",
+  "version": "1.6.6",
+  "changelog": "Moved the app onto a shared dashboard-style primary icon rail, linked Dashboard, Inbox, AI, and Settings into it, and pinned Settings to the bottom of the new nav.",
   "released": "2026-04-01"
 }

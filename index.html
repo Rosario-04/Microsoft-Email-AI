@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.5">
+<meta name="app-version" content="1.6.6">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -74,9 +74,30 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 ::-webkit-scrollbar{width:0}
 
 /* ── SIDEBAR ── */
-.sb{grid-area:sb;background:color-mix(in srgb, var(--sidebar-glass) 94%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;overflow-y:auto;padding-bottom:24px;box-shadow:1px 0 0 var(--sidebar-border),18px 0 42px rgba(15,23,42,.08)}
+.sb{grid-area:sb;background:color-mix(in srgb, var(--sidebar-glass) 94%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-right:1px solid var(--sidebar-border);display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;overflow:hidden;padding:14px;box-shadow:1px 0 0 var(--sidebar-border),18px 0 42px rgba(15,23,42,.08)}
+.sb-rail{
+  min-height:0;border-radius:28px;padding:16px 0 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)
+}
+.sb-rail-group{display:flex;flex-direction:column;gap:12px}
+.sb-rail-btn{
+  width:46px;height:46px;border:none;border-radius:16px;background:transparent;color:rgba(255,255,255,.68);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:transform .16s var(--spring),background .16s var(--ease),color .16s var(--ease),box-shadow .16s var(--ease)
+}
+.sb-rail-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.09);color:#fff}
+.sb-rail-btn.active{
+  background:linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,234,220,0.95));
+  color:#15171D;box-shadow:0 12px 24px rgba(0,0,0,0.2)
+}
+.sb-rail-btn svg{width:18px;height:18px}
+.sb-main{min-width:0;overflow-y:auto;padding-bottom:24px}
+.sb-main::-webkit-scrollbar{display:none}
 
-.sb-head{padding:18px 18px 10px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:color-mix(in srgb, var(--sidebar-glass) 88%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
+.sb-head{padding:4px 4px 10px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:color-mix(in srgb, var(--sidebar-glass) 88%, transparent);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
 .logo-wrap{position:relative;cursor:pointer;flex-shrink:0;transition:transform .2s var(--spring);padding:4px;border-radius:18px;background:color-mix(in srgb,var(--panel-bg) 86%,transparent);border:.5px solid color-mix(in srgb,var(--panel-border) 84%,transparent);box-shadow:var(--sh1)}
 .logo-wrap:hover{transform:scale(1.06)}
 .logo-img{width:40px;height:40px;border-radius:10px;object-fit:cover;display:block;box-shadow:0 2px 10px rgba(0,0,0,.15)}
@@ -327,6 +348,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 [data-theme="dark"] .dash-input-shell,
 [data-theme="dark"] .dash-stage-field{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
 .dash-simple-shell .dash-chip-row{margin-top:14px}
+.sb .sec-lbl:first-of-type{padding-top:8px}
 .dash-fig-shell{display:flex;min-height:100%;padding:18px}
 .dash-fig-frame{
   flex:1;min-height:0;max-width:1420px;margin:0 auto;padding:28px;border-radius:34px;
@@ -337,12 +359,12 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   border:1px solid rgba(255,255,255,0.06);
   box-shadow:0 26px 68px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05);
   display:grid;
-  grid-template-columns:72px minmax(0,1.48fr) minmax(320px,.95fr);
+  grid-template-columns:minmax(0,1.48fr) minmax(320px,.95fr);
   grid-template-rows:auto auto minmax(0,1fr);
   grid-template-areas:
-    "rail top top"
-    "rail main summary"
-    "rail main queue";
+    "top top"
+    "main summary"
+    "main queue";
   gap:20px;
   overflow:visible;
 }
@@ -374,25 +396,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;
   box-shadow:0 12px 24px rgba(0,0,0,0.22)
 }
-.dash-fig-rail{
-  grid-area:rail;display:flex;flex-direction:column;justify-content:space-between;align-items:center;
-  padding:18px 0 4px
-}
-.dash-fig-rail-stack{display:flex;flex-direction:column;gap:14px}
-.dash-fig-rail-group{
-  padding:10px 9px;border-radius:24px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);
-  display:grid;gap:10px
-}
-.dash-fig-rail-btn{
-  width:44px;height:44px;border:none;border-radius:16px;background:transparent;color:rgba(255,255,255,0.66);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .16s var(--spring),background .16s var(--ease),color .16s var(--ease),box-shadow .16s var(--ease)
-}
-.dash-fig-rail-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,0.08);color:#fff}
-.dash-fig-rail-btn.active{
-  background:linear-gradient(145deg, rgba(255,255,255,0.98), rgba(241,234,220,0.95));
-  color:#15171D;box-shadow:0 12px 24px rgba(0,0,0,0.2)
-}
-.dash-fig-rail-btn svg{width:18px;height:18px}
 .dash-fig-head{display:grid;gap:18px;align-content:start}
 .dash-fig-head-copy{max-width:540px}
 .dash-fig-kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,0.42);margin-bottom:12px}
@@ -886,10 +889,9 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-fig-frame{
     padding:20px;
     grid-template-columns:1fr;
-    grid-template-rows:auto auto auto auto auto auto;
+    grid-template-rows:auto auto auto auto;
     grid-template-areas:
       "top"
-      "rail"
       "main"
       "summary"
       "queue";
@@ -898,9 +900,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .dash-fig-top{flex-direction:column;align-items:stretch}
   .dash-fig-search{max-width:none}
   .dash-fig-user{justify-content:space-between}
-  .dash-fig-rail{padding:0;display:grid;gap:12px}
-  .dash-fig-rail-stack{flex-direction:row}
-  .dash-fig-rail-group{grid-auto-flow:column;justify-content:start}
   .dash-fig-title{font-size:40px}
   .dash-fig-lower{grid-template-columns:1fr}
   .dash-hero-metrics,.dash-panel-grid,.dash-edit-grid,.dash-dual-note,.workspace-grid,.workspace-field-grid,.workspace-color-row,.dash-mini-grid{grid-template-columns:1fr}
@@ -912,11 +911,13 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   body{height:auto;min-height:100dvh;overflow:auto;grid-template:"sb" auto "list" minmax(280px,42dvh) "det" minmax(0,1fr) / minmax(0,1fr)}
   body.dashboard-mode{height:100dvh;min-height:100dvh;overflow:hidden;grid-template:"sb" auto "det" minmax(0,1fr) / minmax(0,1fr)}
   .sb,.list-pane,.det{min-width:0}
-  .sb{border-right:none;border-bottom:.5px solid var(--sys-sep-op);padding-bottom:16px}
+  .sb{border-right:none;border-bottom:.5px solid var(--sys-sep-op);padding:12px;grid-template-columns:64px minmax(0,1fr)}
   .list-pane{border-right:none;border-bottom:.5px solid var(--sys-sep-op);max-height:none}
   body.dashboard-mode .list-pane{display:none}
   .det{min-height:46dvh}
-  .sb-head{padding:16px 14px 10px}
+  .sb-head{padding:4px 2px 10px}
+  .sb-rail{padding:14px 0 10px}
+  .sb-rail-btn{width:42px;height:42px}
   .api-bar{margin-left:12px;margin-right:12px}
   .nav-list{padding:0 12px}
   .sec-lbl,.sb-version{padding-left:14px;padding-right:14px}
@@ -997,6 +998,26 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 
 <!-- ── SIDEBAR ── -->
 <aside class="sb glass-sidebar apple-sidebar">
+  <nav class="sb-rail" aria-label="Primary navigation">
+    <div class="sb-rail-group">
+      <button class="sb-rail-btn" id="primaryDashboardBtn" onclick="openDashboard()" title="Dashboard" aria-label="Dashboard">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l8 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9l8-6z"/></svg>
+      </button>
+      <button class="sb-rail-btn" id="primaryInboxBtn" onclick="openInboxPrimary()" title="Inbox" aria-label="Inbox">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 6l-7 4-7-4V5l7 4 7-4v4z"/></svg>
+      </button>
+      <button class="sb-rail-btn" id="primaryAIBtn" onclick="openAIWorkspace()" title="AI" aria-label="AI">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg>
+      </button>
+    </div>
+    <div class="sb-rail-group">
+      <button class="sb-rail-btn" id="primarySettingsBtn" onclick="openWorkspaceSettings()" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.43 7.43 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.73 7.73 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.49-.42h-3.84a.5.5 0 00-.49.42l-.36 2.54c-.57.22-1.11.54-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.68 8.84a.5.5 0 00.12.64l2.03 1.58a7.43 7.43 0 000 1.88L2.8 14.52a.5.5 0 00-.12.64l1.92 3.32a.5.5 0 00.6.22l2.39-.96c.5.39 1.05.71 1.62.94l.36 2.54a.5.5 0 00.49.42h3.84a.5.5 0 00.49-.42l.36-2.54c.57-.23 1.12-.55 1.62-.94l2.39.96a.5.5 0 00.6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8a3.5 3.5 0 010 7.5z"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <div class="sb-main">
   <div class="sb-head">
     <div class="logo-wrap" onclick="document.getElementById('lfi').click()" title="Change logo">
       <div class="logo-letter" id="logoLetter">M</div>
@@ -1012,23 +1033,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       <svg id="themeIco" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
     </button>
   </div>
-
-  <div class="sec-lbl">Command Center</div>
-  <ul class="nav-list">
-    <li><button class="nav-btn dash-action" id="dashboardBtn" onclick="openDashboard()">
-      <div class="n-icon ic-blue">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-      </div>
-      <span class="n-label">Dashboard</span>
-    </button></li>
-    <li><button class="nav-btn dash-action" id="settingsBtn" onclick="openWorkspaceSettings()">
-      <div class="n-icon ic-indigo">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      </div>
-      <span class="n-label">Settings</span>
-    </button></li>
-  </ul>
-  <div class="nav-divider"></div>
 
   <div class="sec-lbl">Mailboxes</div>
   <ul class="nav-list">
@@ -1090,10 +1094,6 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
     </button></li>
   </ul>
 
-  <div class="nav-divider"></div>
-  <div class="sec-lbl">AI</div>
-  <button class="ai-action" id="aiPageBtn" onclick="openAIWorkspace()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg><span class="n-label">AI</span></button>
-
   <!-- update banner -->
   <div class="update-banner" id="updateBanner">
     <div class="update-banner-top">
@@ -1111,11 +1111,12 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.2</span>
+    <span id="versionLabel">v1.6.6</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
     </button>
+  </div>
   </div>
 </aside>
 
@@ -1443,6 +1444,14 @@ function readJSON(key,fallback){
 }
 function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light';}
 function shouldRenderActiveView(){return currentView==='dashboard'||currentView==='settings'||currentView==='ai';}
+function syncPrimaryNav(){
+  const ids=['primaryDashboardBtn','primaryInboxBtn','primaryAIBtn','primarySettingsBtn'];
+  ids.forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  if(currentView==='dashboard') document.getElementById('primaryDashboardBtn')?.classList.add('active');
+  else if(currentView==='settings') document.getElementById('primarySettingsBtn')?.classList.add('active');
+  else if(currentView==='ai') document.getElementById('primaryAIBtn')?.classList.add('active');
+  else document.getElementById('primaryInboxBtn')?.classList.add('active');
+}
 function clearSidebarSelections(){
   document.querySelectorAll('.nav-btn').forEach(button=>button.classList.remove('active'));
   document.getElementById('dashboardBtn')?.classList.remove('active');
@@ -1785,6 +1794,9 @@ function setDashboardSearch(value){
   searchQ=String(value||'').toLowerCase();
 }
 function openDashboardInboxSearch(){
+  setFilter('all',document.querySelector('[data-filter=all]'));
+}
+function openInboxPrimary(){
   setFilter('all',document.querySelector('[data-filter=all]'));
 }
 function dashboardAccentTone(tab){
@@ -2186,34 +2198,6 @@ function renderDashboardDetail(){
               <div class="dash-fig-avatar">${esc((document.getElementById('appName').textContent||'R').trim().charAt(0) || 'R')}</div>
             </div>
           </div>
-          <aside class="dash-fig-rail">
-            <div class="dash-fig-rail-stack">
-              <div class="dash-fig-rail-group">
-                <button class="dash-fig-rail-btn active" onclick="openDashboard()" title="Dashboard">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l8 6v11a1 1 0 0 1-1 1h-5v-7H10v7H5a1 1 0 0 1-1-1V9l8-6z"/></svg>
-                </button>
-                <button class="dash-fig-rail-btn" onclick="setFilter('all',document.querySelector('[data-filter=all]'))" title="Inbox">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 6l-7 4-7-4V5l7 4 7-4v4z"/></svg>
-                </button>
-                <button class="dash-fig-rail-btn" onclick="setDashboardTab('sales')" title="Sales">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 9h3v10H5V9zm5-4h3v14h-3V5zm5 7h3v7h-3v-7z"/></svg>
-                </button>
-              </div>
-              <div class="dash-fig-rail-group">
-                <button class="dash-fig-rail-btn" onclick="setDashboardTab('today')" title="Today">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 11H7v-2h4V6h2v7z"/></svg>
-                </button>
-                <button class="dash-fig-rail-btn" onclick="openWorkspaceSettings()" title="Settings">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94a7.43 7.43 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.73 7.73 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.49-.42h-3.84a.5.5 0 00-.49.42l-.36 2.54c-.57.22-1.11.54-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.68 8.84a.5.5 0 00.12.64l2.03 1.58a7.43 7.43 0 000 1.88L2.8 14.52a.5.5 0 00-.12.64l1.92 3.32a.5.5 0 00.6.22l2.39-.96c.5.39 1.05.71 1.62.94l.36 2.54a.5.5 0 00.49.42h3.84a.5.5 0 00.49-.42l.36-2.54c.57-.23 1.12-.55 1.62-.94l2.39.96a.5.5 0 00.6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8a3.5 3.5 0 010 7.5z"/></svg>
-                </button>
-              </div>
-            </div>
-            <div class="dash-fig-rail-group">
-              <button class="dash-fig-rail-btn" onclick="loadEmails()" title="Load Sample Data">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V2L7 7l5 5V9c3.31 0 6 2.69 6 6a6 6 0 01-6 6 6 6 0 01-5.65-4H4.26A8 8 0 0012 23a8 8 0 000-16z"/></svg>
-              </button>
-            </div>
-          </aside>
           <div class="dash-fig-main">
             <section class="dash-fig-head">
               <div class="dash-fig-head-copy">
@@ -2610,6 +2594,7 @@ function leaveDashboard(){
   document.body.classList.remove('settings-mode');
   setDashboardListPaneHidden(false);
   document.getElementById('dashboardBtn').classList.remove('active');
+  syncPrimaryNav();
   if(location.hash==='#dashboard') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -2618,6 +2603,7 @@ function leaveWorkspaceSettings(){
   currentView='mail';
   document.body.classList.remove('settings-mode');
   setDashboardListPaneHidden(false);
+  syncPrimaryNav();
   if(location.hash==='#settings') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -2626,6 +2612,7 @@ function leaveAIWorkspace(){
   currentView='mail';
   document.body.classList.remove('settings-mode');
   setDashboardListPaneHidden(false);
+  syncPrimaryNav();
   if(location.hash==='#ai') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -2637,6 +2624,7 @@ function openDashboard(tab=dashboardTab){
   setDashboardListPaneHidden(true);
   clearSidebarSelections();
   document.getElementById('dashboardBtn').classList.add('active');
+  syncPrimaryNav();
   if(location.hash!=='#dashboard') history.replaceState({},'', `${window.location.pathname}#dashboard`);
   render();
   saveSettings();
@@ -2648,6 +2636,7 @@ function openWorkspaceSettings(){
   setDashboardListPaneHidden(false);
   clearSidebarSelections();
   document.getElementById('settingsBtn')?.classList.add('active');
+  syncPrimaryNav();
   if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
   render();
   saveSettings();
@@ -2659,6 +2648,7 @@ function openAIWorkspace(){
   setDashboardListPaneHidden(false);
   clearSidebarSelections();
   document.getElementById('aiPageBtn')?.classList.add('active');
+  syncPrimaryNav();
   if(location.hash!=='#ai') history.replaceState({},'', `${window.location.pathname}#ai`);
   render();
   saveSettings();
@@ -2715,6 +2705,7 @@ function setFilter(f,btn){
   curFilter=f;
   clearSidebarSelections();
   btn.classList.add('active');
+  syncPrimaryNav();
   const labels={all:'All Mail',urgent:'Urgent',client:'Client',internal:'Internal',finance:'Finance',hr:'HR',snoozed:'Snoozed'};
   document.getElementById('listTitle').textContent=labels[f]||'Mail';
   render();
@@ -2760,6 +2751,7 @@ function render(){
     return;
   }
   setDashboardListPaneHidden(false);
+  syncPrimaryNav();
   if(currentView==='settings'){
     renderWorkspaceList();
     renderWorkspaceDetail();
@@ -4401,7 +4393,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.5';
+const APP_VERSION = '1.6.6';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
