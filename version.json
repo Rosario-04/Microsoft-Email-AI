@@ -1,5 +1,5 @@
 {
-  "version": "1.6.11",
-  "changelog": "Unified the rail icon sizing, centered the logo and icon buttons, exposed all compact nav icons, and made the sidebar scrollable.",
+  "version": "1.6.12",
+  "changelog": "Rebalanced the compact navbar sizing with smaller icon tiles, a tighter logo frame, and cleaner spacing down the full rail.",
   "released": "2026-04-06"
 }
