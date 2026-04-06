@@ -1,5 +1,5 @@
 {
-  "version": "1.6.7",
-  "changelog": "Rebuilt the sidebar into one rounded expanding rail, moved the channels and mailbox links into it, and pinned Settings into the bottom of the hover-expand nav.",
-  "released": "2026-04-01"
+  "version": "1.6.8",
+  "changelog": "Gave the sidebar icons a neutral glass finish, centered the logo tile, and condensed the collapsed rail to the most important workspace actions.",
+  "released": "2026-04-06"
 }

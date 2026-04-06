@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.7">
+<meta name="app-version" content="1.6.8">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -99,12 +99,28 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .sb-scroll::-webkit-scrollbar{display:none}
 .sb-footer{padding:8px 0 0;margin-top:auto}
 
-.sb-head{padding:4px 14px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:transparent}
-.logo-wrap{position:relative;cursor:pointer;flex-shrink:0;transition:transform .2s var(--spring);padding:4px;border-radius:18px;background:color-mix(in srgb,var(--panel-bg) 86%,transparent);border:.5px solid color-mix(in srgb,var(--panel-border) 84%,transparent);box-shadow:var(--sh1)}
-.logo-wrap:hover{transform:scale(1.06)}
-.logo-img{width:40px;height:40px;border-radius:10px;object-fit:cover;display:block;box-shadow:0 2px 10px rgba(0,0,0,.15)}
-.logo-letter{width:40px;height:40px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 2px 10px color-mix(in srgb,var(--accent) 45%,transparent);transition:background .3s,box-shadow .3s}
-.logo-edit-overlay{position:absolute;inset:0;border-radius:10px;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.sb-head{padding:4px 14px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:8;background:transparent;min-height:74px}
+.logo-wrap{
+  position:relative;cursor:pointer;flex-shrink:0;transition:transform .2s var(--spring);
+  width:62px;height:62px;padding:6px;border-radius:20px;display:grid;place-items:center;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)),
+    color-mix(in srgb,var(--panel-bg) 88%,transparent);
+  border:.5px solid color-mix(in srgb,var(--panel-border) 84%,transparent);
+  box-shadow:var(--sh1)
+}
+.logo-wrap:hover{transform:translateY(-1px) scale(1.03)}
+.logo-img{
+  width:100%;height:100%;border-radius:14px;object-fit:contain;object-position:center;display:block;
+  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  box-shadow:0 2px 10px rgba(0,0,0,.15)
+}
+.logo-letter{
+  width:100%;height:100%;border-radius:14px;background:var(--accent);display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 2px 10px color-mix(in srgb,var(--accent) 45%,transparent);
+  transition:background .3s,box-shadow .3s
+}
+.logo-edit-overlay{position:absolute;inset:0;border-radius:20px;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
 .logo-wrap:hover .logo-edit-overlay{display:flex}
 
 .app-meta{display:flex;flex-direction:column;gap:0;flex:1;min-width:0}
@@ -128,20 +144,37 @@ body::after{width:40vw;height:40vw;min-width:280px;min-height:280px;bottom:-16vw
 .nav-btn:hover{background:rgba(255,255,255,.38);border-color:color-mix(in srgb,var(--panel-border) 72%,transparent);color:var(--label);transform:translateY(-1px)}
 .nav-btn.active{background:rgba(255,255,255,.72);color:#111315;border-color:rgba(255,255,255,.8);box-shadow:0 12px 26px rgba(0,0,0,.08)}
 [data-theme="dark"] .nav-btn.active{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.22);box-shadow:inset 0 1px 1px rgba(255,255,255,.2),0 12px 26px rgba(0,0,0,.25)}
-.nav-btn.active .n-icon,.nav-btn.active .ch-badge{color:var(--accent)!important;background:color-mix(in srgb,var(--accent) 14%,rgba(255,255,255,.88))!important}
-[data-theme="dark"] .nav-btn.active .n-icon,[data-theme="dark"] .nav-btn.active .ch-badge{color:#fff!important;background:rgba(255,255,255,.12)!important}
-.nav-btn.active .nav-badge{background:color-mix(in srgb,var(--accent) 18%,rgba(255,255,255,.88));color:var(--accent)}
-[data-theme="dark"] .nav-btn.active .nav-badge{background:rgba(255,255,255,.22);color:#fff}
+.nav-btn.active .n-icon,.nav-btn.active .ch-badge{
+  color:#fff!important;
+  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08))!important;
+  border-color:rgba(255,255,255,.18)!important
+}
+[data-theme="light"] .nav-btn.active .n-icon,[data-theme="light"] .nav-btn.active .ch-badge{
+  color:#1f1a14!important;
+  background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.72))!important;
+  border-color:rgba(83,66,32,.12)!important
+}
+.nav-btn.active .nav-badge{background:rgba(255,255,255,.18);color:#fff}
+[data-theme="light"] .nav-btn.active .nav-badge{background:rgba(31,26,20,.08);color:#1f1a14}
 
-.n-icon{width:28px;height:28px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:background .2s}
-.ic-blue{background:rgba(0,122,255,.12);color:var(--blue)}
-.ic-red{background:rgba(255,59,48,.12);color:var(--red)}
-.ic-orange{background:rgba(255,149,0,.12);color:var(--orange)}
-.ic-green{background:rgba(52,199,89,.12);color:var(--green)}
-.ic-indigo{background:rgba(88,86,214,.12);color:var(--indigo)}
-.ic-pink{background:rgba(255,45,85,.12);color:var(--pink)}
-.ic-gray{background:var(--gray5);color:var(--gray)}
-.ic-purple{background:rgba(175,82,222,.12);color:var(--purple)}
+.n-icon{
+  width:28px;height:28px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;
+  transition:background .2s,border-color .2s,color .2s,transform .2s var(--spring);
+  color:rgba(255,255,255,.8);
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 10px 18px rgba(0,0,0,.16);
+  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px)
+}
+[data-theme="light"] .n-icon{
+  color:#4b453a;
+  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.66));
+  border-color:rgba(83,66,32,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 10px 18px rgba(15,23,42,.08)
+}
+.nav-btn:hover .n-icon{transform:translateY(-1px);color:var(--label)}
+.ic-blue,.ic-red,.ic-orange,.ic-green,.ic-indigo,.ic-pink,.ic-gray,.ic-purple{background:transparent!important;color:inherit!important}
 
 .n-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
 .nav-badge{font-size:11px;font-weight:700;background:var(--red);color:#fff;min-width:20px;height:20px;border-radius:var(--r-full);display:flex;align-items:center;justify-content:center;padding:0 5px;flex-shrink:0}
@@ -353,6 +386,12 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
 .sb .sec-lbl:first-of-type{padding-top:8px}
 
 @media (min-width:761px){
+  .sb:not(:hover):not(:focus-within) .sb-head{
+    justify-content:center;padding-left:0;padding-right:0
+  }
+  .sb:not(:hover):not(:focus-within) .logo-wrap{
+    margin:0 auto
+  }
   .sb:not(:hover):not(:focus-within) .app-meta,
   .sb:not(:hover):not(:focus-within) .sec-lbl,
   .sb:not(:hover):not(:focus-within) .update-banner,
@@ -370,6 +409,10 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   .sb:not(:hover):not(:focus-within) .nav-btn .nav-badge,
   .sb:not(:hover):not(:focus-within) .nav-btn .ch-badge{
     opacity:0;width:0;min-width:0;max-width:0;padding:0;overflow:hidden
+  }
+  .sb:not(:hover):not(:focus-within) .nav-secondary-item,
+  .sb:not(:hover):not(:focus-within) .nav-divider-secondary{
+    display:none
   }
 }
 .dash-fig-shell{display:flex;min-height:100%;padding:18px}
@@ -1053,7 +1096,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       <span class="n-label">All Mail</span>
       <span class="nav-badge gray" id="cntAll">0</span>
     </button></li>
-    <li><button class="nav-btn" id="aiPageBtn" onclick="openAIWorkspace()">
+    <li class="nav-secondary-item"><button class="nav-btn" id="aiPageBtn" onclick="openAIWorkspace()">
       <div class="n-icon ic-purple"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.76 4.24L18 8l-4.24 1.76L12 14l-1.76-4.24L6 8l4.24-1.76L12 2zm7 13l.94 2.06L22 18l-2.06.94L19 21l-.94-2.06L16 18l2.06-.94L19 15zM5 14l1.17 2.83L9 18l-2.83 1.17L5 22l-1.17-2.83L1 18l2.83-1.17L5 14z"/></svg></div>
       <span class="n-label">AI</span>
     </button></li>
@@ -1066,30 +1109,30 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       <span class="n-label">Urgent</span>
       <span class="nav-badge" id="cntUrgent" style="display:none">0</span>
     </button></li>
-    <li><button class="nav-btn" data-filter="client" onclick="setFilter('client',this)">
+    <li class="nav-secondary-item"><button class="nav-btn" data-filter="client" onclick="setFilter('client',this)">
       <div class="n-icon ic-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
       <span class="n-label">Client</span>
     </button></li>
-    <li><button class="nav-btn" data-filter="internal" onclick="setFilter('internal',this)">
+    <li class="nav-secondary-item"><button class="nav-btn" data-filter="internal" onclick="setFilter('internal',this)">
       <div class="n-icon ic-indigo"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg></div>
       <span class="n-label">Internal</span>
     </button></li>
-    <li><button class="nav-btn" data-filter="finance" onclick="setFilter('finance',this)">
+    <li class="nav-secondary-item"><button class="nav-btn" data-filter="finance" onclick="setFilter('finance',this)">
       <div class="n-icon ic-orange"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
       <span class="n-label">Finance</span>
     </button></li>
-    <li><button class="nav-btn" data-filter="hr" onclick="setFilter('hr',this)">
+    <li class="nav-secondary-item"><button class="nav-btn" data-filter="hr" onclick="setFilter('hr',this)">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
       <span class="n-label">HR</span>
     </button></li>
-    <li><button class="nav-btn" data-filter="snoozed" onclick="setFilter('snoozed',this)">
+    <li class="nav-secondary-item"><button class="nav-btn" data-filter="snoozed" onclick="setFilter('snoozed',this)">
       <div class="n-icon ic-orange"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
       <span class="n-label">Snoozed</span>
       <span class="nav-badge gray" id="cntSnoozed" style="display:none">0</span>
     </button></li>
   </ul>
 
-  <div class="nav-divider"></div>
+  <div class="nav-divider nav-divider-secondary"></div>
   <div class="sec-lbl">Channels</div>
   <ul class="nav-list">
     <li><button class="nav-btn channel-nav-btn" data-channel="outlook" onclick="openChannelSheet('outlook')" onmouseenter="showChannelHover('outlook',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('outlook',this)" onblur="scheduleHideChannelHover()">
@@ -1097,17 +1140,17 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
       <span class="n-label">Outlook</span>
       <span class="ch-badge ch-off" id="ch-outlook">Connect</span>
     </button></li>
-    <li><button class="nav-btn channel-nav-btn" data-channel="gmail" onclick="openChannelSheet('gmail')" onmouseenter="showChannelHover('gmail',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gmail',this)" onblur="scheduleHideChannelHover()">
-      <div class="n-icon" style="background:rgba(255,59,48,.12);color:#FF3B30"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 2v.4l-8 4.99L4 8.4V8h16zm0 8H4V10.77l7.47 4.67c.16.1.34.15.53.15s.37-.05.53-.15L20 10.77V16z"/></svg></div>
+    <li class="nav-secondary-item"><button class="nav-btn channel-nav-btn" data-channel="gmail" onclick="openChannelSheet('gmail')" onmouseenter="showChannelHover('gmail',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gmail',this)" onblur="scheduleHideChannelHover()">
+      <div class="n-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 2v.4l-8 4.99L4 8.4V8h16zm0 8H4V10.77l7.47 4.67c.16.1.34.15.53.15s.37-.05.53-.15L20 10.77V16z"/></svg></div>
       <span class="n-label">Gmail</span>
       <span class="ch-badge ch-off" id="ch-gmail">Connect</span>
     </button></li>
-    <li><button class="nav-btn channel-nav-btn" data-channel="gvoice" onclick="openChannelSheet('gvoice')" onmouseenter="showChannelHover('gvoice',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gvoice',this)" onblur="scheduleHideChannelHover()">
+    <li class="nav-secondary-item"><button class="nav-btn channel-nav-btn" data-channel="gvoice" onclick="openChannelSheet('gvoice')" onmouseenter="showChannelHover('gvoice',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('gvoice',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg></div>
       <span class="n-label">Twilio SMS</span>
       <span class="ch-badge ch-off" id="ch-gvoice">Connect</span>
     </button></li>
-    <li><button class="nav-btn channel-nav-btn" data-channel="imessage" onclick="openChannelSheet('imessage')" onmouseenter="showChannelHover('imessage',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('imessage',this)" onblur="scheduleHideChannelHover()">
+    <li class="nav-secondary-item"><button class="nav-btn channel-nav-btn" data-channel="imessage" onclick="openChannelSheet('imessage')" onmouseenter="showChannelHover('imessage',this)" onmouseleave="scheduleHideChannelHover()" onfocus="showChannelHover('imessage',this)" onblur="scheduleHideChannelHover()">
       <div class="n-icon ic-indigo"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
       <span class="n-label">iMessage</span>
       <span class="ch-badge ch-off" id="ch-imessage">Connect</span>
@@ -1143,7 +1186,7 @@ body.settings-mode .list-pane{background:color-mix(in srgb, var(--pane-bg) 88%, 
   <!-- version footer -->
   <div class="nav-divider" style="margin-top:auto"></div>
   <div class="sb-version">
-    <span id="versionLabel">v1.6.7</span>
+    <span id="versionLabel">v1.6.8</span>
     <button class="sb-check-btn" id="checkBtn" onclick="checkForUpdates()">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:3px"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
       Check for updates
@@ -4426,7 +4469,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.7';
+const APP_VERSION = '1.6.8';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';
