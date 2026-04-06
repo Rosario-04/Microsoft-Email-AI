@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mail AI</title>
-<meta name="app-version" content="1.6.3">
+<meta name="app-version" content="1.6.4">
 <style>
 @supports (font: -apple-system-body) {
   :root { --font-sf: -apple-system,"SF Pro Display","SF Pro Text",BlinkMacSystemFont,sans-serif; }
@@ -1773,47 +1773,15 @@ function dashboardSummaryValue(id){
     default: return '';
   }
 }
+function setDashboardListPaneHidden(hidden){
+  const pane=document.querySelector('.list-pane');
+  if(!pane) return;
+  pane.style.display=hidden?'none':'';
+}
 function renderDashboardList(){
-  const urgent=emails.filter(e=>e.urgent&&!e.snoozed).length;
-  const unread=emails.filter(e=>e.unread&&!e.snoozed).length;
-  const recent=emails.filter(e=>!e.snoozed).slice(0,4);
-  const financeThreads=emails.filter(e=>e.cat==='finance'&&!e.snoozed).length;
-  const clientThreads=emails.filter(e=>e.cat==='client'&&!e.snoozed).length;
+  setDashboardListPaneHidden(true);
   document.getElementById('listTitle').textContent='Dashboard';
-  document.getElementById('listBody').innerHTML=`
-    <div class="dash-rail">
-      <div class="dash-rail-card hero">
-        <div class="dash-rail-kicker">Executive Snapshot</div>
-        <div class="dash-rail-title">${document.getElementById('appName').textContent}</div>
-        <div class="dash-rail-copy">${document.getElementById('appSubtitle').textContent}</div>
-        <div class="dash-rail-grid">
-          ${dashboardPulseCard('Revenue',money(dashboardData.finance.revenue),'Primary finance KPI')}
-          ${dashboardPulseCard('Pipeline',money(dashboardData.sales.pipeline),'Open sales value')}
-          ${dashboardPulseCard('Urgent',dashboardData.today.followUps,'Follow-ups planned today')}
-          ${dashboardPulseCard('Leads',dashboardData.marketing.leads,'Marketing inflow')}
-        </div>
-      </div>
-      <div class="dash-rail-card">
-        <div class="dash-list-head"><div class="dash-list-title">Sections</div><button class="dash-list-link" onclick="setFilter('all',document.querySelector('[data-filter=all]'))">Open inbox</button></div>
-        <div class="dash-module-list">
-          ${dashboardSections.map(section=>`<button class="dash-module-item ${dashboardTab===section.id?'active':''}" style="--dash-tone:${section.tone}" onclick="setDashboardTab('${section.id}')"><span class="dash-module-dot"></span><span class="dash-module-copy"><span class="dash-module-label">${section.label}</span><span class="dash-module-sub">${section.subtitle}</span></span><span class="dash-module-value">${dashboardSummaryValue(section.id)}</span></button>`).join('')}
-        </div>
-      </div>
-      <div class="dash-rail-card">
-        <div class="dash-list-head"><div class="dash-list-title">Today Rail</div><button class="dash-list-link" onclick="setDashboardTab('today')">Open today</button></div>
-        <div class="dash-quick-list">
-          <div class="dash-quick-item"><div class="dash-quick-main"><div class="dash-quick-title">Urgent inbox</div><div class="dash-quick-copy">Messages flagged urgent and still waiting on a response.</div></div><div class="dash-quick-value">${urgent}</div></div>
-          <div class="dash-quick-item"><div class="dash-quick-main"><div class="dash-quick-title">Client conversations</div><div class="dash-quick-copy">Open client threads currently sitting in the inbox.</div></div><div class="dash-quick-value">${clientThreads}</div></div>
-          <div class="dash-quick-item"><div class="dash-quick-main"><div class="dash-quick-title">Finance follow-up</div><div class="dash-quick-copy">Finance-category threads still visible in the workspace.</div></div><div class="dash-quick-value">${financeThreads}</div></div>
-          <div class="dash-quick-item"><div class="dash-quick-main"><div class="dash-quick-title">Templates ready</div><div class="dash-quick-copy">Reusable replies saved for faster handling.</div></div><div class="dash-quick-value">${templates.length}</div></div>
-        </div>
-      </div>
-      <div class="dash-rail-card">
-        <div class="dash-list-head"><div class="dash-list-title">Recent Activity</div><button class="dash-list-link" onclick="${emails.length?"setFilter('all',document.querySelector('[data-filter=all]'))":"loadEmails()"}">${emails.length?'Open inbox':'Load sample data'}</button></div>
-        ${recent.length?recent.map(e=>`<div class="dash-list-row"><div class="dash-row-main"><div class="dash-row-label">${e.sender}</div><div class="dash-row-sub">${e.subject}</div></div><div class="dash-row-val">${e.time}</div></div>`).join(''):`<div class="dash-empty-note">Connect Outlook or load the sample inbox to populate recent activity here.</div>`}
-        <div class="dash-empty-note" style="margin-top:12px">${unread} unread messages are still sitting in the app.</div>
-      </div>
-    </div>`;
+  document.getElementById('listBody').innerHTML='';
 }
 function setDashboardSearch(value){
   searchQ=String(value||'').toLowerCase();
@@ -2640,6 +2608,7 @@ function leaveDashboard(){
   currentView='mail';
   document.body.classList.remove('dashboard-mode');
   document.body.classList.remove('settings-mode');
+  setDashboardListPaneHidden(false);
   document.getElementById('dashboardBtn').classList.remove('active');
   if(location.hash==='#dashboard') history.replaceState({},'', window.location.pathname);
   saveSettings();
@@ -2648,6 +2617,7 @@ function leaveWorkspaceSettings(){
   if(currentView!=='settings') return;
   currentView='mail';
   document.body.classList.remove('settings-mode');
+  setDashboardListPaneHidden(false);
   if(location.hash==='#settings') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -2655,6 +2625,7 @@ function leaveAIWorkspace(){
   if(currentView!=='ai') return;
   currentView='mail';
   document.body.classList.remove('settings-mode');
+  setDashboardListPaneHidden(false);
   if(location.hash==='#ai') history.replaceState({},'', window.location.pathname);
   saveSettings();
 }
@@ -2663,6 +2634,7 @@ function openDashboard(tab=dashboardTab){
   currentView='dashboard';
   document.body.classList.add('dashboard-mode');
   document.body.classList.remove('settings-mode');
+  setDashboardListPaneHidden(true);
   clearSidebarSelections();
   document.getElementById('dashboardBtn').classList.add('active');
   if(location.hash!=='#dashboard') history.replaceState({},'', `${window.location.pathname}#dashboard`);
@@ -2673,6 +2645,7 @@ function openWorkspaceSettings(){
   currentView='settings';
   document.body.classList.remove('dashboard-mode');
   document.body.classList.add('settings-mode');
+  setDashboardListPaneHidden(false);
   clearSidebarSelections();
   document.getElementById('settingsBtn')?.classList.add('active');
   if(location.hash!=='#settings') history.replaceState({},'', `${window.location.pathname}#settings`);
@@ -2683,6 +2656,7 @@ function openAIWorkspace(){
   currentView='ai';
   document.body.classList.remove('dashboard-mode');
   document.body.classList.add('settings-mode');
+  setDashboardListPaneHidden(false);
   clearSidebarSelections();
   document.getElementById('aiPageBtn')?.classList.add('active');
   if(location.hash!=='#ai') history.replaceState({},'', `${window.location.pathname}#ai`);
@@ -2785,6 +2759,7 @@ function render(){
     renderDashboardDetail();
     return;
   }
+  setDashboardListPaneHidden(false);
   if(currentView==='settings'){
     renderWorkspaceList();
     renderWorkspaceDetail();
@@ -4426,7 +4401,7 @@ setInterval(async()=>{
    5. "Update Now" reloads — GitHub Pages serves the latest index.html
    ══════════════════════════════════════ */
 
-const APP_VERSION = '1.6.3';
+const APP_VERSION = '1.6.4';
 const VERSION_URL = (() => {
   const base = window.location.href.split('index.html')[0].split('?')[0];
   return base.endsWith('/') ? base + 'version.json' : base + '/version.json';

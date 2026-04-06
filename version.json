@@ -1,5 +1,5 @@
 {
-  "version": "1.6.3",
-  "changelog": "Redesigned the dashboard into a cleaner dark command board with a centered shell, stronger readability, compact navigation rail, and a layout that better matches the new reference design.",
+  "version": "1.6.4",
+  "changelog": "Fixed the dashboard overlap by removing the legacy dashboard list render and explicitly hiding the list pane whenever the new command-board dashboard is active.",
   "released": "2026-04-01"
 }
